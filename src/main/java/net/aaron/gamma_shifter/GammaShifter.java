@@ -1,5 +1,6 @@
 package net.aaron.gamma_shifter;
 
+import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,5 +11,6 @@ public class GammaShifter implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
 	}
 }
