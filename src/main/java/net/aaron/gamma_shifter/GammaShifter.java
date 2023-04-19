@@ -10,8 +10,6 @@ public class GammaShifter implements ModInitializer {
 	public static final String GAMMA_MOD = "gamma_shifter";
 	public static final Logger LOGGER = LoggerFactory.getLogger(GAMMA_MOD);
 
-	private static MinecraftClient mc = MinecraftClient.getInstance();
-
 	@Override
 	public void onInitialize() {
 	}

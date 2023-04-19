@@ -12,7 +12,5 @@ public class GammaShifterClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         KeyInputHandler.register();
-//        HudRenderCallback.EVENT.register(new HUD());
-
     }
 }
