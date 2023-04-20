@@ -14,6 +14,14 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/*
+    InitGammaMixin
+
+    Fabric mixin to read gamma settings from options.txt when the game client starts
+    Retrieves and stores the raw value from options.txt when GameOptions.load() is called and manually sets the gamma value when the method ends
+    Bypasses default clamping of gamma values to 0.0:1.0
+    **File input logic cloned from MinecraftClient.GameOptions.load()
+ */
 
 @Mixin(GameOptions.class)
 public class InitGammaMixin {
@@ -21,11 +29,17 @@ public class InitGammaMixin {
     private static final Splitter COLON_SPLITTER = Splitter.on(':').limit(2);
 
     // retrieves the gamma setting from options.txt before it is modified by the game
+    @SuppressWarnings("UnstableApiUsage") // Files.newReader marked with @Beta
     @Inject(method = "load", at = @At("HEAD"), cancellable = false)
     public void retrieveGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this;
 //        GammaShifter.LOGGER.info("Injected into GameOptions.load() successfully (optionsFile = " + options.getOptionsFile().toString());
         AtomicBoolean found = new AtomicBoolean(false);
+
+        /*
+            The following code to read options from the files is cloned from MinecraftClient.GameOptions.load()
+                ie. I did not write it, it is not mine
+         */
 
         // read every line of the file
         try (BufferedReader bufferedReader = Files.newReader(options.getOptionsFile(), Charsets.UTF_8);){
@@ -60,5 +74,4 @@ public class InitGammaMixin {
         GameOptions options = (GameOptions) (Object) this;
         options.getGamma().setValue(found_gamma); // setting values higher than 1.0 with setValue enabled by setGammaMixin
     }
-
 }

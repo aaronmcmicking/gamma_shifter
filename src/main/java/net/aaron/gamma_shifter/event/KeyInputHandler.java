@@ -17,6 +17,13 @@ import org.lwjgl.glfw.GLFW;
 import java.text.DecimalFormat;
 import java.util.Optional;
 
+/*
+    KeyInputHandler
+
+    Sets default keybinds and detects key presses
+    Calculates and sets new gamma settings on keypress (runs every tick)
+ */
+
 
 public class KeyInputHandler {
 
@@ -31,21 +38,24 @@ public class KeyInputHandler {
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(increaseGammaKey.wasPressed()){
+                // fix round errors with double arithmetic and set the new value
                 double new_gamma = Math.round((client.options.getGamma().getValue() + .2)*100)/100.0;
                 client.options.getGamma().setValue(new_gamma);
 
+                // display a message on-screen telling the player the current gamma value
                 String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%";
                 if(client.player != null) {
                     client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
                 }
                 GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
-                MinecraftClient.getInstance().options.write();
+                MinecraftClient.getInstance().options.write(); // write the settings to the options file
               }
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(decreaseGammaKey.wasPressed()){
                 // decrease gamma
                 if(client.options.getGamma().getValue() > .2) {
+                    // fix round errors with double arithmetic and set the new value
                     double new_gamma = Math.round((client.options.getGamma().getValue() - .2)*100)/100.0;
                     client.options.getGamma().setValue(new_gamma);
                     GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
@@ -54,7 +64,8 @@ public class KeyInputHandler {
                     client.options.getGamma().setValue(0.0);
                 }
 
-                MinecraftClient.getInstance().options.write();
+                MinecraftClient.getInstance().options.write(); // write the settings to the options file
+                // display a message on-screen telling the player the current gamma value
                 String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%";
                 if(client.player != null) {
                     client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);

@@ -16,4 +16,4 @@ Gamma settings are loaded and written from options.txt without being clamped to 
 
 The write() method in GameOptions.java will still log an error when trying to save a gamma value > 1.0 <br>
 Manually written gamma values will always appear as the last line of options.txt <br>
-Although the mod is client-sided, The server will still receive information about the client settings (GameOptions.sendClientSettings())
+The server will still receive information about the client settings (GameOptions.sendClientSettings())
