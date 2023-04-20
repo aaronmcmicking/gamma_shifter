@@ -22,7 +22,7 @@ public class SaveGammaMixin {
             try {
                 String str = "gamma:" + options.getGamma().getValue() + "\n";
                 Files.write(Paths.get(options.getOptionsFile().getName()), str.getBytes(), StandardOpenOption.APPEND);
-                GammaShifter.LOGGER.info("[GammaShifter] Manually wrote gamma value (" + options.getGamma().getValue() + ") to options file at " + options.getOptionsFile().toString());
+//                GammaShifter.LOGGER.info("[GammaShifter] Manually wrote gamma value (" + options.getGamma().getValue() + ") to options file at " + options.getOptionsFile().toString());
             }catch(IOException e){
                 GammaShifter.LOGGER.info("[GammaShifter] Unable to open options file for manual writing (IOException)");
             }

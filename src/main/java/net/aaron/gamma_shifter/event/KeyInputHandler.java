@@ -31,7 +31,8 @@ public class KeyInputHandler {
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(increaseGammaKey.wasPressed()){
-                client.options.getGamma().setValue(client.options.getGamma().getValue() + .2);
+                double new_gamma = Math.round((client.options.getGamma().getValue() + .2)*100)/100.0;
+                client.options.getGamma().setValue(new_gamma);
 
                 String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%";
                 if(client.player != null) {
@@ -45,7 +46,8 @@ public class KeyInputHandler {
             if(decreaseGammaKey.wasPressed()){
                 // decrease gamma
                 if(client.options.getGamma().getValue() > .2) {
-                    client.options.getGamma().setValue(client.options.getGamma().getValue() - .2);
+                    double new_gamma = Math.round((client.options.getGamma().getValue() - .2)*100)/100.0;
+                    client.options.getGamma().setValue(new_gamma);
                     GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
                 }else{
                     GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
