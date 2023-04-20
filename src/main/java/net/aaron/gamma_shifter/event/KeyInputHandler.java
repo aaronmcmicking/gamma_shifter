@@ -38,6 +38,7 @@ public class KeyInputHandler {
                     client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
                 }
                 GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
+                MinecraftClient.getInstance().options.write();
               }
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -51,6 +52,7 @@ public class KeyInputHandler {
                     client.options.getGamma().setValue(0.0);
                 }
 
+                MinecraftClient.getInstance().options.write();
                 String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%";
                 if(client.player != null) {
                     client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);

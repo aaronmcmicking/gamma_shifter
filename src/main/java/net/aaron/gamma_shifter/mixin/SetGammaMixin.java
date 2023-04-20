@@ -18,9 +18,10 @@ public abstract class SetGammaMixin {
     @Inject(method = "setValue(Ljava/lang/Object;)V", at = @At("RETURN"), cancellable = false)
     public void setValueInjected(Object value, CallbackInfo ci){
         SimpleOption<?> gamma = (SimpleOption<?>) (Object) this;
+        MinecraftClient mc = MinecraftClient.getInstance();
 
-        if(gamma.equals(MinecraftClient.getInstance().options.getGamma())){
-            ((SimpleOptionAccessor<Object>) this).setValue(value);
+        if(gamma.equals(mc.options.getGamma())){
+            ((SimpleOptionAccessor<Object>) this).setValue(value); // setValue method created with accessor mixin
         }
     }
 
