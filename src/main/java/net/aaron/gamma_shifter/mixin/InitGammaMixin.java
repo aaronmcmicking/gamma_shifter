@@ -1,8 +1,5 @@
 package net.aaron.gamma_shifter.mixin;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.io.Files;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,60 +8,64 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /*
     InitGammaMixin
 
     Fabric mixin to read gamma settings from options.txt when the game client starts
     Retrieves and stores the raw value from options.txt when GameOptions.load() is called and manually sets the gamma value when the method ends
     Bypasses default clamping of gamma values to 0.0:1.0
-    **File input logic cloned from MinecraftClient.GameOptions.load()
  */
 
 @Mixin(GameOptions.class)
 public class InitGammaMixin {
     private Double found_gamma = 1.0;
-    private static final Splitter COLON_SPLITTER = Splitter.on(':').limit(2);
 
     // retrieves the gamma setting from options.txt before it is modified by the game
-    @SuppressWarnings("UnstableApiUsage") // Files.newReader marked with @Beta
     @Inject(method = "load", at = @At("HEAD"), cancellable = false)
     public void retrieveGammaInject(CallbackInfo ci){
-        GameOptions options = (GameOptions) (Object) this;
-//        GammaShifter.LOGGER.info("Injected into GameOptions.load() successfully (optionsFile = " + options.getOptionsFile().toString());
-        AtomicBoolean found = new AtomicBoolean(false);
-
-        /*
-            The following code to read options from the files is cloned from MinecraftClient.GameOptions.load()
-                ie. I did not write it, it is not mine
-         */
-
-        // read every line of the file
-        try (BufferedReader bufferedReader = Files.newReader(options.getOptionsFile(), Charsets.UTF_8);){
-            bufferedReader.lines().forEach(line -> {
-                try {
-                    Iterator<String> iterator = COLON_SPLITTER.split(line).iterator();
-                    // retrieve key-value pairs
-                    String cur_key = iterator.next();
-                    String cur_val = iterator.next();
-
-                    if(cur_key.equals("gamma")){
-                        found_gamma = Double.parseDouble(cur_val);
-                        found.set(true);
-                    }
-                } catch (Exception exception) {
-                    GammaShifter.LOGGER.warn("[GammaShifter] Skipping bad option: {} (encountered while retrieving gamma)", line);
+        GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it
+        boolean found = false; // records if a gamma value was found in the file
+        boolean malformed = false, missing = false; // records if the options file appeared to be malformed (controls logging), or was missing
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(options.getOptionsFile().getName()));
+            String line = br.readLine();
+            while(line != null){
+                // initialize key-value pair
+                String cur_key = "", cur_val = "";
+                int i = 0;
+                while(line.charAt(i) != ':'){   // read the key
+                    cur_key += line.charAt(i++);
                 }
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                if(cur_key.equals("gamma")){
+                    i++;
+                    try{
+                        while(i < 13){ // read the value (stops after reading 7 characters or at Exception)
+                            cur_val += line.charAt(i++);
+                        }
+                    }catch(IndexOutOfBoundsException e){
+//                        GammaShifter.LOGGER.warn("[GammaShifter] IndexOutOfBoundsException in InitGammaMixin.retrieveGammaInject: cur_val = " + cur_val);
+                    }
+                    try {
+                        found_gamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
+                        found = true;
+                    }catch(NumberFormatException e){
+                        GammaShifter.LOGGER.error("[GammaShifter] Couldn't parse value from file... was the options file malformed?");
+                        found_gamma = 1.0;
+                        malformed = true;
+                    }
+                    break;
+                }   // if(cur_key.equals("gamma"))
+                line = br.readLine();
+            }   // while (line != null)
+        }catch(IOException e){
+            GammaShifter.LOGGER.error("[GammaShifter] Caught IOException while trying to load options... does the options file exist?");
+            missing = true;
         }
-        if(found.get()){
-            GammaShifter.LOGGER.info("[GammaShifter] Found existing gamma setting of " + found_gamma);
-        }else{
-            GammaShifter.LOGGER.warn("[GammaShifter] Couldn't find an existing gamma setting... did " + options.getOptionsFile().getName() +  " specify a gamma setting?");
+
+        if(found){
+            GammaShifter.LOGGER.info("[GammaShifter] Read gamma value of " + found_gamma + " from options file");
+        }else if(!malformed && !missing){
+            GammaShifter.LOGGER.warn("[GammaShifter] Couldn't find an existing gamma setting... did the options file include one?");
         }
     }
 
