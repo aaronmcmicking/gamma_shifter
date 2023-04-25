@@ -73,6 +73,8 @@ public class InitGammaMixin {
     @Inject(method = "load", at = @At("RETURN"), cancellable = false)
     public void setGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this;
+        GammaShifter.LOGGER.info("[GammaShifter] About to set gamma");
         options.getGamma().setValue(found_gamma); // setting values higher than 1.0 with setValue enabled by setGammaMixin
+        GammaShifter.LOGGER.info("[GammaShifter] Just set gamma");
     }
 }
