@@ -10,11 +10,8 @@
     "SaveGammaMixin",
     "SetGammaMixin",
     "SimpleOptionAccessor",
-    "LoggerInterruptMixin",
     "DataResultErrorMixin",
-    "DataResultAccessor",
-    "PartialResultAccessor",
-    "OptionalAccessor"
+    "DataResultAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,6 +1,6 @@
 # gamma_shifter
 
-A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft 1.19.2
+A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft 1.19
 
 ## Default Keybinds
 
@@ -14,7 +14,5 @@ Gamma settings are loaded and written from options.txt without being clamped to 
 
 ## Notes
 
-The write() method in GameOptions.java will still log an error when trying to save a gamma value > 1.0 <br>
 Manually written gamma values will always appear as the last line of options.txt <br>
-The server will still receive information about the client settings (GameOptions.sendClientSettings()) <br>
 Gamma value will still be clamped at 1000%

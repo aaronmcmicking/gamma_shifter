@@ -1,13 +1,9 @@
 package net.aaron.gamma_shifter.event;
 
-//import net.aaron.gamma_shifter.HUD.HUD;
-import net.aaron.gamma_shifter.GammaShifter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -15,7 +11,6 @@ import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
-import java.util.Optional;
 
 /*
     KeyInputHandler
@@ -30,7 +25,7 @@ public class KeyInputHandler {
     public static final String KEY_CATEGORY_GAMMA_SHIFTER = "Gamma Shifter";
     public static final String KEY_INCREASE_GAMMA = "Increase Gamma";
     public static final String KEY_DECREASE_GAMMA = "Decrease Gamma";
-    static DecimalFormat decFor = new DecimalFormat("0.0");
+    static DecimalFormat decFor = new DecimalFormat("0");
 
     public static KeyBinding increaseGammaKey;
     public static KeyBinding decreaseGammaKey;
@@ -57,7 +52,7 @@ public class KeyInputHandler {
                     client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
                 }
                 if(set) {
-//                    GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
+//                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
                     MinecraftClient.getInstance().options.write(); // write the settings to the options file (if a new value was set)
                 }
               }
@@ -78,7 +73,7 @@ public class KeyInputHandler {
                 }
 
                 if(set) {
-//                    GammaShifter.LOGGER.info("[GammaShifter] Set gamma to " + client.options.getGamma().getValue());
+//                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
                     MinecraftClient.getInstance().options.write(); // write the settings to the options file
                 }
                 // display a message on-screen telling the player the current gamma value

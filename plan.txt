@@ -1,9 +1,0 @@
-Inject into dataResult.error.ifPresent() and try to extract information from Consumer.class to see if its related to gamma
-If we can, set value = 
-
-
-try injecting into logger.error() and see its its argument contains gamma reading (if it does, just return without doing anything)
-
-
-
-inject into DataResult.error and get its partialresult to see if it gamma, if so cancel

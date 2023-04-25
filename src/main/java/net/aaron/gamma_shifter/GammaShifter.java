@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 	GammaShifter
 
 	ModInitializer for GammaShifter:
-		A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft 1.19.2
+		A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft 1.19
  */
 
 public class GammaShifter implements ModInitializer {

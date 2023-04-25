@@ -2,43 +2,40 @@ package net.aaron.gamma_shifter.mixin;
 
 import com.mojang.serialization.DataResult;
 import net.aaron.gamma_shifter.GammaShifter;
+import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
+/*
+    DataResultErrorMixin
+
+    Fabric mixin to cancel error messages sent by Minecraft after it refuses to save gamma values > 1.0
+    Suppresses warnings by returning an empty Optional object from DataResult.error() instead of the intended Optional<PartialResult<R>>
+        This prevents the game from knowing that an error has actually occurred
+ */
+
+@SuppressWarnings("unchecked") // suppressing mixin typecast-warnings
 @Mixin(DataResult.class)
 public abstract class DataResultErrorMixin {
-
-    @Shadow public abstract <K, V> Function<K, DataResult<V>> partialGet(Function<K, V> partialGet, Supplier<String> errorPrefix);
-
     @Inject(method = "error()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
     public <R, T> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<R>>> cir){
-//        if(MinecraftClient.getInstance() != null)
-//            if(MinecraftClient.getInstance().player != null)
-//                GammaShifter.LOGGER.info("[GammaShifter] Injected into DataResult.error() at HEAD");
-
         DataResult<R> dataResult = (DataResult<R>) (Object) this;
         try {
-            Optional<DataResult.PartialResult<R>> partialResult = ((DataResultAccessor<R>) dataResult).getResult().right();
+            Optional<DataResult.PartialResult<R>> partialResult = ((DataResultAccessor<R>) dataResult).getResult().right(); // get the partial result
             if(partialResult.isPresent()) {
-                GammaShifter.LOGGER.info("[GammaShifter] PartialResult: " + partialResult.get().message());
-                if (partialResult.get().toString().contains("Brightness") && partialResult.get().toString().contains("outside of range")) {
-                    GammaShifter.LOGGER.info("[GammaShifter] Found Brightness in DataResult injection");
-                    Optional<T> parRes = ( (PartialResultAccessor<T>) ( (DataResultAccessor<R>) dataResult ).getResult()).getPartialResult();
-                    ( (OptionalAccessor<T>) parRes).setValue(null);
-//                    cir.setReturnValue(new Optional<>(null));
+                // if the partial result message contains info about the gamma values > 1.0
+                if (partialResult.get().toString().contains(MinecraftClient.getInstance().options.getGamma().getValue().toString()) && partialResult.get().toString().contains("outside of range")) {
+//                    GammaShifter.LOGGER.info("Cancelled high-brightness error message");
+                    cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
                 }
             }
         }catch(NoSuchElementException e){
-            // empty catch
-            GammaShifter.LOGGER.info("[GammaShifter] NoSuchElementException in DataResultErrorMixin");
+            GammaShifter.LOGGER.error("NoSuchElementException in DataResultErrorMixin"); // Optional.get() error
         }
     }
 }

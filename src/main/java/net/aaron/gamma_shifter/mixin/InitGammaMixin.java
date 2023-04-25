@@ -43,13 +43,13 @@ public class InitGammaMixin {
                             cur_val += line.charAt(i++);
                         }
                     }catch(IndexOutOfBoundsException e){
-//                        GammaShifter.LOGGER.warn("[GammaShifter] IndexOutOfBoundsException in InitGammaMixin.retrieveGammaInject: cur_val = " + cur_val);
+//                        GammaShifter.LOGGER.warn("IndexOutOfBoundsException in InitGammaMixin.retrieveGammaInject: cur_val = " + cur_val);
                     }
                     try {
                         found_gamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
                         found = true;
                     }catch(NumberFormatException e){
-                        GammaShifter.LOGGER.error("[GammaShifter] Couldn't parse value from file... was the options file malformed?");
+                        GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?");
                         found_gamma = 1.0;
                         malformed = true;
                     }
@@ -58,14 +58,14 @@ public class InitGammaMixin {
                 line = br.readLine();
             }   // while (line != null)
         }catch(IOException e){
-            GammaShifter.LOGGER.error("[GammaShifter] Caught IOException while trying to load options... does the options file exist?");
+            GammaShifter.LOGGER.error("Caught IOException while trying to load options... does the options file exist?");
             missing = true;
         }
 
         if(found){
-            GammaShifter.LOGGER.info("[GammaShifter] Read gamma value of " + found_gamma + " from options file");
+            GammaShifter.LOGGER.info("Read gamma value of " + found_gamma + " from options file");
         }else if(!malformed && !missing){
-            GammaShifter.LOGGER.warn("[GammaShifter] Couldn't find an existing gamma setting... did the options file include one?");
+            GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
         }
     }
 
