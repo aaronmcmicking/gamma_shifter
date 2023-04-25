@@ -4,6 +4,7 @@ package net.aaron.gamma_shifter;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.MinecraftClient;
 
 /*
 	GammaShifterClient
@@ -17,4 +18,5 @@ public class GammaShifterClient implements ClientModInitializer {
     public void onInitializeClient() {
         KeyInputHandler.register();
     }
+
 }

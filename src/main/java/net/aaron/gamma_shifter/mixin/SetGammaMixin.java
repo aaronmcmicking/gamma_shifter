@@ -19,7 +19,7 @@ import java.util.Optional;
 @Mixin(SimpleOption.class)
 public abstract class SetGammaMixin {
 //    @SuppressWarnings("unchecked") // removes warning for unchecked typecast of 'this' to 'SimpleOptionAccessor<>'
-    @Inject(method = "setValue(Ljava/lang/Object;)V", at = @At("RETURN"))
+    @Inject(method = "setValue(Ljava/lang/Object;)V", at = @At("HEAD"), cancellable = true)
     public void setValueInjected(Object value, CallbackInfo ci){
         SimpleOption<?> gamma = (SimpleOption<?>) (Object) this;
         MinecraftClient mc = MinecraftClient.getInstance();
@@ -38,12 +38,13 @@ public abstract class SetGammaMixin {
 //            return;
 //        }
 
-
         try {
             if(mc.options != null) {
                 if (gamma.equals(mc.options.getGamma())) {
                     try {
                         ((SimpleOptionAccessor<Object>) this).setValue(value); // setValue method created with accessor mixin
+                        ci.cancel();
+                        GammaShifter.LOGGER.info("Cancelling setValue to override value checking");
                     } catch (NullPointerException e) {
                         GammaShifter.LOGGER.error("((SimpleOptionAccessor<Object>) this).setValue(value) threw NullPointerException");
                     }

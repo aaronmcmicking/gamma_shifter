@@ -1,8 +1,15 @@
 package net.aaron.gamma_shifter.mixin;
 
 import net.aaron.gamma_shifter.GammaShifter;
+import net.aaron.gamma_shifter.GammaShifterClient;
+import net.aaron.gamma_shifter.initGammaHelper;
+import net.minecraft.GameVersion;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.MinecraftClientGame;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.SimpleOption;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,8 +24,11 @@ import java.io.*;
  */
 
 @Mixin(GameOptions.class)
-public class InitGammaMixin {
+public abstract class InitGammaMixin {
+    @Shadow public abstract SimpleOption<Double> getGamma();
+
     private Double found_gamma = 1.0;
+    private GameOptions options_c = null;
 
     // retrieves the gamma setting from options.txt before it is modified by the game
     @Inject(method = "load", at = @At("HEAD"), cancellable = false)
@@ -70,11 +80,13 @@ public class InitGammaMixin {
     }
 
     // set the gamma to the value found in options.txt, bypassing clamping
-    @Inject(method = "load", at = @At("RETURN"), cancellable = false)
+    @Inject(method = "load", at = @At("RETURN"))
     public void setGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this;
         GammaShifter.LOGGER.info("[GammaShifter] About to set gamma");
-        options.getGamma().setValue(found_gamma); // setting values higher than 1.0 with setValue enabled by setGammaMixin
+//        options.getGamma().setValue(found_gamma); // setting values higher than 1.0 with setValue enabled by setGammaMixin
+//        ((SimpleOptionAccessor<Double>) this).getGamma();
+        initGammaHelper.setValue(found_gamma);
         GammaShifter.LOGGER.info("[GammaShifter] Just set gamma");
     }
 }
