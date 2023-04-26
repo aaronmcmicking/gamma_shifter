@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 /*
     DataResultAccessor
 
-    Fabric mixin that expands field/method access to DataResult.class
+    Spongepowered mixin that expands field/method access to DataResult.class
  */
 
 @Mixin(DataResult.class)

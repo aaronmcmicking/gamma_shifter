@@ -14,7 +14,7 @@ import java.util.Optional;
 /*
     DataResultErrorMixin
 
-    Fabric mixin to cancel error messages sent by Minecraft after it refuses to save gamma values > 1.0
+    Spongepowered mixin to cancel error messages sent by Minecraft after it refuses to save gamma values > 1.0
     Suppresses warnings by returning an empty Optional object from DataResult.error() instead of the intended Optional<PartialResult<R>>
         This prevents the game from knowing that an error has actually occurred
  */

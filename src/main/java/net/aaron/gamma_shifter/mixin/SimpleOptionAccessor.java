@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 /*
     SimpleOptionAccessor
 
-    Fabric mixin that expands field/method access to SimpleOptions.class
+    Spongepowered mixin that expands field/method access to SimpleOptions.class
  */
 
 @Mixin(SimpleOption.class)

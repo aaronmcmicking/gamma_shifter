@@ -6,12 +6,13 @@
   "mixins": [
   ],
   "client": [
+    "DataResultAccessor",
+    "DataResultErrorMixin",
     "InitGammaMixin",
+    "MinecraftClientMixin",
     "SaveGammaMixin",
     "SetGammaMixin",
-    "SimpleOptionAccessor",
-    "DataResultErrorMixin",
-    "DataResultAccessor"
+    "SimpleOptionAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,10 +1,7 @@
 package net.aaron.gamma_shifter;
 
-//import net.aaron.gamma_shifter.HUD.HUD;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
 
 /*
 	GammaShifterClient
@@ -14,8 +11,12 @@ import net.minecraft.client.MinecraftClient;
 */
 
 public class GammaShifterClient implements ClientModInitializer {
+
+    public static initGammaHelper gammaHelper = new initGammaHelper();
+
     @Override
     public void onInitializeClient() {
+//        gammaHelper.setValue();
         KeyInputHandler.register();
     }
 

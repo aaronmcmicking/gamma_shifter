@@ -2,10 +2,6 @@ package net.aaron.gamma_shifter.mixin;
 
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.GammaShifterClient;
-import net.aaron.gamma_shifter.initGammaHelper;
-import net.minecraft.GameVersion;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.MinecraftClientGame;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,27 +11,28 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.*;
+
 /*
     InitGammaMixin
 
-    Fabric mixin to read gamma settings from options.txt when the game client starts
+    Spongepowered mixin to read gamma settings from options.txt when the game client starts
     Retrieves and stores the raw value from options.txt when GameOptions.load() is called and manually sets the gamma value when the method ends
     Bypasses default clamping of gamma values to 0.0:1.0
  */
 
 @Mixin(GameOptions.class)
 public abstract class InitGammaMixin {
-    @Shadow public abstract SimpleOption<Double> getGamma();
+    @Shadow public abstract SimpleOption<Double> getGamma(); // may be unnecessary
 
     private Double found_gamma = 1.0;
-    private GameOptions options_c = null;
 
     // retrieves the gamma setting from options.txt before it is modified by the game
     @Inject(method = "load", at = @At("HEAD"), cancellable = false)
     public void retrieveGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it
         boolean found = false; // records if a gamma value was found in the file
-        boolean malformed = false, missing = false; // records if the options file appeared to be malformed (controls logging), or was missing
+        boolean malformed = false; // records if the options file appeared to be malformed (controls logging)
+        boolean missing_file = false;  // records if the options file was missing
         try {
             BufferedReader br = new BufferedReader(new FileReader(options.getOptionsFile().getName()));
             String line = br.readLine();
@@ -49,18 +46,19 @@ public abstract class InitGammaMixin {
                 if(cur_key.equals("gamma")){
                     i++;
                     try{
-                        while(i < 13){ // read the value (stops after reading 7 characters or at Exception)
+                        while(i < 13 && i < line.length()){ // read the value (stops after reading 7 characters or at Exception)
                             cur_val += line.charAt(i++);
                         }
                     }catch(IndexOutOfBoundsException e){
-//                        GammaShifter.LOGGER.warn("IndexOutOfBoundsException in InitGammaMixin.retrieveGammaInject: cur_val = " + cur_val);
+                        // empty catch block
+                        //GammaShifter.LOGGER.warn("in InitGammaMixin.retrieveGammaInject(): " + e);
                     }
                     try {
-                        found_gamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
+                        this.found_gamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
                         found = true;
-                    }catch(NumberFormatException e){
-                        GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?");
-                        found_gamma = 1.0;
+                    }catch(NumberFormatException | NullPointerException e){ // possible exceptions from Double.parseDouble()
+                        GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?\n\t" + e);
+                        this.found_gamma = 1.0;
                         malformed = true;
                     }
                     break;
@@ -68,25 +66,15 @@ public abstract class InitGammaMixin {
                 line = br.readLine();
             }   // while (line != null)
         }catch(IOException e){
-            GammaShifter.LOGGER.error("Caught IOException while trying to load options... does the options file exist?");
-            missing = true;
+            GammaShifter.LOGGER.error("Caught IOException while trying to load options... does the options file exist?\n\t" + e);
+            missing_file = true;
         }
 
         if(found){
             GammaShifter.LOGGER.info("Read gamma value of " + found_gamma + " from options file");
-        }else if(!malformed && !missing){
+            GammaShifterClient.gammaHelper.storeGamma(found_gamma);
+        }else if(!malformed && !missing_file){
             GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
         }
-    }
-
-    // set the gamma to the value found in options.txt, bypassing clamping
-    @Inject(method = "load", at = @At("RETURN"))
-    public void setGammaInject(CallbackInfo ci){
-        GameOptions options = (GameOptions) (Object) this;
-        GammaShifter.LOGGER.info("[GammaShifter] About to set gamma");
-//        options.getGamma().setValue(found_gamma); // setting values higher than 1.0 with setValue enabled by setGammaMixin
-//        ((SimpleOptionAccessor<Double>) this).getGamma();
-        initGammaHelper.setValue(found_gamma);
-        GammaShifter.LOGGER.info("[GammaShifter] Just set gamma");
     }
 }

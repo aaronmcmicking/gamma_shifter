@@ -4,16 +4,16 @@
   "version": "${version}",
 
   "name": "Gamma Shifter",
-  "description": "Enable gamma adjustments beyond 100% without having to edit the options.txt file",
+  "description": "Enables setting the gamma/brightness above 100% in Minecraft 1.19",
   "authors": [
-    "Me!"
+    "Aaron McMicking"
   ],
   "contact": {
     "homepage": "https://github.com/aaronmcmicking",
     "sources": "https://github.com/aaronmcmicking/gamma_shifter"
   },
 
-  "license": "MIT License",
+  "license": "MIT",
   "icon": "assets/modid/icon.png",
 
   "environment": "*",
