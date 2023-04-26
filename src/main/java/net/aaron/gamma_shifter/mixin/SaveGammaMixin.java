@@ -12,16 +12,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-/*
-    SaveGammaMixin
-
-    Spongepowered mixin that manually saves gamma to options.txt if the value is over 1.0
-    Bypasses default clamping of gamma values to 0.0:1.0
-    Gamma appears as last line of options.txt since it is appended after GameOptions.write() finishes
+/**
+ * Spongepowered mixin that manually saves gamma values > 1.0 to options.txt. Values written by this class will always
+ * appear as the last line of options.txt.
  */
-
 @Mixin(GameOptions.class)
 public class SaveGammaMixin {
+    /**
+     * Injects at the end of {@link GameOptions#write()} and manually writes gamma values > 1.0 to options.txt.
+     * @param ci CallbackInfo to return.
+     */
     @Inject(method = "write", at = @At("RETURN"))
     public void writeInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this;

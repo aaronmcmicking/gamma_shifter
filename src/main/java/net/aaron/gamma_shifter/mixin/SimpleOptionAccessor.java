@@ -4,15 +4,16 @@ import net.minecraft.client.option.SimpleOption;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-/*
-    SimpleOptionAccessor
-
-    Spongepowered mixin that expands field/method access to SimpleOptions.class
+/**
+ * Spongepowered mixin that expands field access to {@link SimpleOption}.
+ * @param <Object>
  */
-
 @Mixin(SimpleOption.class)
 public interface SimpleOptionAccessor<Object> {
-    // create setter for private field 'value'
+    /**
+     * Create setter for 'value' in {@link SimpleOption}.
+     * @param value The value to be set.
+     */
     @Accessor
     void setValue(Object value);
 }

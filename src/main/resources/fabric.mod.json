@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Gamma Shifter",
-  "description": "Enables setting the gamma/brightness above 100% in Minecraft 1.19",
+  "description": "Enables setting the gamma/brightness above 100% in Minecraft 1.19.4",
   "authors": [
     "Aaron McMicking"
   ],

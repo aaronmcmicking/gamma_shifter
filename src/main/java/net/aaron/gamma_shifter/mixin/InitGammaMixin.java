@@ -2,6 +2,7 @@ package net.aaron.gamma_shifter.mixin;
 
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.GammaShifterClient;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,22 +13,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.*;
 
-/*
-    InitGammaMixin
-
-    Spongepowered mixin to read gamma settings from options.txt when the game client starts
-    Retrieves and stores the raw value from options.txt when GameOptions.load() is called and manually sets the gamma value when the method ends
-    Bypasses default clamping of gamma values to 0.0:1.0
+/**
+ * Spongepowered mixin to read/load gamma values from options.txt when the client launches, bypassing clamping to 0.0:1.0.
+ *
+ * <p>After being read, the gamma value is saved in {@link GammaShifterClient#gammaHelper}, which saves the value when
+ * the title screen is displayed. Setting the value uses a helper class as the game client is not formally running yet
+ * ({@link MinecraftClient#getInstance()} returns null), and so setGammaMixin cannot be used.</p>
  */
-
 @Mixin(GameOptions.class)
 public abstract class InitGammaMixin {
-    @Shadow public abstract SimpleOption<Double> getGamma(); // may be unnecessary
+    @Shadow public abstract SimpleOption<Double> getGamma();
 
+    /**
+     * The gamma found in options.txt. Set to 1.0 by default (max vanilla brightness).
+     */
     private Double found_gamma = 1.0;
 
     // retrieves the gamma setting from options.txt before it is modified by the game
-    @Inject(method = "load", at = @At("HEAD"), cancellable = false)
+
+    /**
+     * Injects into {@link GameOptions#load} to retrieve and store the gamma value before it is deleted by the game.
+     * @param ci CallbackInfo to be returned after injection finishes.
+     */
+    @Inject(method = "load", at = @At("HEAD"))
     public void retrieveGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it
         boolean found = false; // records if a gamma value was found in the file
@@ -72,7 +80,7 @@ public abstract class InitGammaMixin {
 
         if(found){
             GammaShifter.LOGGER.info("Read gamma value of " + found_gamma + " from options file");
-            GammaShifterClient.gammaHelper.storeGamma(found_gamma);
+            GammaShifterClient.gammaHelper.storeGamma(found_gamma); // initGammaHelper handles setting the value
         }else if(!malformed && !missing_file){
             GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
         }

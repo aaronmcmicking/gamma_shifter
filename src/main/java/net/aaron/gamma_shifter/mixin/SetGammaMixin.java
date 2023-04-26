@@ -14,8 +14,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
     Spongepowered mixin that bypasses the validation process for changes to the gamma setting, allowing values higher than 1.0
     Injects into SimpleOption.setValue() and uses an Accessor to manually set the gamma value
  */
+
+/**
+ * Spongepowered mixin that manually sets gamma values > 1.0, bypassing vanilla clamping to 0.0:1.0 and cancelling the
+ * caller.
+ */
 @Mixin(SimpleOption.class)
 public abstract class SetGammaMixin {
+    /**
+     * Injects into start of {@link SimpleOption#setValue(Object)} and manually sets the gamma value to bypass vanilla
+     * clamping to 0.0:1.0. Cancels caller method if a value is manually set.
+     * @param value The new gamma value. If working on the gamma option, then the type will be Double.
+     * @param ci CallbackInfo to be returned.
+     */
     @SuppressWarnings("unchecked") // removes warning for unchecked typecast of 'this' to 'SimpleOptionAccessor<>'
     @Inject(method = "setValue(Ljava/lang/Object;)V", at = @At("HEAD"), cancellable = true)
     public void setValueInjected(Object value, CallbackInfo ci){

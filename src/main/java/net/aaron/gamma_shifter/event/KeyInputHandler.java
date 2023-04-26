@@ -12,24 +12,36 @@ import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
 
-/*
-    KeyInputHandler
-
-    Sets default keybinds and detects key presses
-    Calculates and sets new gamma settings on keypress (runs every tick)
- */
-
+/**
+ *   Sets default keybinds, detects key presses, calculates, and sets new gamma settings on keypress (runs every tick).
+ **/
 
 public class KeyInputHandler {
 
+    /**
+     * Names for the mod category and keybinds in the settings menu.
+     **/
     public static final String KEY_CATEGORY_GAMMA_SHIFTER = "Gamma Shifter";
     public static final String KEY_INCREASE_GAMMA = "Increase Gamma";
     public static final String KEY_DECREASE_GAMMA = "Decrease Gamma";
-    static DecimalFormat decFor = new DecimalFormat("0");
 
+    /**
+     * The keybinds themselves, initialized in register().
+     */
     public static KeyBinding increaseGammaKey;
     public static KeyBinding decreaseGammaKey;
 
+    /**
+     * Define the decimal format for Doubles when the current gamma is displayed to the user.
+     */
+    private final static DecimalFormat decFor = new DecimalFormat("0");
+
+    /**
+     * Checks every tick if the keybinds to increase/decrease gamma have been pressed. If they have, the gamma is incremented/decremented accordingly. Displays a message above the hotbar to the user.
+     * <p>
+     * Hard-coded to change the value by 0.2, or 20%, per input.
+     * </p>
+     */
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(increaseGammaKey.wasPressed()){
@@ -85,6 +97,9 @@ public class KeyInputHandler {
         });
     }
 
+    /**
+     * Creates the default keybinds on mod initialization.
+     */
     public static void register(){
         // set the default keybind to increase gamma to ']'
         increaseGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
