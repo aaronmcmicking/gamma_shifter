@@ -38,5 +38,4 @@ public class initGammaHelper {
             GammaShifter.LOGGER.error("Failed to load gamma from file: " + e);
         }
     }
-
 }
