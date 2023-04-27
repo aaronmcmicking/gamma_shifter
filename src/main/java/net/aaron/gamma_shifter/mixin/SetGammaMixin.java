@@ -4,6 +4,7 @@ import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,6 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(SimpleOption.class)
 public abstract class SetGammaMixin {
+
+    /**
+     * Shadow private 'value' in {@link SimpleOption}.
+     */
+    @Shadow
+    Object value;
+
     /**
      * Injects into start of {@link SimpleOption#setValue(Object)} and manually sets the gamma value to bypass vanilla
      * clamping to 0.0:1.0. Cancels caller method if a value is manually set.
@@ -35,7 +43,8 @@ public abstract class SetGammaMixin {
 
         try {
             if (mc.options != null && gamma.equals(mc.options.getGamma())) {
-                ((SimpleOptionAccessor<Object>) this).setValue(value); // setValue method created with accessor mixin
+//                ((SimpleOptionAccessor<Object>) this).setValue(value); // setValue method created with accessor mixin
+                this.value = value;
                 ci.cancel(); // cancel the targeted method to prevent it overwriting the value
             }
         }catch(NullPointerException e){

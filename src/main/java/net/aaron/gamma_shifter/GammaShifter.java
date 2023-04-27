@@ -25,7 +25,7 @@ public class GammaShifter implements ModInitializer {
 	/**
 	 * Records whether the mod is currently enabled/toggled.
 	 */
-	public static boolean toggled = true;
+	private static boolean toggled = true;
 
 	/**
 	 * Empty method run when the mod is initialized.

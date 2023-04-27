@@ -1,9 +1,14 @@
 package net.aaron.gamma_shifter.mixin;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DataResult.PartialResult;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -20,7 +25,18 @@ import java.util.Optional;
 
 @SuppressWarnings("unchecked") // suppressing mixin typecast-warnings
 @Mixin(DataResult.class)
-public abstract class DataResultErrorMixin {
+public abstract class DataResultErrorMixin<R> {
+
+    @Mutable
+    @Final
+    @Shadow
+    private final Either<R, DataResult.PartialResult<R>> result;
+
+    protected DataResultErrorMixin() {
+        this.result = null;
+    }
+
+
     /**
      * Injects into {@link DataResult#error()} and reads the error message to find references to an out-of-range gamma value. Upon finding them, the injection returns an
      * empty {@link Optional} instance, which the caller expects to receive if no error was encountered when validating option values.
@@ -31,7 +47,8 @@ public abstract class DataResultErrorMixin {
     public <R> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<R>>> cir){
         DataResult<R> dataResult = (DataResult<R>) (Object) this;
         try {
-            Optional<DataResult.PartialResult<R>> partialResult = ((DataResultAccessor<R>) dataResult).getResult().right(); // get the partial result
+//            Optional<DataResult.PartialResult<R>> partialResult = ((DataResultAccessor<R>) dataResult).getResult().right(); // get the partial result
+            Optional<DataResult.PartialResult<R>> partialResult = this.result.right();
             if(partialResult.isPresent()) {
                 // if the partial result message contains info about the gamma values > 1.0
                 if (partialResult.get().toString().contains(MinecraftClient.getInstance().options.getGamma().getValue().toString()) && partialResult.get().toString().contains("outside of range")) {
