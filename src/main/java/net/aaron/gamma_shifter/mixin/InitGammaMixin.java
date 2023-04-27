@@ -27,7 +27,7 @@ public abstract class InitGammaMixin {
     /**
      * The gamma found in options.txt. Set to 1.0 by default (max vanilla brightness).
      */
-    private Double found_gamma = 1.0;
+    private Double foundGamma = 1.0;
 
     // retrieves the gamma setting from options.txt before it is modified by the game
 
@@ -62,11 +62,11 @@ public abstract class InitGammaMixin {
                         //GammaShifter.LOGGER.warn("in InitGammaMixin.retrieveGammaInject(): " + e);
                     }
                     try {
-                        this.found_gamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
+                        this.foundGamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
                         found = true;
                     }catch(NumberFormatException | NullPointerException e){ // possible exceptions from Double.parseDouble()
                         GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?\n\t" + e);
-                        this.found_gamma = 1.0;
+                        this.foundGamma = 1.0;
                         malformed = true;
                     }
                     break;
@@ -79,8 +79,8 @@ public abstract class InitGammaMixin {
         }
 
         if(found){
-            GammaShifter.LOGGER.info("Read gamma value of " + found_gamma + " from options file");
-            GammaShifterClient.gammaHelper.storeGamma(found_gamma); // initGammaHelper handles setting the value
+            GammaShifter.LOGGER.info("Read gamma value of " + foundGamma + " from options file");
+            GammaShifterClient.gammaHelper.storeGamma(foundGamma); // initGammaHelper handles setting the value
         }else if(!malformed && !missing_file){
             GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
         }

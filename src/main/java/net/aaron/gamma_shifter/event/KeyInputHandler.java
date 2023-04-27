@@ -1,5 +1,7 @@
 package net.aaron.gamma_shifter.event;
 
+import net.aaron.gamma_shifter.GammaShifterClient;
+import net.aaron.gamma_shifter.GammaShifter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -15,7 +17,6 @@ import java.text.DecimalFormat;
 /**
  *   Sets default keybinds, detects key presses, calculates, and sets new gamma settings on keypress (runs every tick).
  **/
-
 public class KeyInputHandler {
 
     /**
@@ -24,12 +25,25 @@ public class KeyInputHandler {
     public static final String KEY_CATEGORY_GAMMA_SHIFTER = "Gamma Shifter";
     public static final String KEY_INCREASE_GAMMA = "Increase Gamma";
     public static final String KEY_DECREASE_GAMMA = "Decrease Gamma";
+    public static final String KEY_TOGGLE_MOD = "Toggle Mod";
 
     /**
      * The keybinds themselves, initialized in register().
      */
     public static KeyBinding increaseGammaKey;
     public static KeyBinding decreaseGammaKey;
+    public static KeyBinding toggleModKey;
+
+    /**
+     * The amount to change the gamma value by per input received. It is currently hardcoded but it is planned to be
+     * made customizable by the user in future updates.
+     */
+    public static Double changePerInput = 0.5;
+
+    /**
+     * Stores the current gamma value for when the mod is toggled off
+     */
+    private static Double currentCustomGamma = 1.0;
 
     /**
      * Define the decimal format for Doubles when the current gamma is displayed to the user.
@@ -38,23 +52,21 @@ public class KeyInputHandler {
 
     /**
      * Checks every tick if the keybinds to increase/decrease gamma have been pressed. If they have, the gamma is incremented/decremented accordingly. Displays a message above the hotbar to the user.
-     * <p>
-     * Hard-coded to change the value by 0.2, or 20%, per input.
-     * </p>
      */
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(increaseGammaKey.wasPressed()){
+            if(increaseGammaKey.wasPressed() && GammaShifter.isToggled()){
                 // fix round errors with double arithmetic and set the new value
                 boolean set = false; // records whether a new value was set
-                double new_gamma = 1.0;
+                double new_gamma;
                 if(client.options.getGamma().getValue() <= 9.81) {
-                    new_gamma = Math.round((client.options.getGamma().getValue() + .2) * 100) / 100.0;
+                    new_gamma = Math.round((client.options.getGamma().getValue() + changePerInput) * 100) / 100.0;
                     set = true;
                 }else{
                     new_gamma = 10.0;
-                    if(client.options.getGamma().getValue() < 10.0)
+                    if(client.options.getGamma().getValue() < 10.0) {
                         set = true;
+                    }
                 }
                 client.options.getGamma().setValue(new_gamma);
 
@@ -66,27 +78,33 @@ public class KeyInputHandler {
                 if(set) {
 //                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
                     MinecraftClient.getInstance().options.write(); // write the settings to the options file (if a new value was set)
+                    currentCustomGamma = new_gamma;
                 }
               }
         });
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(decreaseGammaKey.wasPressed()){
+            if(decreaseGammaKey.wasPressed() && GammaShifter.isToggled()){
                 boolean set = false; // records whether a new value was set
+                double new_gamma = 1.0;
                 // decrease gamma
-                if(client.options.getGamma().getValue() > .2) {
+                if(client.options.getGamma().getValue() > changePerInput) {
                     // fix round errors with double arithmetic and set the new value
-                    double new_gamma = Math.round((client.options.getGamma().getValue() - .2)*100)/100.0;
+                    new_gamma = Math.round((client.options.getGamma().getValue() - changePerInput)*100)/100.0;
                     client.options.getGamma().setValue(new_gamma);
                     set = true;
                 }else{
-                    client.options.getGamma().setValue(0.0);
-                    if(client.options.getGamma().getValue() > 0.0)
+                    if(client.options.getGamma().getValue() > 0.0) {
                         set = true;
+                    }
+                    new_gamma = 0.0;
+                    client.options.getGamma().setValue(new_gamma);
                 }
 
                 if(set) {
 //                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
                     MinecraftClient.getInstance().options.write(); // write the settings to the options file
+                    currentCustomGamma = new_gamma;
                 }
                 // display a message on-screen telling the player the current gamma value
                 if(client.player != null) {
@@ -95,28 +113,58 @@ public class KeyInputHandler {
                 }
             }
         });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if(toggleModKey.wasPressed()){
+                if(GammaShifter.isToggled()){
+                    MinecraftClient.getInstance().options.getGamma().setValue(1.0);
+                }else{
+                    MinecraftClient.getInstance().options.getGamma().setValue(currentCustomGamma);
+                }
+                GammaShifter.toggle();
+            }
+        });
     }
 
     /**
      * Creates the default keybinds on mod initialization.
      */
-    public static void register(){
-        // set the default keybind to increase gamma to ']'
+    public static void registerKeyBinds(){
+        // set the default keybind to increase gamma to '+'
         increaseGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_INCREASE_GAMMA,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_RIGHT_BRACKET,
+                GLFW.GLFW_KEY_EQUAL,
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
-        // set the default keybind to decrease gamma to '['
+        // set the default keybind to decrease gamma to '-'
         decreaseGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_DECREASE_GAMMA,
                 InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_LEFT_BRACKET,
+                GLFW.GLFW_KEY_MINUS,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
+        toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_TOGGLE_MOD,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_G,
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
         registerKeyInputs();
+    }
+
+    public static Double getCurrentCustomGamma() {
+        return currentCustomGamma;
+    }
+
+    public static Double getChangePerInput(){
+        return changePerInput;
+    }
+
+    public static void setChangePerInput(Double value){
+        changePerInput = value;
     }
 }
