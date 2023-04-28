@@ -40,11 +40,12 @@ public abstract class SetGammaMixin {
     public void setValueInjected(Object value, CallbackInfo ci){
         SimpleOption<?> gamma = (SimpleOption<?>) (Object) this; // cast this to SimpleOption since this will be injected into SimpleOption.class
         MinecraftClient mc = MinecraftClient.getInstance();
-
+        GammaShifter.LOGGER.info("[HEAD: SetGammaMixin] MC.getInstance().getGameVersion() = " + MinecraftClient.getInstance().getGameVersion());
         try {
             if (mc.options != null && gamma.equals(mc.options.getGamma())) {
 //                ((SimpleOptionAccessor<Object>) this).setValue(value); // setValue method created with accessor mixin
-                this.value = value;
+                GammaShifter.LOGGER.info("[SetGammaMixin] MC.getInstance().getGameVersion() = " + MinecraftClient.getInstance().getGameVersion());
+//                this.value = value;
                 ci.cancel(); // cancel the targeted method to prevent it overwriting the value
             }
         }catch(NullPointerException e){

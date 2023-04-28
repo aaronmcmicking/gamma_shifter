@@ -2,7 +2,6 @@ package net.aaron.gamma_shifter.mixin;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DataResult.PartialResult;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Final;
@@ -32,31 +31,36 @@ public abstract class DataResultErrorMixin<R> {
     @Shadow
     private final Either<R, DataResult.PartialResult<R>> result;
 
+    /**
+     * Constructor to ensure this.result is initialized
+     */
     protected DataResultErrorMixin() {
         this.result = null;
     }
-
 
     /**
      * Injects into {@link DataResult#error()} and reads the error message to find references to an out-of-range gamma value. Upon finding them, the injection returns an
      * empty {@link Optional} instance, which the caller expects to receive if no error was encountered when validating option values.
      * @param cir The returnable callback that returns an empty Optional and cancels the calling method.
-     * @param <R> The DataResult type.
+     * @param <T> The DataResult type.
      */
     @Inject(method = "error()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
-    public <R> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<R>>> cir){
-        DataResult<R> dataResult = (DataResult<R>) (Object) this;
+    public <T> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<T>>> cir){
+//        DataResult<T> dataResult = (DataResult<T>) (Object) this;
         try {
-//            Optional<DataResult.PartialResult<R>> partialResult = ((DataResultAccessor<R>) dataResult).getResult().right(); // get the partial result
-            Optional<DataResult.PartialResult<R>> partialResult = this.result.right();
-            if(partialResult.isPresent()) {
-                // if the partial result message contains info about the gamma values > 1.0
-                if (partialResult.get().toString().contains(MinecraftClient.getInstance().options.getGamma().getValue().toString()) && partialResult.get().toString().contains("outside of range")) {
-                    cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
+//            Optional<DataResult.PartialResult<T>> partialResult = ((DataResultAccessor<T>) dataResult).getResult().right(); // get the partial result
+            Optional<DataResult.PartialResult<R>> partialResult;
+            if(this.result != null) {
+                partialResult = this.result.right();
+                if (partialResult.isPresent()) {
+                    // if the partial result message contains info about the gamma values > 1.0
+                    if (partialResult.get().toString().contains( MinecraftClient.getInstance().options.getGamma().getValue().toString() ) && partialResult.get().toString().contains("outside of range")) {
+                        cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
+                    }
                 }
             }
-        }catch(NoSuchElementException e){
-            GammaShifter.LOGGER.error("NoSuchElementException in DataResultErrorMixin"); // Optional.get() error
+        }catch(NoSuchElementException | NullPointerException e){
+            GammaShifter.LOGGER.error("DataResultErrorMixin: " + e);
         }
     }
 }
