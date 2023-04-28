@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.DataResult;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -27,7 +28,7 @@ public abstract class DataResultErrorMixin<R> {
 
     @Mutable
     @Final
-    @Shadow
+    @Shadow(remap = false)
     private final Either<R, DataResult.PartialResult<R>> result;
 
     /**
@@ -45,15 +46,14 @@ public abstract class DataResultErrorMixin<R> {
      */
     @Inject(method = "error()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
     public <T> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<T>>> cir){
-//        DataResult<T> dataResult = (DataResult<T>) (Object) this;
         try {
             Optional<DataResult.PartialResult<R>> partialResult;
             if(this.result != null) {
                 partialResult = this.result.right();
                 if (partialResult.isPresent()) {
                     // if the partial result message contains info about the gamma values > 1.0
-                    if (partialResult.get().toString().contains( MinecraftClient.getInstance().options.getGamma().getValue().toString() ) && partialResult.get().toString().contains("outside of range")) {
-                        GammaShifter.LOGGER.info("DataResultErrorMixin: Cancelling");
+                    String gammaValueString = MinecraftClient.getInstance().options.getGamma().getValue().toString(); // Separated variable for readability
+                    if (partialResult.get().toString().contains( gammaValueString ) && partialResult.get().toString().contains("outside of range")) {
                         cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
                     }
                 }

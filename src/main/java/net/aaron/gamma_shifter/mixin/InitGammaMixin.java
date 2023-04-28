@@ -29,8 +29,6 @@ public abstract class InitGammaMixin {
      */
     private Double foundGamma = 1.0;
 
-    // retrieves the gamma setting from options.txt before it is modified by the game
-
     /**
      * Injects into {@link GameOptions#load} to retrieve and store the gamma value before it is deleted by the game.
      * @param ci CallbackInfo to be returned after injection finishes.
@@ -57,10 +55,7 @@ public abstract class InitGammaMixin {
                         while(i < 13 && i < line.length()){ // read the value (stops after reading 7 characters or at Exception)
                             cur_val += line.charAt(i++);
                         }
-                    }catch(IndexOutOfBoundsException e){
-                        // empty catch block
-                        //GammaShifter.LOGGER.warn("in InitGammaMixin.retrieveGammaInject(): " + e);
-                    }
+                    }catch(IndexOutOfBoundsException e){ /* empty catch block */ }
                     try {
                         this.foundGamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
                         found = true;

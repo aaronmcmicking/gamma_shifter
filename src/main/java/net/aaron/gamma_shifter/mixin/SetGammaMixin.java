@@ -9,13 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/*
-    SetGammaMixin
-
-    Spongepowered mixin that bypasses the validation process for changes to the gamma setting, allowing values higher than 1.0
-    Injects into SimpleOption.setValue() and uses an Accessor to manually set the gamma value
- */
-
 /**
  * Spongepowered mixin that manually sets gamma values > 1.0, bypassing vanilla clamping to 0.0:1.0 and cancelling the
  * caller.
@@ -37,9 +30,8 @@ public abstract class SetGammaMixin {
      */
     @Inject(method = "setValue(Ljava/lang/Object;)V", at = @At("HEAD"), cancellable = true)
     public void setValueInjected(Object value, CallbackInfo ci){
-        SimpleOption<?> gamma = (SimpleOption<?>) (Object) this; // cast this to SimpleOption since this will be injected into SimpleOption.class
+        SimpleOption<?> gamma = (SimpleOption<?>) (Object) this;
         MinecraftClient mc = MinecraftClient.getInstance();
-//        GammaShifter.LOGGER.info("[HEAD: SetGammaMixin] MC.getInstance().getGameVersion() = " + MinecraftClient.getInstance().getGameVersion());
         try {
             if (mc.options != null && gamma.equals(mc.options.getGamma())) {
 //                GammaShifter.LOGGER.info("[SetGammaMixin] Setting gamma (" + value + ")");

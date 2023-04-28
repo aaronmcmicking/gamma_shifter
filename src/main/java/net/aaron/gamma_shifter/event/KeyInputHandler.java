@@ -1,6 +1,5 @@
 package net.aaron.gamma_shifter.event;
 
-import net.aaron.gamma_shifter.GammaShifterClient;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

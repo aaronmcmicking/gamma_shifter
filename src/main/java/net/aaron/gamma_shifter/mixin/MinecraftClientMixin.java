@@ -23,7 +23,6 @@ public class MinecraftClientMixin {
     public void setScreenGammaInject(Screen screen, CallbackInfo ci){
             if (!GammaShifterClient.gammaHelper.alreadyDone()) {
                 GammaShifterClient.gammaHelper.setGamma();
-//                GammaShifter.LOGGER.info("calling GammaShifterClient.gammaHelper.setValue()");
         }
     }
 }

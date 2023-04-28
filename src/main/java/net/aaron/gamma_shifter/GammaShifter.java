@@ -1,8 +1,6 @@
 package net.aaron.gamma_shifter;
 
-import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +32,17 @@ public class GammaShifter implements ModInitializer {
 	public void onInitialize() {
 	}
 
+	/**
+	 * Returns whether the mod is toggled on.
+	 * @return true if the mod is toggled on, false otherwise.
+	 */
 	public static boolean isToggled(){
 		return toggled;
 	}
 
+	/**
+	 * Toggles the mod.
+	 */
 	public static void toggle(){
 		toggled = !toggled;
 	}
