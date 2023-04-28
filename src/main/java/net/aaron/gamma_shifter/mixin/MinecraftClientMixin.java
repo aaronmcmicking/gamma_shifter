@@ -1,5 +1,6 @@
 package net.aaron.gamma_shifter.mixin;
 
+import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.GammaShifterClient;
 import net.aaron.gamma_shifter.initGammaHelper;
 import net.minecraft.client.MinecraftClient;
@@ -16,13 +17,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftClientMixin {
     /**
      * Injects into {@link MinecraftClient#setScreen(Screen)} and signals to set the initial gamma value.
+     *
      * @param screen The Screen to change to (nullable).
-     * @param ci CallbackInfo to return.
+     * @param ci     CallbackInfo to return.
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
-    public void setScreenGammaInject(Screen screen, CallbackInfo ci){
-            if (!GammaShifterClient.gammaHelper.alreadyDone()) {
-                GammaShifterClient.gammaHelper.setGamma();
+    public void setScreenGammaInject(Screen screen, CallbackInfo ci) {
+        if (!GammaShifterClient.gammaHelper.alreadyDone()) {
+            GammaShifterClient.gammaHelper.setInitialGamma();
+        }
+    }
+
+    /**
+     *
+     * @param ci
+     */
+    @Inject(method = "openPauseMenu", at = @At("HEAD"))
+    public void saveOptionsOnPauseMenu(CallbackInfo ci){
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if(mc != null && mc.options != null && mc.player != null){
+            mc.options.write();
+            GammaShifter.LOGGER.info("Saved options");
         }
     }
 }

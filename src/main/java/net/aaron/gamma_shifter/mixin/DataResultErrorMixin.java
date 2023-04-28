@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Spongepowered mixin to cancel error messages sent by Minecraft after it refuses to save out-of-range gamma values (> 1.0).
@@ -53,7 +55,20 @@ public abstract class DataResultErrorMixin<R> {
                 if (partialResult.isPresent()) {
                     // if the partial result message contains info about the gamma values > 1.0
                     String gammaValueString = MinecraftClient.getInstance().options.getGamma().getValue().toString(); // Separated variable for readability
-                    if (partialResult.get().toString().contains( gammaValueString ) && partialResult.get().toString().contains("outside of range")) {
+                    boolean found = false;
+
+                    // check the game version
+                    if(GammaShifter.getVersion().equals("1.19.4")){
+                        String str = "Optional[" + gammaValueString + "]";
+                        if(partialResult.get().toString().contains(str)){
+                            found = true;
+                        }
+                    }else{
+                        if (partialResult.get().toString().contains(gammaValueString) && partialResult.get().toString().contains("outside of range")) {
+                            found = true;
+                        }
+                    }
+                    if(found){
                         cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
                     }
                 }

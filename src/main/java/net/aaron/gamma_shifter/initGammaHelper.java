@@ -64,7 +64,7 @@ public class initGammaHelper {
      * Sets the stored gamma value to the game settings.
      * <p>The caller is responsible for checking {@link initGammaHelper#alreadyDone} before calling.</p>
      */
-    public void setGamma(){
+    public void setInitialGamma(){
         try {
 //            GammaShifter.LOGGER.info("Setting gamma (value = " + this.gamma + ") from initGammaHelper.setValue()");
             this.alreadyDone = true;

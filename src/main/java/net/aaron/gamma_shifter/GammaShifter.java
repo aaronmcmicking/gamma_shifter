@@ -13,12 +13,17 @@ public class GammaShifter implements ModInitializer {
 	/**
 	 * The internal name of the mod.
 	 */
-	public static final String GAMMA_MOD = "gamma_shifter";
+	public static final String GAMMA_MOD = "Gamma Shifter";
 
 	/**
 	 * The Logger for log output from all other mod classes.
 	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(GAMMA_MOD);
+
+	/**
+	 * The game version.
+	 */
+	private static final String version = "1.19.4";
 
 	/**
 	 * Records whether the mod is currently enabled/toggled.
@@ -46,4 +51,10 @@ public class GammaShifter implements ModInitializer {
 	public static void toggle(){
 		toggled = !toggled;
 	}
+
+	/**
+	 * Returns the current game version as a String.
+	 * @return The current game version.
+	 */
+	public static String getVersion(){ return version; }
 }
