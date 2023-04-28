@@ -54,6 +54,7 @@ public class KeyInputHandler {
      * Checks every tick if the keybinds to increase/decrease gamma have been pressed. If they have, the gamma is incremented/decremented accordingly. Displays a message above the hotbar to the user.
      */
     public static void registerKeyInputs(){
+        // Detect keypresses for increasing the gamma
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(increaseGammaKey.wasPressed() && GammaShifter.isToggled()){
                 // fix round errors with double arithmetic and set the new value
@@ -83,6 +84,7 @@ public class KeyInputHandler {
               }
         });
 
+        // Detect keypresses for decreasing the gamma
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(decreaseGammaKey.wasPressed() && GammaShifter.isToggled()){
                 boolean set = false; // records whether a new value was set
@@ -114,6 +116,7 @@ public class KeyInputHandler {
             }
         });
 
+        // Detect keypresses for toggle mod effects
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(toggleModKey.wasPressed()){
                 if(GammaShifter.isToggled()){
@@ -146,6 +149,7 @@ public class KeyInputHandler {
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
+        // set the default keybind to toggle mod effects to 'G'
         toggleModKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_TOGGLE_MOD,
                 InputUtil.Type.KEYSYM,
@@ -156,14 +160,26 @@ public class KeyInputHandler {
         registerKeyInputs();
     }
 
+    /**
+     * Gets the current custom gamma.
+     * @return The current custom gamma.
+     */
     public static Double getCurrentCustomGamma() {
         return currentCustomGamma;
     }
 
+    /**
+     * Get the gamma change-per-input.
+     * @return The change-per-input.
+     */
     public static Double getChangePerInput(){
         return changePerInput;
     }
 
+    /**
+     * Sets the gamma change-per-input.
+     * @param value The new change-per-input to set.
+     */
     public static void setChangePerInput(Double value){
         changePerInput = value;
     }

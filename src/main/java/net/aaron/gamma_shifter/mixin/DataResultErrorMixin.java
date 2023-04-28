@@ -18,11 +18,10 @@ import java.util.Optional;
 /**
  * Spongepowered mixin to cancel error messages sent by Minecraft after it refuses to save out-of-range gamma values (> 1.0).
  * <p>Injects into {@link DataResult#error()} and returns an empty Optional instance, preventing the caller from learning the submitted option value couldn't be validated</p>.
+ * <p>Currently does not work in 1.19.4.</p>
  * @see Optional
  * @see net.minecraft.client.option.SimpleOption#setValue(Object)
  */
-
-@SuppressWarnings("unchecked") // suppressing mixin typecast-warnings
 @Mixin(DataResult.class)
 public abstract class DataResultErrorMixin<R> {
 
@@ -48,13 +47,13 @@ public abstract class DataResultErrorMixin<R> {
     public <T> void DataResultErrorInject(CallbackInfoReturnable<Optional<DataResult.PartialResult<T>>> cir){
 //        DataResult<T> dataResult = (DataResult<T>) (Object) this;
         try {
-//            Optional<DataResult.PartialResult<T>> partialResult = ((DataResultAccessor<T>) dataResult).getResult().right(); // get the partial result
             Optional<DataResult.PartialResult<R>> partialResult;
             if(this.result != null) {
                 partialResult = this.result.right();
                 if (partialResult.isPresent()) {
                     // if the partial result message contains info about the gamma values > 1.0
                     if (partialResult.get().toString().contains( MinecraftClient.getInstance().options.getGamma().getValue().toString() ) && partialResult.get().toString().contains("outside of range")) {
+                        GammaShifter.LOGGER.info("DataResultErrorMixin: Cancelling");
                         cir.setReturnValue(Optional.empty()); // return an empty Optional object, signaling that the client need not produce an error message
                     }
                 }
