@@ -4,8 +4,10 @@ import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.GammaShifterClient;
 import net.aaron.gamma_shifter.initGammaHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,7 +29,13 @@ public class MinecraftClientMixin {
         if (!GammaShifterClient.gammaHelper.alreadyDone()) {
             GammaShifterClient.gammaHelper.setInitialGamma();
         }
+//        else{
+//            if(screen.equals(new GameMenuScreen()));
+//        }
     }
+
+    @Shadow
+    public Screen currentScreen;
 
     /**
      * Saves the game options to options.txt whenever the pause menu is opened. The player must not be null (ie. must be
@@ -35,9 +43,9 @@ public class MinecraftClientMixin {
      * @param ci CallbackInfo to be returned.
      */
     @Inject(method = "openPauseMenu", at = @At("HEAD"))
-    public void saveOptionsOnPauseMenu(CallbackInfo ci){
+    public void saveOptionsOnPauseMenu(boolean pause, CallbackInfo ci){
         MinecraftClient mc = MinecraftClient.getInstance();
-        if(mc != null && mc.options != null && mc.player != null){
+        if(mc != null && mc.options != null && mc.player != null && this.currentScreen == null){
             mc.options.write();
             GammaShifter.LOGGER.info("Saved options");
         }

@@ -68,6 +68,7 @@ public class initGammaHelper {
         try {
             this.alreadyDone = true;
             MinecraftClient.getInstance().options.getGamma().setValue(this.gamma);
+            MinecraftClient.getInstance().options.write();
         }catch(Exception e){
             GammaShifter.LOGGER.error("Failed to load gamma from file: " + e);
         }

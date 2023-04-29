@@ -23,7 +23,7 @@ public class GammaShifter implements ModInitializer {
 	/**
 	 * The game version.
 	 */
-	private static final String version = "1.19.4";
+	private static final String version = "1.19";
 
 	/**
 	 * Records whether the mod is currently enabled/toggled.
