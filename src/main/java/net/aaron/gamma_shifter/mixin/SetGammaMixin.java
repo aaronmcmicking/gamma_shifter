@@ -34,7 +34,6 @@ public abstract class SetGammaMixin {
         MinecraftClient mc = MinecraftClient.getInstance();
         try {
             if (mc.options != null && gamma.equals(mc.options.getGamma())) {
-//                GammaShifter.LOGGER.info("[SetGammaMixin] Setting gamma (" + value + ")");
                 this.value = value;
                 ci.cancel(); // cancel the targeted method to prevent it overwriting the value
             }

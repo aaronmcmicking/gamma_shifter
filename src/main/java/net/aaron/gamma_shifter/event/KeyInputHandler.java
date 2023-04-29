@@ -77,7 +77,6 @@ public class KeyInputHandler {
                 }
                 if(set) {
 //                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
-//                    MinecraftClient.getInstance().options.write(); // write the settings to the options file (if a new value was set)
                     currentCustomGamma = new_gamma;
                 }
               }
@@ -104,7 +103,6 @@ public class KeyInputHandler {
 
                 if(set) {
 //                    GammaShifter.LOGGER.info("Set gamma to " + client.options.getGamma().getValue());
-//                    MinecraftClient.getInstance().options.write(); // write the settings to the options file
                     currentCustomGamma = new_gamma;
                 }
                 // display a message on-screen telling the player the current gamma value

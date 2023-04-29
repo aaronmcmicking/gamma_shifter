@@ -16,8 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
     /**
-     * Injects into {@link MinecraftClient#setScreen(Screen)} and signals to set the initial gamma value.
-     *
+     * Signals to set the gamma value read from options.txt on initialization when the title screen loads for the
+     * first time.
+     * @see initGammaHelper
      * @param screen The Screen to change to (nullable).
      * @param ci     CallbackInfo to return.
      */
@@ -29,8 +30,9 @@ public class MinecraftClientMixin {
     }
 
     /**
-     *
-     * @param ci
+     * Saves the game options to options.txt whenever the pause menu is opened. The player must not be null (ie. must be
+     * in a singleplayer/multiplayer world) to avoid running continuously on other menus.
+     * @param ci CallbackInfo to be returned.
      */
     @Inject(method = "openPauseMenu", at = @At("HEAD"))
     public void saveOptionsOnPauseMenu(CallbackInfo ci){

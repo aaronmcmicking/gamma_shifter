@@ -41,8 +41,11 @@ public abstract class DataResultErrorMixin<R> {
     }
 
     /**
-     * Injects into {@link DataResult#error()} and reads the error message to find references to an out-of-range gamma value. Upon finding them, the injection returns an
-     * empty {@link Optional} instance, which the caller expects to receive if no error was encountered when validating option values.
+     * Injects into {@link DataResult#error()} and reads the error message to find references to an out-of-range gamma
+     * value. Upon finding them, the injection returns an empty {@link Optional} instance, which the caller expects to
+     * receive if no error was encountered when validating option values.
+     * <p>The error message for an illegal option value changed between 1.19.3 and 1.19.4, and so the method checks which
+     * version is currently running (hard-coded in {@link GammaShifter} and searches for the corresponding error message.</p>
      * @param cir The returnable callback that returns an empty Optional and cancels the calling method.
      * @param <T> The DataResult type.
      */
