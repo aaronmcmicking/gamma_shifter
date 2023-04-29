@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.DataResult;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -15,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Spongepowered mixin to cancel error messages sent by Minecraft after it refuses to save out-of-range gamma values (> 1.0).
@@ -61,7 +58,7 @@ public abstract class DataResultErrorMixin<R> {
                     boolean found = false;
 
                     // check the game version
-                    if(GammaShifter.getVersion().equals("1.19.4")){
+                    if(GammaShifter.getVersion().equals("1.19.4")){ // 1.19.4 has different error messages
                         String str = "Optional[" + gammaValueString + "]";
                         if(partialResult.get().toString().contains(str)){
                             found = true;

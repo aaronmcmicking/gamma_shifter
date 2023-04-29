@@ -4,6 +4,7 @@ import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.GammaShifterClient;
 import net.aaron.gamma_shifter.initGammaHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,14 +12,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Spongepowered mixin signals to {@link initGammaHelper} to set the gamma file read from options.txt when the title screen loads for the first time.
+ * Spongepowered mixin that:
+ * <p>1. Signals to {@link initGammaHelper} to set the gamma file read from options.txt when the title screen loads for the first time.</p>
+ * <p>2. Saves the options to disk when the pause menu is opened while the player is in a world.</p>
  */
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
+
     /**
-     * NEEDS REVISION
-     * Signals to set the gamma value read from options.txt on initialization when the title screen loads for the
-     * first time.
+     * This injection either signals to set the gamma value read from options.txt on initialization when the title screen loads for the
+     * first time, or saves the options to disk when the pause menu is opened.</p>
      *
      * @param screen The Screen to change to (nullable).
      * @param ci     CallbackInfo to return.
@@ -30,7 +33,7 @@ public abstract class MinecraftClientMixin {
             GammaShifterClient.gammaHelper.setInitialGamma();
         } else {
             // if saving options while player is playing
-            if (screen != null && MinecraftClient.getInstance() != null && MinecraftClient.getInstance().player != null) {
+            if ((screen instanceof GameMenuScreen) && (MinecraftClient.getInstance() != null)  &&  (MinecraftClient.getInstance().player != null)) {
                 MinecraftClient.getInstance().options.write();
                 GammaShifter.LOGGER.info(("Saved options"));
             }
