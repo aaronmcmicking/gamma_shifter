@@ -16,9 +16,9 @@ import java.io.*;
 /**
  * Spongepowered mixin to read/load gamma values from options.txt when the client launches, bypassing clamping to 0.0:1.0.
  *
- * <p>After being read, the gamma value is saved in {@link GammaHandler#initHelper}, which saves the value when
- * the title screen is displayed. Setting the value uses a helper class as the game client is not formally running yet
- * ({@link MinecraftClient#getInstance()} returns null), and so setGammaMixin cannot be used.</p>
+ * <p>After being read, the gamma value is saved in {@link GammaHandler#initHelper}, which sets the value when
+ * the title screen is displayed. This helper class is used since {@link MinecraftClient#getInstance()} returns null
+ * while the game is initializing, so {@link SimpleOption#setValue(Object)} cannot be called yet.</p>
  */
 @Mixin(GameOptions.class)
 public abstract class GameOptionsMixin {
@@ -28,7 +28,7 @@ public abstract class GameOptionsMixin {
     private Double foundGamma = 1.0;
 
     /**
-     * Injects into {@link GameOptions#load} to retrieve and store the gamma value before it is deleted by the game.
+     * Injects into {@link GameOptions#load()} to retrieve and stores the gamma value before it is deleted by the game.
      * @param ci CallbackInfo to be returned after injection finishes.
      */
     @Inject(method = "load", at = @At("HEAD"))
@@ -65,7 +65,7 @@ public abstract class GameOptionsMixin {
                 line = br.readLine();
             }   // while (line != null)
         }catch(IOException e){
-            GammaShifter.LOGGER.error("Caught IOException while trying to load options... does the options file exist?\n\t" + e);
+            GammaShifter.LOGGER.error("Couldn't read options file... does it exist?\n\t" + e);
             missingFile = true;
         }
 

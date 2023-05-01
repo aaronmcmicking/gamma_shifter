@@ -9,7 +9,7 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
 /**
- *   Sets default keybinds, detects key presses, calculates, and sets new gamma settings on keypress (runs every tick).
+ *   Sets default keybinds and detects key presses.
  **/
 public class KeyInputHandler {
 
@@ -22,20 +22,19 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLE_MOD = "Toggle Mod";
 
     /**
-     * The keybinds themselves, initialized in register().
+     * Default keybinds, initialized in {@link KeyInputHandler#registerKeyBinds()}.
      */
     public static KeyBinding increaseGammaKey;
     public static KeyBinding decreaseGammaKey;
     public static KeyBinding toggleModKey;
 
     /**
-     * Checks every tick if the keybinds to increase/decrease gamma have been pressed. If they have, the gamma is incremented/decremented accordingly. Displays a message above the hotbar to the user.
+     * Checks every tick if the keybinds to increase/decrease gamma have been pressed and calls the appropriate handler/helper method.
      */
     public static void registerKeyInputs(){
         // Detect keypresses for increasing the gamma
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(increaseGammaKey.wasPressed() && GammaShifter.isEnabled()){
-                // fix round errors with double arithmetic and set the new value
                 GammaHandler.increaseGamma();
               }
         });

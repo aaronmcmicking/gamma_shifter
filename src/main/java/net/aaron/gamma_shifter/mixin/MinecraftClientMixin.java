@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Spongepowered mixin that:
  * <p>1. Signals to {@link InitGammaHelper} to set the gamma file read from options.txt when the title screen loads for the first time.</p>
  * <p>2. Saves the options to disk when the pause menu is opened while the player is in a world.</p>
+ * <p>3. Saves the options when the game closes.</p>
  */
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
@@ -38,5 +39,15 @@ public abstract class MinecraftClientMixin {
                 GammaShifter.LOGGER.info(("Saved options"));
             }
         }
+    }
+
+    /**
+     * Saves the options when the game closes.
+     * @param ci CallbackInfo to be returned.
+     */
+    @Inject(method = "stop", at = @At("HEAD"))
+    public void saveOnClose(CallbackInfo ci){
+        MinecraftClient.getInstance().options.write();
+        GammaShifter.LOGGER.info(("Saved options"));
     }
 }

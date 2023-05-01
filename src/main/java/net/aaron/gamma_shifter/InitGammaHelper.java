@@ -1,10 +1,11 @@
 package net.aaron.gamma_shifter;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
 
 /**
- * Helper class that temporarily stores the gamma value read by initGammaMixin before the client formally begins running
- * and sets it when the title screen loads.
+ * Helper class that temporarily stores the gamma value read by {@link GameOptions#load()} before an instance of
+ * {@link MinecraftClient} is available, and sets the value when the title screen loads for the first time.
  */
 public class InitGammaHelper {
 
@@ -14,13 +15,13 @@ public class InitGammaHelper {
     public Double gammaFromFile;
 
     /**
-     * Boolean to store whether the value has been set already, since it should be set when the title screen displays
+     * Stores whether the value has been set already, since it should be set when the title screen displays
      * for the first time.
      */
     public boolean alreadyDone;
 
     /**
-     * Default constructor that sets default values.
+     * Default constructor.
      */
     public InitGammaHelper(){
         this.gammaFromFile = 1.0;
@@ -45,7 +46,7 @@ public class InitGammaHelper {
     }
 
     /**
-     * Get the stored gamma value.
+     * Get the stored gamma value (does not read file).
      * @return The stored gamma value.
      */
     public Double getGammaFromFile(){

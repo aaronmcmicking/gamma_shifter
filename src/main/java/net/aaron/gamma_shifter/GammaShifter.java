@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A client-side FabricMC mod that restore the ability to set the gamma (brightness) setting beyond 100% (1.0) in
+ * A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% (1.0) in
  * Minecraft 1.19-1.19.4.
- * <p>This file acts as an entry point for the client-side operations of the mod.</p>
+ * <p>This file acts as an entry point for the mod.</p>
  */
 public class GammaShifter implements ClientModInitializer {
 
@@ -43,7 +43,7 @@ public class GammaShifter implements ClientModInitializer {
     }
 
     /**
-     * Begins client-side operations once the is initialized.
+     * Starts mod activity once the game loads.
      */
     @Override
     public void onInitializeClient() {
