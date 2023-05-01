@@ -11,7 +11,7 @@ public class initGammaHelper {
     /**
      * The gamma value found from options.txt.
      */
-    public Double gamma;
+    public Double gammaFromFile;
 
     /**
      * Boolean to store whether the value has been set already, since it should be set when the title screen displays
@@ -23,7 +23,7 @@ public class initGammaHelper {
      * Default constructor that sets default values.
      */
     public initGammaHelper(){
-        this.gamma = 1.0;
+        this.gammaFromFile = 1.0;
         this.alreadyDone = false;
     }
 
@@ -32,7 +32,7 @@ public class initGammaHelper {
      * @param value The value to store.
      */
     public initGammaHelper(Double value){
-        this.gamma = value;
+        this.gammaFromFile = value;
         this.alreadyDone = false;
     }
 
@@ -41,15 +41,15 @@ public class initGammaHelper {
      * @param value The value to store.
      */
     public void storeGamma(Double value){
-        this.gamma = value;
+        this.gammaFromFile = value;
     }
 
     /**
      * Get the stored gamma value.
      * @return The stored gamma value.
      */
-    public Double getGamma(){
-        return this.gamma;
+    public Double getGammaFromFile(){
+        return this.gammaFromFile;
     }
 
     /**
@@ -67,7 +67,7 @@ public class initGammaHelper {
     public void setInitialGamma(){
         try {
             this.alreadyDone = true;
-            MinecraftClient.getInstance().options.getGamma().setValue(this.gamma);
+            MinecraftClient.getInstance().options.getGamma().setValue(this.gammaFromFile);
             MinecraftClient.getInstance().options.write();
         }catch(Exception e){
             GammaShifter.LOGGER.error("Failed to load gamma from file: " + e);

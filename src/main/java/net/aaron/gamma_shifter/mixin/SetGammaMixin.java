@@ -3,11 +3,16 @@ package net.aaron.gamma_shifter.mixin;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;
+import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Optional;
 
 /**
  * Spongepowered mixin that manually sets gamma values > 1.0, bypassing vanilla clamping to 0.0:1.0 and cancelling the
@@ -21,6 +26,10 @@ public abstract class SetGammaMixin {
      */
     @Shadow
     Object value;
+
+    @Final
+    @Shadow
+    Text text;
 
     /**
      * Injects into start of {@link SimpleOption#setValue(Object)} and manually sets the gamma value to bypass vanilla
@@ -42,4 +51,13 @@ public abstract class SetGammaMixin {
         }
     }
 
+//    @Mixin(SimpleOption.DoubleSliderCallbacks.class)
+//    public static class fakeValidation{
+//        @Inject(method = "validate(Ljava/lang/Double;)Ljava/util/Optional;", at = @At("HEAD"), cancellable = true)
+//        public void overrideValidation(Double value, CallbackInfoReturnable cir){
+//            cir.setReturnValue(Optional.of(value));
+//        }
+//    }
+
 }
+

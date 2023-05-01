@@ -18,11 +18,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.aaron.gamma_shifter.GammaShifter"
-    ],
     "client":  [
-      "net.aaron.gamma_shifter.GammaShifterClient"
+      "net.aaron.gamma_shifter.GammaShifter"
     ]
   },
   "mixins": [

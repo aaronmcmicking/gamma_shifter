@@ -1,7 +1,7 @@
 package net.aaron.gamma_shifter.mixin;
 
+import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
-import net.aaron.gamma_shifter.GammaShifterClient;
 import net.aaron.gamma_shifter.initGammaHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
@@ -29,8 +29,8 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
     public void setScreenGammaInject(Screen screen, CallbackInfo ci) {
-        if (!GammaShifterClient.gammaHelper.alreadyDone()) { // if setting the initial value from options.txt
-            GammaShifterClient.gammaHelper.setInitialGamma();
+        if (!GammaHandler.initHelper.alreadyDone()) { // if setting the initial value from options.txt
+            GammaHandler.initHelper.setInitialGamma();
         } else {
             // if saving options while player is playing
             if ((screen instanceof GameMenuScreen) && (MinecraftClient.getInstance() != null)  &&  (MinecraftClient.getInstance().player != null)) {
