@@ -121,9 +121,4 @@ public class GammaHandler {
     public static void setChangePerInput(Double value){
         changePerInput = value;
     }
-//
-//    private MinecraftClient mc(){
-//        return MinecraftClient.getInstance();
-//    }
-
 }

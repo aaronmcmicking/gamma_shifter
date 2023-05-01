@@ -10,7 +10,7 @@
     "InitGammaMixin",
     "MinecraftClientMixin",
     "SaveGammaMixin",
-    "SetGammaMixin"
+    "ValidateGammaMixin"
   ],
   "injectors": {
     "defaultRequire": 1
