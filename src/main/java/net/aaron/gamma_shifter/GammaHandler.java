@@ -36,51 +36,34 @@ public class GammaHandler {
 
 
     public static void increaseGamma(){
-        boolean set = false; // records whether a new value was set
-        double new_gamma;
-        if(mc.options.getGamma().getValue() <= (MAX_GAMMA - changePerInput)) {
-            new_gamma = Math.round((mc.options.getGamma().getValue() + changePerInput) * 100) / 100.0;
-            set = true;
+        double newGamma, oldGamma = mc.options.getGamma().getValue();
+        if(oldGamma <= (MAX_GAMMA - changePerInput)) {
+            newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0;
         }else{
-            new_gamma = 10.0;
-            if(mc.options.getGamma().getValue() < 10.0) {
-                set = true;
-            }
+            newGamma = 10.0;
         }
-        mc.options.getGamma().setValue(new_gamma);
+        mc.options.getGamma().setValue(newGamma);
+        currentCustomGamma = newGamma;
 
         // display a message on-screen telling the player the current gamma value
-        String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%";
         if(mc.player != null) {
+            String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%";
             mc.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
-        }
-        if(set) {
-//                    GammaShifter.LOGGER.info("Set gamma to " + mc.options.getGamma().getValue());
-            currentCustomGamma = new_gamma;
         }
     }
 
     public static void decreaseGamma(){
-        boolean set = false; // records whether a new value was set
-        double new_gamma = 1.0;
+        double newGamma, oldGamma = mc.options.getGamma().getValue();
         // decrease gamma
-        if(mc.options.getGamma().getValue() > changePerInput) {
+        if(oldGamma > changePerInput) {
             // fix round errors with double arithmetic and set the new value
-            new_gamma = Math.round((mc.options.getGamma().getValue() - changePerInput)*100)/100.0;
-            mc.options.getGamma().setValue(new_gamma);
-            set = true;
+            newGamma = Math.round((mc.options.getGamma().getValue() - changePerInput)*100)/100.0;
         }else{
-            if(mc.options.getGamma().getValue() > 0.0) {
-                set = true;
-            }
-            new_gamma = 0.0;
-            mc.options.getGamma().setValue(new_gamma);
+            newGamma = 0.0;
         }
+        mc.options.getGamma().setValue(newGamma);
+        currentCustomGamma = newGamma;
 
-        if(set) {
-//                    GammaShifter.LOGGER.info("Set gamma to " + mc.options.getGamma().getValue());
-            currentCustomGamma = new_gamma;
-        }
         // display a message on-screen telling the player the current gamma value
         if(mc.player != null) {
             String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%";
@@ -92,8 +75,7 @@ public class GammaHandler {
         mc.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
         GammaShifter.toggle();
     }
-
-
+    
     /**
      * Gets the current custom gamma.
      * @return The current custom gamma.

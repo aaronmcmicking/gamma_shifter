@@ -23,11 +23,6 @@ public class GammaShifter implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(GAMMA_MOD);
 
     /**
-     * The game version.
-     */
-    private static final String version = "1.19.4";
-
-    /**
      * Records whether the mod is currently enabled/toggled.
      */
     private static boolean enabled = true;
@@ -46,12 +41,6 @@ public class GammaShifter implements ClientModInitializer {
     public static void toggle(){
         enabled = !enabled;
     }
-
-    /**
-     * Returns the current game version as a String.
-     * @return The current game version.
-     */
-    public static String getVersion(){ return version; }
 
     /**
      * Begins client-side operations once the is initialized.

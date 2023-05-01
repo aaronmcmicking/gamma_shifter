@@ -21,9 +21,7 @@ import java.io.*;
  * ({@link MinecraftClient#getInstance()} returns null), and so setGammaMixin cannot be used.</p>
  */
 @Mixin(GameOptions.class)
-public abstract class InitGammaMixin {
-    @Shadow public abstract SimpleOption<Double> getGamma();
-
+public abstract class GameOptionsMixin {
     /**
      * The gamma found in options.txt. Set to 1.0 by default (max vanilla brightness).
      */
@@ -36,9 +34,7 @@ public abstract class InitGammaMixin {
     @Inject(method = "load", at = @At("HEAD"))
     public void retrieveGammaInject(CallbackInfo ci){
         GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it
-        boolean found = false; // records if a gamma value was found in the file
-        boolean malformed = false; // records if the options file appeared to be malformed (controls logging)
-        boolean missing_file = false;  // records if the options file was missing
+        boolean found = false, missingFile = false, malformed = false; // records: 1. if gamma value was found 2. if options file was malformed 3. if options file was missing
         try {
             BufferedReader br = new BufferedReader(new FileReader(options.getOptionsFile().getName()));
             String line = br.readLine();
@@ -70,14 +66,15 @@ public abstract class InitGammaMixin {
             }   // while (line != null)
         }catch(IOException e){
             GammaShifter.LOGGER.error("Caught IOException while trying to load options... does the options file exist?\n\t" + e);
-            missing_file = true;
+            missingFile = true;
         }
 
         if(found){
             GammaShifter.LOGGER.info("Read gamma value of " + foundGamma + " from options file");
             GammaHandler.initHelper.storeGamma(foundGamma); // InitGammaHelper handles setting the value
-        }else if(!malformed && !missing_file){
+        }else if(!malformed && !missingFile){
             GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
         }
+
     }
 }
