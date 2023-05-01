@@ -2,7 +2,7 @@ package net.aaron.gamma_shifter.mixin;
 
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
-import net.aaron.gamma_shifter.initGammaHelper;
+import net.aaron.gamma_shifter.InitGammaHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Spongepowered mixin that:
- * <p>1. Signals to {@link initGammaHelper} to set the gamma file read from options.txt when the title screen loads for the first time.</p>
+ * <p>1. Signals to {@link InitGammaHelper} to set the gamma file read from options.txt when the title screen loads for the first time.</p>
  * <p>2. Saves the options to disk when the pause menu is opened while the player is in a world.</p>
  */
 @Mixin(MinecraftClient.class)
@@ -25,7 +25,7 @@ public abstract class MinecraftClientMixin {
      *
      * @param screen The Screen to change to (nullable).
      * @param ci     CallbackInfo to return.
-     * @see initGammaHelper
+     * @see InitGammaHelper
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
     public void setScreenGammaInject(Screen screen, CallbackInfo ci) {

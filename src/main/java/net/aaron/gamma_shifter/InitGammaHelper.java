@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
  * Helper class that temporarily stores the gamma value read by initGammaMixin before the client formally begins running
  * and sets it when the title screen loads.
  */
-public class initGammaHelper {
+public class InitGammaHelper {
 
     /**
      * The gamma value found from options.txt.
@@ -22,7 +22,7 @@ public class initGammaHelper {
     /**
      * Default constructor that sets default values.
      */
-    public initGammaHelper(){
+    public InitGammaHelper(){
         this.gammaFromFile = 1.0;
         this.alreadyDone = false;
     }
@@ -31,7 +31,7 @@ public class initGammaHelper {
      * Constructor to set custom initial gamma value.
      * @param value The value to store.
      */
-    public initGammaHelper(Double value){
+    public InitGammaHelper(Double value){
         this.gammaFromFile = value;
         this.alreadyDone = false;
     }
@@ -62,15 +62,16 @@ public class initGammaHelper {
 
     /**
      * Sets the stored gamma value to the game settings.
-     * <p>The caller is responsible for checking {@link initGammaHelper#alreadyDone} before calling.</p>
+     * <p>The caller is responsible for checking {@link InitGammaHelper#alreadyDone} before calling.</p>
      */
     public void setInitialGamma(){
         try {
             this.alreadyDone = true;
             MinecraftClient.getInstance().options.getGamma().setValue(this.gammaFromFile);
             MinecraftClient.getInstance().options.write();
+            GammaHandler.setCurrentCustomGamma(gammaFromFile);
         }catch(Exception e){
-            GammaShifter.LOGGER.error("Failed to load gamma from file: " + e);
+            GammaShifter.LOGGER.error("Couldn't load gamma from file: " + e);
         }
     }
 }

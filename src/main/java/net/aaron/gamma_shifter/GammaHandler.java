@@ -12,7 +12,7 @@ public class GammaHandler {
      * A helper-class instance that stores and sets gamma values read from options.txt.
      * <p>See also: net.aaron.gamma_shifter.mixin.initGammaMixin</p>
      */
-    public static initGammaHelper initHelper = new initGammaHelper();
+    public static InitGammaHelper initHelper = new InitGammaHelper();
 
     static MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -21,6 +21,8 @@ public class GammaHandler {
      * made customizable by the user in future updates.
      */
     public static Double changePerInput = 0.5;
+
+    public static final Double MAX_GAMMA = 10.0;
 
     /**
      * Stores the current gamma value for when the mod is toggled off
@@ -36,7 +38,7 @@ public class GammaHandler {
     public static void increaseGamma(){
         boolean set = false; // records whether a new value was set
         double new_gamma;
-        if(mc.options.getGamma().getValue() <= 9.81) {
+        if(mc.options.getGamma().getValue() <= (MAX_GAMMA - changePerInput)) {
             new_gamma = Math.round((mc.options.getGamma().getValue() + changePerInput) * 100) / 100.0;
             set = true;
         }else{
@@ -98,6 +100,10 @@ public class GammaHandler {
      */
     public static Double getCurrentCustomGamma() {
         return currentCustomGamma;
+    }
+
+    public static void setCurrentCustomGamma(Double value){
+        currentCustomGamma = value;
     }
 
     /**

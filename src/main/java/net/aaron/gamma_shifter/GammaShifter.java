@@ -44,7 +44,6 @@ public class GammaShifter implements ClientModInitializer {
      * Toggles the mod.
      */
     public static void toggle(){
-        LOGGER.info("Toggling mod");
         enabled = !enabled;
     }
 
