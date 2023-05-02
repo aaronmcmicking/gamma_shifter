@@ -20,6 +20,8 @@ public class KeyInputHandler {
     public static final String KEY_INCREASE_GAMMA = "key.gamma_shifter.increase_gamma";
     public static final String KEY_DECREASE_GAMMA = "key.gamma_shifter.decrease_gamma";
     public static final String KEY_TOGGLE_MOD = "key.gamma_shifter.toggle_mod";
+    public static final String KEY_MAX_GAMMA = "key.gamma_shifter.max_gamma";
+    public static final String KEY_DEFAULT_GAMMA = "key.gamma_shifter.default_gamma";
 
     /**
      * Default keybinds, initialized in {@link KeyInputHandler#registerKeyBinds()}.
@@ -27,27 +29,32 @@ public class KeyInputHandler {
     public static KeyBinding increaseGammaKey;
     public static KeyBinding decreaseGammaKey;
     public static KeyBinding toggleModKey;
+    public static KeyBinding maxGammaKey;
+    public static KeyBinding defaultGammaKey;
 
     /**
-     * Checks every tick if the keybinds to increase/decrease gamma have been pressed and calls the appropriate handler/helper method.
+     * Checks every tick for relevant key presses and calls the appropriate handler/helper method.
      */
     public static void registerKeyInputs(){
-        // Detect keypresses for increasing the gamma
+        // Detect keypresses
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(increaseGammaKey.wasPressed() && GammaShifter.isEnabled()){
-                GammaHandler.increaseGamma();
-              }
-        });
+            if(GammaShifter.isEnabled()){
+                if(increaseGammaKey.wasPressed()){
+                    GammaHandler.increaseGamma();
+                }
 
-        // Detect keypresses for decreasing the gamma
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(decreaseGammaKey.wasPressed() && GammaShifter.isEnabled()){
-                GammaHandler.decreaseGamma();
+                if(decreaseGammaKey.wasPressed()){
+                    GammaHandler.decreaseGamma();
+                }
+
+                if(maxGammaKey.wasPressed()){
+                    GammaHandler.setMaxGamma();
+                }
+
+                if(defaultGammaKey.wasPressed()){
+                    GammaHandler.setDefaultGamma();
+                }
             }
-        });
-
-        // Detect keypresses for toggle mod effects
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(toggleModKey.wasPressed()){
                 GammaHandler.toggle();
             }
@@ -58,7 +65,7 @@ public class KeyInputHandler {
      * Creates the default keybinds on mod initialization.
      */
     public static void registerKeyBinds(){
-        // set the default keybind to increase gamma to '+'
+        // set the default keybind to increase gamma to '='
         increaseGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_INCREASE_GAMMA,
                 InputUtil.Type.KEYSYM,
@@ -79,6 +86,22 @@ public class KeyInputHandler {
                 KEY_TOGGLE_MOD,
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
+        // set the max gamma keybind to ']'
+        maxGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_MAX_GAMMA,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_RIGHT_BRACKET,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
+        // set the default gamma keybind to '['
+        defaultGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_DEFAULT_GAMMA,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_LEFT_BRACKET,
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 

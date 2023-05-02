@@ -4,5 +4,7 @@
   "key.category.gamma_shifter.gamma_shifter": "Gamma Shifter",
   "key.gamma_shifter.increase_gamma": "Increase Gamma",
   "key.gamma_shifter.decrease_gamma": "Decrease Gamma",
-  "key.gamma_shifter.toggle_mod": "Toggle Mod Effects"
+  "key.gamma_shifter.toggle_mod": "Toggle Mod Effects",
+  "key.gamma_shifter.max_gamma": "Max Gamma",
+  "key.gamma_shifter.default_gamma": "Max Vanilla Gamma"
 }

@@ -125,6 +125,22 @@ public class GammaHandler {
     }
 
     /**
+     * Sets the gamma to the maxiumum allowed value.
+     */
+    public static void setMaxGamma(){
+        set(MAX_GAMMA);
+        displayGammaMessage();
+    }
+
+    /**
+     * Sets the gamma to the default maximum value (100%).
+     */
+    public static void setDefaultGamma(){
+        set(1.0); // Default MC max gamma
+        displayGammaMessage();
+    }
+
+    /**
      * Gets the current custom gamma.
      * @return The current custom gamma.
      */
