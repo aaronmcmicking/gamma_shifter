@@ -1,0 +1,8 @@
+{
+  "gamma_shifter": "Gamma Shifter",
+
+  "key.category.gamma_shifter.gamma_shifter": "Gamma Shifter",
+  "key.gamma_shifter.increase_gamma": "Increase Gamma",
+  "key.gamma_shifter.decrease_gamma": "Decrease Gamma",
+  "key.gamma_shifter.toggle_mod": "Toggle Mod Effects"
+}
