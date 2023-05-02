@@ -5,6 +5,7 @@ import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,52 +29,66 @@ public abstract class GameOptionsMixin {
     private Double foundGamma = 1.0;
 
     /**
-     * Injects into {@link GameOptions#load()} to retrieve and stores the gamma value before it is deleted by the game.
+     * Shadow placeholder for {@link GameOptions#getOptionsFile()}.
+     * @return The options file as type 'File'.
+     */
+    @Shadow public abstract File getOptionsFile();
+
+    /**
+     * Injects into {@link GameOptions#load()} to retrieve and stores the gamma value before it is overwritten by the game.
      * @param ci CallbackInfo to be returned after injection finishes.
      */
     @Inject(method = "load", at = @At("HEAD"))
     public void retrieveGammaInject(CallbackInfo ci){
-        GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it
+//        GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it (replaced by @Shadow)
         boolean found = false, missingFile = false, malformed = false; // records: 1. if gamma value was found 2. if options file was malformed 3. if options file was missing
+        String curKey = "", curVal = ""; // key-value pair
+        int i = 0; // iterating variable
+        @Nullable String line = ""; // line from options.txt
+
+        // find the key 'gamma' in the file
         try {
-            BufferedReader br = new BufferedReader(new FileReader(options.getOptionsFile().getName()));
-            String line = br.readLine();
-            while(line != null){
-                // initialize key-value pair
-                String cur_key = "", cur_val = "";
-                int i = 0;
-                while(line.charAt(i) != ':'){   // read the key
-                    cur_key += line.charAt(i++);
-                }
-                if(cur_key.equals("gamma")){
-                    i++;
-                    try{
-                        while(i < 13 && i < line.length()){ // read the value (stops after reading 7 characters or at Exception)
-                            cur_val += line.charAt(i++);
-                        }
-                    }catch(IndexOutOfBoundsException e){ /* empty catch block */ }
-                    try {
-                        this.foundGamma = Math.min(Double.parseDouble(cur_val), 10.0);  // clamp to 1000%
-                        found = true;
-                    }catch(NumberFormatException | NullPointerException e){ // possible exceptions from Double.parseDouble()
-                        GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?\n\t" + e);
-                        this.foundGamma = 1.0;
-                        malformed = true;
-                    }
-                    break;
-                }   // if(cur_key.equals("gamma"))
+            BufferedReader br = new BufferedReader(new FileReader(this.getOptionsFile().getName()));
+            while (line != null && !curKey.equals("gamma")) { // while line != null && !curKey.equals("gamma")
                 line = br.readLine();
-            }   // while (line != null)
-        }catch(IOException e){
+                if (line != null) {
+                    curKey = "";
+                    curVal = "";
+                    i = 0;
+                    while (i < line.length() && line.charAt(i) != ':') {   // read the key
+                        curKey += line.charAt(i++);
+                    } // while
+                } // if
+            } // while
+        } catch (IOException e) {
             GammaShifter.LOGGER.error("Couldn't read options file... does it exist?\n\t" + e);
             missingFile = true;
         }
+
+        // if the key was found, retrieve the associated value as a Double parsed from a String
+        if (curKey.equals("gamma")) {
+            i++;
+            try {
+                while (i < 13 && i < line.length()) { // read the value (stops after reading 7 characters or at Exception)
+                    curVal += line.charAt(i++);
+                }
+            } catch (IndexOutOfBoundsException e) { /* empty catch block */ }
+            try {
+                this.foundGamma = Math.min(Double.parseDouble(curVal), GammaHandler.MAX_GAMMA);  // clamp to the maximum allowed gamma
+                found = true;
+            } catch (NumberFormatException |
+                     NullPointerException e) { // possible exceptions from Double.parseDouble()
+                GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?\n\t" + e);
+                this.foundGamma = 1.0; // in case of exception, set gamma to a default value
+                malformed = true;
+            }
+        }   // if(curKey.equals("gamma"))
 
         if(found){
             GammaShifter.LOGGER.info("Read gamma value of " + foundGamma + " from options file");
             GammaHandler.initHelper.storeGamma(foundGamma); // InitGammaHelper handles setting the value
         }else if(!malformed && !missingFile){
-            GammaShifter.LOGGER.warn("Couldn't find an existing gamma setting... did the options file include one?");
+            GammaShifter.LOGGER.error("Couldn't find an existing gamma setting... did the options file include one?");
         }
 
     }

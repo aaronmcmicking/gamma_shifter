@@ -43,7 +43,7 @@ public class SimpleOptionMixin {
      * {@link GameOptions#load()} to set save gamma values > 1.0 to options.txt and suppresses error messages.
      * <p>Currently cannot discriminate between gamma and other options, and so any option using
      * {@link net.minecraft.client.option.SimpleOption.DoubleSliderCallbacks} will have it's validation replaced
-     * (since 0.0.3)</p>
+     * (since 0.1.0)</p>
      */
     @Mixin(SimpleOption.DoubleSliderCallbacks.class)
     public static class DoubleSliderCallbacksMixin {
