@@ -32,6 +32,11 @@ public class GammaHandler {
     public static final Double MAX_GAMMA = 10.0;
 
     /**
+     * The minimum gamma value the mod will set.
+     */
+    public static final Double MIN_GAMMA = 0.0;
+
+    /**
      * Stores the current gamma value for when the mod is toggled off. Initially set when the gamma value read from
      * options.txt is read.
      * <p>Should always be the same as the value stored {@link GameOptions#getGamma()}.</p>
@@ -39,28 +44,16 @@ public class GammaHandler {
     private static Double currentCustomGamma = 1.0;
 
     /**
-     * Define the decimal format for Doubles when the current gamma is displayed to the user.
-     */
-    private final static DecimalFormat decFor = new DecimalFormat("0");
-
-    /**
-     * Increases the gamma value by the {@link GammaHandler#changePerInput}. Rounds values to whole percents and clamps values to
-     * {@link GammaHandler#MAX_GAMMA}.
+     * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
+     * information to the user.
+     * @see GammaHandler#calculateNewGamma(Double, boolean)
+     * @see GammaHandler#set(Double)
+     * @see GammaHandler#displayGammaMessage()
      */
     public static void increaseGamma(){
-        double newGamma, oldGamma = mc.options.getGamma().getValue();
-        if(oldGamma <= (MAX_GAMMA - changePerInput)) {
-            newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0; // fix round errors with double arithmetic
-        }else{
-            newGamma = 10.0;
-        }
+        double newGamma = calculateNewGamma(mc.options.getGamma().getValue(), true);
         set(newGamma);
-
-        // display a message on-screen telling the player the current gamma value
-        if(mc.player != null) {
-            String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%";
-            mc.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
-        }
+        displayGammaMessage();
     }
 
     /**
@@ -68,20 +61,38 @@ public class GammaHandler {
      * values to 0.0.
      */
     public static void decreaseGamma(){
-        double newGamma, oldGamma = mc.options.getGamma().getValue();
-        // decrease gamma
-        if(oldGamma > changePerInput) {
-            newGamma = Math.round((mc.options.getGamma().getValue() - changePerInput)*100)/100.0; // fix round errors with double arithmetic
-        }else{
-            newGamma = 0.0;
-        }
+        double newGamma = calculateNewGamma(mc.options.getGamma().getValue(), false);
         set(newGamma);
+        displayGammaMessage();
+    }
 
-        // display a message on-screen telling the player the current gamma value
-        if(mc.player != null) {
-            String msg = "Gamma = " + decFor.format(newGamma*100) + "%";
-            mc.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
+    /**
+     * Calculates the new gamma value and snaps it to the nearest 0.5. Values are clamped to {@link GammaHandler#MIN_GAMMA}
+     * and {@link GammaHandler#MAX_GAMMA}.
+     * <p>Does not support custom step values (ie. {@link GammaHandler#changePerInput} must be 0.5) and does not support
+     * the ability to set gamma values less than 0.0.</p>
+     * @param oldGamma The previous gamma.
+     * @param increasing Whether the gamma should be increased or decreased.
+     * @return The new gamma value.
+     */
+    public static Double calculateNewGamma(Double oldGamma, boolean increasing){
+        double newGamma;
+        oldGamma = Math.round(oldGamma * 100) / 100.0;
+        if(increasing) {
+            if((MAX_GAMMA - oldGamma) <= changePerInput){ return MAX_GAMMA; }
+            if (oldGamma % 0.5 >= 0.25) {
+                oldGamma -= 0.25;
+            }
+            newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0;
+        }else{ // else if decreasing
+            if(oldGamma <= changePerInput) { return MIN_GAMMA; }
+            if(oldGamma % 0.5 < 0.25 && oldGamma % 0.5 != 0.0){
+                oldGamma += 0.25;
+            }
+            newGamma = Math.round((oldGamma - changePerInput) * 100) / 100.0;
         }
+        newGamma = roundToHalf(newGamma);
+        return newGamma;
     }
 
     /**
@@ -91,6 +102,17 @@ public class GammaHandler {
     private static void set(Double value){
         mc.options.getGamma().setValue(value);
         currentCustomGamma = value;
+    }
+
+    /**
+     * Display a HUD message to the user telling them the current gamma value.
+     */
+    public static void displayGammaMessage(){
+        if(mc.player != null) {
+            DecimalFormat decFor = new DecimalFormat("0"); // define the Double decimal format (no decimals)
+            String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%"; // build string
+            mc.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
+        }
     }
 
     /**
@@ -134,5 +156,15 @@ public class GammaHandler {
      */
     public static void setChangePerInput(Double value){
         changePerInput = value;
+    }
+
+    /**
+     * Rounds a Double to the nearest 0.5. For example:
+     * <p>1.1 -> 1.0</p><p>1.4 -> 1.5</p><p>1.75 -> 2.0</p>
+     * @param x The value to be rounded.
+     * @return The rounded value.
+     */
+    private static Double roundToHalf(Double x){
+        return Math.round(x * 2) / 2.0;
     }
 }
