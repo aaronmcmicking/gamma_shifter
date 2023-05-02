@@ -16,10 +16,10 @@ public class KeyInputHandler {
     /**
      * Names for the mod category and keybinds in the settings menu.
      **/
-    public static final String KEY_CATEGORY_GAMMA_SHIFTER = "Gamma Shifter";
-    public static final String KEY_INCREASE_GAMMA = "Increase Gamma";
-    public static final String KEY_DECREASE_GAMMA = "Decrease Gamma";
-    public static final String KEY_TOGGLE_MOD = "Toggle Mod";
+    public static final String KEY_CATEGORY_GAMMA_SHIFTER = "key.category.gamma_shifter.gamma_shifter";
+    public static final String KEY_INCREASE_GAMMA = "key.gamma_shifter.increase_gamma";
+    public static final String KEY_DECREASE_GAMMA = "key.gamma_shifter.decrease_gamma";
+    public static final String KEY_TOGGLE_MOD = "key.gamma_shifter.toggle_mod";
 
     /**
      * Default keybinds, initialized in {@link KeyInputHandler#registerKeyBinds()}.

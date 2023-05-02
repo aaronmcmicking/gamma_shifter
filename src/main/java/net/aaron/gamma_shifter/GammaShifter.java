@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 public class GammaShifter implements ClientModInitializer {
 
     /**
-     * The internal name of the mod.
+     * The mod ID.
      */
-    public static final String GAMMA_MOD = "Gamma Shifter";
+    public static final String GAMMA_MOD = "gamma_shifter";
 
     /**
      * The Logger for log output from all other mod classes.
