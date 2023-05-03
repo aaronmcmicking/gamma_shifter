@@ -10,13 +10,14 @@
   ],
   "contact": {
     "homepage": "https://github.com/aaronmcmicking",
-    "sources": "https://github.com/aaronmcmicking/gamma_shifter"
+    "sources": "https://github.com/aaronmcmicking/gamma_shifter",
+    "issues":  "https://github.com/aaronmcmicking/gamma_shifter/issues"
   },
 
   "license": "MIT",
   "icon": "assets/modid/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client":  [
       "net.aaron.gamma_shifter.GammaShifter"
