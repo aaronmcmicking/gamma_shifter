@@ -118,8 +118,13 @@ public class GammaHandler {
     /**
      * Toggles the mod effects on/off by setting gamma to either 0.0 or {@link GammaHandler#currentCustomGamma} and
      * toggling {@link GammaShifter}.
+     * <p>Also stores the latest gamma value locally (fixes compatibility issue with Sodium)</p>
      */
     public static void toggle(){
+        // make sure the latest gamma value is stored locally before overwriting it
+        if(GammaShifter.isEnabled()){
+            currentCustomGamma = mc.options.getGamma().getValue();
+        }
         mc.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
         GammaShifter.toggle();
     }
