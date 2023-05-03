@@ -39,6 +39,7 @@ public class KeyInputHandler {
         // Detect keypresses
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if(GammaShifter.isEnabled()){
+                // if the mod is enabled, process keybinds
                 if(increaseGammaKey.wasPressed()){
                     GammaHandler.increaseGamma();
                 }
@@ -54,7 +55,13 @@ public class KeyInputHandler {
                 if(defaultGammaKey.wasPressed()){
                     GammaHandler.setDefaultGamma();
                 }
-            }
+            }else{
+                // if the mod is not enabled, flush buffered inputs
+                for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey}){
+                    while(bind.wasPressed()) { /* empty */ }
+                }
+            } // end if else
+
             if(toggleModKey.wasPressed()){
                 GammaHandler.toggle();
             }
