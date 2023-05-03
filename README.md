@@ -11,9 +11,10 @@ Gamma settings are loaded and written from options.txt without being clamped to 
 
 Decrease gamma by 50%:  - <br>
 Increase gamma by 50%:  = <br>
+Set max vanilla gamma (100%): [ <br>
+Set max gamma (1000%): ] <br>
 Toggle effects:  G
 
 ## Notes
 
-Manually written gamma values will always appear as the last line of options.txt <br>
 Gamma value will still be clamped at 1000%
