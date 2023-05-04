@@ -21,6 +21,9 @@
   "entrypoints": {
     "client":  [
       "net.aaron.gamma_shifter.GammaShifter"
+    ],
+    "modmenu": [
+      "net.aaron.gamma_shifter.config.ModMenuApiImplementation"
     ]
   },
   "mixins": [

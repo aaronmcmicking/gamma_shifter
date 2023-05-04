@@ -78,6 +78,7 @@ public class GammaHandler {
     public static Double calculateNewGamma(Double oldGamma, boolean increasing){
         double newGamma;
         oldGamma = Math.round(oldGamma * 100) / 100.0;
+        
         if(increasing) {
             if((MAX_GAMMA - oldGamma) <= changePerInput){ return MAX_GAMMA; }
             if (oldGamma % 0.5 >= 0.25) {
