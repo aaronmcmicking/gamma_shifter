@@ -39,9 +39,9 @@ public class GammaHandler {
     /**
      * Stores the current gamma value for when the mod is toggled off. Initially set when the gamma value read from
      * options.txt is read.
-     * <p>Should always be the same as the value stored {@link GameOptions#getGamma()}.</p>
+     * <p>If the mod is enabled, this should be the same as the value stored {@link GameOptions#getGamma()}.</p>
      */
-    private static Double currentCustomGamma = 1.0;
+    public static Double currentCustomGamma = 1.0;
 
     /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
@@ -67,32 +67,27 @@ public class GammaHandler {
     }
 
     /**
-     * Calculates the new gamma value and snaps it to the nearest 0.5. Values are clamped to {@link GammaHandler#MIN_GAMMA}
+     * Calculates the new gamma value and clamps it to {@link GammaHandler#MIN_GAMMA}
      * and {@link GammaHandler#MAX_GAMMA}.
-     * <p>Does not support custom step values (ie. {@link GammaHandler#changePerInput} must be 0.5) and does not support
-     * the ability to set gamma values less than 0.0.</p>
      * @param oldGamma The previous gamma.
-     * @param increasing Whether the gamma should be increased or decreased.
+     * @param increasing True if the gamma should be increased, false if the gamma should be decreased.
      * @return The new gamma value.
      */
     public static Double calculateNewGamma(Double oldGamma, boolean increasing){
         double newGamma;
         oldGamma = Math.round(oldGamma * 100) / 100.0;
-        
+
         if(increasing) {
-            if((MAX_GAMMA - oldGamma) <= changePerInput){ return MAX_GAMMA; }
-            if (oldGamma % 0.5 >= 0.25) {
-                oldGamma -= 0.25;
+            if((MAX_GAMMA - oldGamma) <= changePerInput){
+                return MAX_GAMMA;
             }
             newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0;
         }else{ // else if decreasing
-            if(oldGamma <= changePerInput) { return MIN_GAMMA; }
-            if(oldGamma % 0.5 < 0.25 && oldGamma % 0.5 != 0.0){
-                oldGamma += 0.25;
+            if(oldGamma <= changePerInput) {
+                return MIN_GAMMA;
             }
             newGamma = Math.round((oldGamma - changePerInput) * 100) / 100.0;
         }
-        newGamma = roundToHalf(newGamma);
         return newGamma;
     }
 
@@ -100,7 +95,7 @@ public class GammaHandler {
      * Wrapper method for setting gamma in the Minecraft settings and in {@link GammaHandler#currentCustomGamma}.
      * @param value The gamma value to set.
      */
-    private static void set(Double value){
+    public static void set(Double value){
         mc.options.getGamma().setValue(value);
         currentCustomGamma = value;
     }
@@ -157,7 +152,7 @@ public class GammaHandler {
     /**
      * Sets {@link GammaHandler#currentCustomGamma} manually. Should only be called when the game is initializing.
      * <p>Otherwise, {@link GammaHandler#currentCustomGamma} should only be set in conjunction with a call to
-     * {@link net.minecraft.client.option.SimpleOption#setValue(Object)}.</p>
+     * {@link net.minecraft.client.option.SimpleOption#setValue(Object)}, OR when being updated by ModMenu.</p>
      * @param value The value to set.
      */
     public static void setCurrentCustomGamma(Double value){
