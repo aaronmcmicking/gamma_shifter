@@ -13,15 +13,6 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 
-//	maven {
-//		name = "TerraformersMC"
-//		url = uri("https://maven.terraformersmc.com/releases/")
-//
-//		content {
-//			includeGroup("com.terraformersmc")
-//		}
-//	}
-
 	maven {
 		url "https://maven.terraformersmc.com/releases/"
 	}

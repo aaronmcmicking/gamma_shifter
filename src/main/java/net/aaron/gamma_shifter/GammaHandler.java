@@ -57,8 +57,11 @@ public class GammaHandler {
     }
 
     /**
-     * Decreases the gamma value by the {@link GammaHandler#changePerInput}. Rounds values to whole percents and clamps
-     * values to 0.0.
+     * Handles decreasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
+     * information to the user.
+     * @see GammaHandler#calculateNewGamma(Double, boolean)
+     * @see GammaHandler#set(Double)
+     * @see GammaHandler#displayGammaMessage()
      */
     public static void decreaseGamma(){
         double newGamma = calculateNewGamma(mc.options.getGamma().getValue(), false);

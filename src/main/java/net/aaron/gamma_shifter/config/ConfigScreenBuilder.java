@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
  * A custom config screen builder that uses the Cloth Config API to create a custom {@link Screen} object using
  * Cloth Config helper methods. This screen is then displayed by ModMenu when requested.
  */
-public class ScreenBuilder {
+public class ConfigScreenBuilder {
     /**
      * The config builder used to create other Cloth Config objects and builders.
      */
@@ -40,25 +40,7 @@ public class ScreenBuilder {
      * @return The options screen.
      */
     public Screen getGammaShifterOptionsMenu() {
-        general.addEntry(entryBuilder.startIntSlider(Text.translatable("Brightness"),
-                        (int) (GammaHandler.getCurrentCustomGamma() * 100),
-                        (int) (double) GammaHandler.MIN_GAMMA*100,
-                        (int) (double) GammaHandler.MAX_GAMMA*100)
-                .setDefaultValue(100)
-                .setTooltip(Text.translatable("The brightness value"))
-                .setSaveConsumer(newValue -> {
-                    if(GammaShifter.isEnabled()) {
-                        GammaHandler.set((Math.round(newValue)) / 100.0);
-                    }else{
-                        GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
-                    }
-                } )
-                .build());
-        general.addEntry(entryBuilder.startIntSlider(Text.translatable("Brightness change per input"), (int) (GammaHandler.getChangePerInput()*100), 1, 250)
-                .setDefaultValue(50)
-                .setTooltip(Text.translatable("The amount the brightness value changes by when the increase/decrease key is pressed"))
-                .setSaveConsumer(newValue -> GammaHandler.setChangePerInput((Math.round(newValue))/100.0) )
-                .build());
+        // toggle mod (boolean button)
         general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Enable mod effects"), GammaShifter.isEnabled())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("Toggles mod effects on/off"))
@@ -68,6 +50,36 @@ public class ScreenBuilder {
                     }
                 })
                 .build());
+
+        // set brightness (field)
+        general.addEntry(entryBuilder.startIntField(Text.translatable("Brightness (%)"),
+                        (int)(GammaHandler.getCurrentCustomGamma()*100))
+                        .setMin(0)
+                        .setMax(1000)
+                        .setDefaultValue(100)
+                        .setTooltip(Text.translatable("The brightness value"))
+                        .setSaveConsumer(newValue -> {
+                            if(GammaShifter.isEnabled()) {
+                                GammaHandler.set((Math.round(newValue)) / 100.0);
+                            }else{
+                                GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
+                            }
+                        } )
+                        .build()
+                );
+
+        // set step (field)
+        general.addEntry(entryBuilder.startIntField(Text.translatable("Brightness change per input (%)"),
+                            (int)(GammaHandler.getChangePerInput()*100))
+                        .setMin(1)
+                        .setMax(250)
+                        .setDefaultValue(25)
+                        .setTooltip(Text.translatable("The percent change in the brightness value when the increase/decrease key is pressed"))
+                        .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
+                        .build()
+                );
+
+        // return the built screen
         return builder.build();
     }
 }

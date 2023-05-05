@@ -12,6 +12,6 @@ public class ModMenuApiImplementation implements ModMenuApi {
     // get the custom config screen created using Cloth Config
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory(){
-        return parent -> (new ScreenBuilder()).getGammaShifterOptionsMenu(); // a new instance is required every time the screen is opened
+        return parent -> (new ConfigScreenBuilder()).getGammaShifterOptionsMenu(); // a new instance is required every time the screen is opened
     }
 }
