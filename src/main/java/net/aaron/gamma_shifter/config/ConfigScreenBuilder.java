@@ -21,7 +21,7 @@ public class ConfigScreenBuilder {
                                         .setParentScreen(MinecraftClient.getInstance().currentScreen)
                                         .setTitle(Text.translatable("title.gamma_shifter.config"))
                                         .setDoesConfirmSave(false)
-                                        .setSavingRunnable(Config::save);
+                                        .setSavingRunnable(ConfigLoader::save);
 
     /**
      * A new option category.
@@ -80,10 +80,10 @@ public class ConfigScreenBuilder {
 
         // set alwaysStartEnabled (boolean button)
         general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Always start enabled"), GammaShifter.alwaysStartEnabled())
-                .setDefaultValue(true)
-                .setTooltip(Text.translatable("Whether the mod always starts enabled or not"))
-                .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
-                .build()
+                        .setDefaultValue(true)
+                        .setTooltip(Text.translatable("Whether the mod always starts enabled or not"))
+                        .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
+                        .build()
         );
 
         // return the built screen

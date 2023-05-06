@@ -13,7 +13,7 @@ import java.util.Properties;
  * created with default values.
  * @see ConfigScreenBuilder
  */
-public class Config {
+public class ConfigLoader {
     /**
      * Initialize and set default values for options saved in the config file.
      */
@@ -45,15 +45,17 @@ public class Config {
         }catch(FileNotFoundException e){
             // attempt to create a new config file and save the default values into it
             if(createNewConfigFile()) {
-                GammaShifter.LOGGER.info("[GammaShifterBeta] Couldn't find config file, creating a new one");
+//                GammaShifter.LOGGER.info("[GammaShifterBeta] Couldn't find config file, creating a new one");
                 save();
             }else{
-                GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't find config and couldn't create a new one:\n\t" + e);
+                GammaShifter.LOGGER.error("[GammaShifter] Couldn't find config and couldn't create a new one:\n\t" + e);
             }
         }catch(IOException e){ // non-FileNotFoundException IOExceptions
-            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't read config file:\n\t" + e);
+            /* empty catch block */
+//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't read config file:\n\t" + e);
         }catch(NullPointerException | NumberFormatException e){ // Parsing exceptions
-            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't parse config file... was it malformed?\n\t" + e);
+            /* empty catch block */
+//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't parse config file... was it malformed?\n\t" + e);
         }
     }
 
@@ -78,7 +80,8 @@ public class Config {
             properties.store(bw, "Gamma Shifter Config");
         }
         catch(IOException e){
-            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't write config file:\n\t" + e);
+            /* empty catch block */
+//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't write config file:\n\t" + e);
         }
     }
 
@@ -90,7 +93,7 @@ public class Config {
         try {
             return (new File(CONFIG_FILE.getPath())).createNewFile();
         }catch(Exception e){
-            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't create new config file:\n\t" + e);
+//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't create new config file:\n\t" + e);
             return false;
         }
     }

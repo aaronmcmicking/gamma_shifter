@@ -1,6 +1,6 @@
 package net.aaron.gamma_shifter;
 
-import net.aaron.gamma_shifter.config.Config;
+import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class GammaShifter implements ClientModInitializer {
     /**
      * Returns whether the mod is currently set to always start enabled. Can be edited in the config settings.
      * @return True if the mod always starts enabled, false otherwise.
-     * @see Config
+     * @see ConfigLoader
      */
     public static Boolean alwaysStartEnabled(){
         return alwaysStartEnabled;
@@ -65,7 +65,7 @@ public class GammaShifter implements ClientModInitializer {
     /**
      * Sets whether the mod always starts enabled. Modified in the config menu.
      * @param value Whether the mod should always start enabled.
-     * @see Config
+     * @see ConfigLoader
      */
     public static void setAlwaysStartEnabled(Boolean value){
         alwaysStartEnabled = value;
@@ -76,7 +76,7 @@ public class GammaShifter implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        Config.load();
+        ConfigLoader.load();
         KeyInputHandler.registerKeyBinds();
     }
 

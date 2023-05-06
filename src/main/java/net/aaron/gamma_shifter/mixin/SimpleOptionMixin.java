@@ -49,7 +49,6 @@ public class SimpleOptionMixin {
     public static class DoubleSliderCallbacksMixin {
         @Inject(method = "validate(Ljava/lang/Double;)Ljava/util/Optional;", at = @At("HEAD"), cancellable = true)
         public void replaceValidator(Double value, CallbackInfoReturnable<Optional<Double>> cir){
-//            GammaShifter.LOGGER.info("Overriding validation (value = " + value + ")");
             cir.setReturnValue(Optional.of(value));
         }
     }
