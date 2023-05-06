@@ -21,10 +21,9 @@ public class GammaHandler {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
-     * The amount to change the gamma value by per input received. It is currently hardcoded but it is planned to be
-     * made customizable by the user in future updates.
+     * The amount to change the gamma value by per input received. Can be modified by user in ModMenu settings.
      */
-    public static Double changePerInput = 0.5;
+    public static Double changePerInput = 0.25;
 
     /**
      * The maximum gamma value the mod will set.

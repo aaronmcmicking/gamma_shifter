@@ -18,17 +18,16 @@ public class ConfigScreenBuilder {
      * The config builder used to create other Cloth Config objects and builders.
      */
     ConfigBuilder builder = ConfigBuilder.create()
-                                            .setParentScreen(MinecraftClient.getInstance().currentScreen)
-                                            .setTitle(Text.translatable("title.gamma_shifter.config"))
-                                            .setDoesConfirmSave(false)
-                                            .setSavingRunnable(() -> {
-                                                // Serialise the config into the config file. This will be called last after all variables are updated.
-                                            });
+                                        .setParentScreen(MinecraftClient.getInstance().currentScreen)
+                                        .setTitle(Text.translatable("title.gamma_shifter.config"))
+                                        .setDoesConfirmSave(false)
+                                        .setSavingRunnable(Config::save);
 
     /**
      * A new option category.
      */
     ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.general"));
+    
     /**
      * A builder used to create new "entries"/modifiable options on the options screen.
      */
@@ -78,6 +77,14 @@ public class ConfigScreenBuilder {
                         .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
                         .build()
                 );
+
+        // set alwaysStartEnabled (boolean button)
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Always start enabled"), GammaShifter.alwaysStartEnabled())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("Whether the mod always starts enabled or not"))
+                .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
+                .build()
+        );
 
         // return the built screen
         return builder.build();
