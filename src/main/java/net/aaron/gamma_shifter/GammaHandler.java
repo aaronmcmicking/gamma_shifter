@@ -48,6 +48,8 @@ public class GammaHandler {
      */
     private static boolean snappingEnabled = true;
 
+    private static boolean alwaysSaveCustomGamma = true;
+
     /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
      * information to the user.
@@ -249,5 +251,13 @@ public class GammaHandler {
      */
     public static void setSnappingEnabled(boolean enabled) {
         snappingEnabled = enabled;
+    }
+
+    public static void setAlwaysSaveCustomGamma(boolean value){
+            alwaysSaveCustomGamma = value;
+    }
+
+    public static boolean getAlwaysSaveCustomGamma(){
+        return alwaysSaveCustomGamma;
     }
 }

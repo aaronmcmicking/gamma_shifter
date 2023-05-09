@@ -29,6 +29,12 @@ public abstract class GameOptionsMixin {
     private Double foundGamma = 1.0;
 
     /**
+     * Storage variable to save a set gamma while another one is substituted when saving to options.txt.
+     * @see GameOptionsMixin#substituteCustomGammaForSave(CallbackInfo)
+     */
+    private Double tempGamma = 1.0;
+
+    /**
      * Shadow placeholder for {@link GameOptions#getOptionsFile()}.
      * @return The options file as type 'File'.
      */
@@ -91,5 +97,34 @@ public abstract class GameOptionsMixin {
             GammaShifter.LOGGER.error("Couldn't find an existing gamma setting... did the options file include one?");
         }
 
+    }
+
+    /**
+     * Substitutes the current gamma with a custom gamma value if the mod is disabled, so that the custom value
+     * is still saved in options.txt. Stores the current shown gamma value in {@link GameOptionsMixin#tempGamma} to
+     * be restored after {@link GameOptions#write()} finishes.
+     * <p>Only modifies values if mod is currently disabled.</p>
+     * @see GameOptionsMixin#restoreCurrentGammaAfterSave(CallbackInfo)
+     * @param ci CallbackInfo to be returned.
+     */
+    @Inject(method = "write", at = @At("HEAD"))
+    public void substituteCustomGammaForSave(CallbackInfo ci){
+        if(!GammaShifter.isEnabled() && GammaHandler.getAlwaysSaveCustomGamma()){
+            GameOptions options = MinecraftClient.getInstance().options;
+            tempGamma = options.getGamma().getValue();
+            options.getGamma().setValue(GammaHandler.currentCustomGamma);
+        }
+    }
+
+    /**
+     * Restores the current gamma after options.txt has been saved with the custom gamma.
+     * <p>Only modifies values if mod is currently disabled.</p>
+     * @param ci CallbackInfo to be returned.
+     */
+    @Inject(method = "write", at = @At("TAIL"))
+    public void restoreCurrentGammaAfterSave(CallbackInfo ci){
+        if(!GammaShifter.isEnabled() && GammaHandler.getAlwaysSaveCustomGamma()){
+            MinecraftClient.getInstance().options.getGamma().setValue(tempGamma);
+        }
     }
 }

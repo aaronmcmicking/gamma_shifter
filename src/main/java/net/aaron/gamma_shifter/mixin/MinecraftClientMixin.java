@@ -3,6 +3,7 @@ package net.aaron.gamma_shifter.mixin;
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.InitGammaHelper;
+import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,7 +23,7 @@ public abstract class MinecraftClientMixin {
 
     /**
      * This injection either signals to set the gamma value read from options.txt on initialization when the title screen loads for the
-     * first time, or saves the options to disk when the pause menu is opened.</p>
+     * first time, or saves the options and config to disk when the pause menu is opened.</p>
      * <p>Also updates {@link GammaHandler#setCurrentCustomGamma(Double)} to reflect changes made to settings
      * in the vanilla options menu.</p>
      *
@@ -38,6 +39,7 @@ public abstract class MinecraftClientMixin {
             // if saving options while player is playing
             if ((screen instanceof GameMenuScreen) && (MinecraftClient.getInstance() != null)  &&  (MinecraftClient.getInstance().player != null)) {
                 MinecraftClient.getInstance().options.write();
+                ConfigLoader.save();
                 GammaShifter.LOGGER.info(("Saved options"));
 
                 // if the mod is enabled, make sure GammaHandler gets the updated gamma value from the vanilla settings menu
@@ -54,6 +56,7 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "stop", at = @At("HEAD"))
     public void saveOnClose(CallbackInfo ci){
+        ConfigLoader.save();
         MinecraftClient.getInstance().options.write();
         GammaShifter.LOGGER.info(("Saved options"));
     }

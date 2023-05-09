@@ -94,6 +94,14 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        // set alwaysSaveCustomGamma
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Always save custom brightness"), GammaHandler.getAlwaysSaveCustomGamma())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("Save the customized brightness to options.txt regardless of whether the mod is enabled or disabled"))
+                .setSaveConsumer(GammaHandler::setAlwaysSaveCustomGamma)
+                .build()
+        );
+
         // return the built screen
         return builder.build();
     }

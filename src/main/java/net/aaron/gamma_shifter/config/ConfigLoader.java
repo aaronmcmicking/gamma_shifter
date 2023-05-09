@@ -21,6 +21,7 @@ public class ConfigLoader {
     private static Boolean alwaysStartEnabled = true;
     private static Double step = 0.25;
     private static boolean snappingEnabled = true;
+    private static boolean alwaysSaveCustomGamma = true;
 
     /**
      * Initialize the file properties.
@@ -41,6 +42,7 @@ public class ConfigLoader {
             step = Double.parseDouble((String) properties.get("step"));
             alwaysStartEnabled = Boolean.parseBoolean((String) properties.get("alwaysStartEnabled"));
             snappingEnabled = Boolean.parseBoolean((String) properties.get("snappingEnabled"));
+            alwaysSaveCustomGamma = Boolean.parseBoolean((String) properties.get("alwaysSaveCustomGamma"));
 
             // apply the values in their respective spots
             set();
@@ -80,6 +82,7 @@ public class ConfigLoader {
             properties.put("alwaysStartEnabled", String.valueOf(alwaysStartEnabled));
             properties.put("step", String.valueOf(step));
             properties.put("snappingEnabled", String.valueOf(snappingEnabled));
+            properties.put("alwaysSaveCustomGamma", String.valueOf(alwaysSaveCustomGamma));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -114,5 +117,6 @@ public class ConfigLoader {
         GammaShifter.setAlwaysStartEnabled(alwaysStartEnabled);
         GammaHandler.setChangePerInput(step);
         GammaHandler.setSnappingEnabled(snappingEnabled);
+        GammaHandler.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
     }
 }
