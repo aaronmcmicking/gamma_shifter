@@ -17,11 +17,13 @@ public class ConfigLoader {
     /**
      * Initialize and set default values for options saved in the config file.
      */
-    private static Boolean enabled = true;
-    private static Boolean alwaysStartEnabled = true;
-    private static Double step = 0.25;
+    private static boolean enabled = true;
+    private static boolean alwaysStartEnabled = true;
+    private static double step = 0.25;
     private static boolean snappingEnabled = true;
     private static boolean alwaysSaveCustomGamma = true;
+    private static double presetOneValue = 1.0;
+    private static double presetTwoValue = 1.0;
 
     /**
      * Initialize the file properties.
@@ -43,6 +45,9 @@ public class ConfigLoader {
             alwaysStartEnabled = Boolean.parseBoolean((String) properties.get("alwaysStartEnabled"));
             snappingEnabled = Boolean.parseBoolean((String) properties.get("snappingEnabled"));
             alwaysSaveCustomGamma = Boolean.parseBoolean((String) properties.get("alwaysSaveCustomGamma"));
+            presetOneValue = Double.parseDouble((String) properties.get("presetOneValue"));
+            presetTwoValue = Double.parseDouble((String) properties.get("presetTwoValue"));
+
 
             // apply the values in their respective spots
             set();
@@ -75,6 +80,9 @@ public class ConfigLoader {
         alwaysStartEnabled = GammaShifter.alwaysStartEnabled();
         step = GammaHandler.getChangePerInput();
         snappingEnabled = GammaHandler.isSnappingEnabled();
+        alwaysSaveCustomGamma = GammaHandler.getAlwaysSaveCustomGamma();
+        presetOneValue = GammaHandler.getPresetOneValue();
+        presetTwoValue = GammaHandler.getPresetTwoValue();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -83,6 +91,8 @@ public class ConfigLoader {
             properties.put("step", String.valueOf(step));
             properties.put("snappingEnabled", String.valueOf(snappingEnabled));
             properties.put("alwaysSaveCustomGamma", String.valueOf(alwaysSaveCustomGamma));
+            properties.put("presetOneValue", String.valueOf(presetOneValue));
+            properties.put("presetTwoValue", String.valueOf(presetTwoValue));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -115,8 +125,32 @@ public class ConfigLoader {
             GammaShifter.setEnabled(enabled);
         }
         GammaShifter.setAlwaysStartEnabled(alwaysStartEnabled);
-        GammaHandler.setChangePerInput(step);
+        GammaHandler.setChangePerInput( clamp(step, 0.01, GammaHandler.MAX_GAMMA) );
         GammaHandler.setSnappingEnabled(snappingEnabled);
         GammaHandler.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
+        GammaHandler.setPresetOneValue( clamp(presetOneValue) );
+        GammaHandler.setPresetTwoValue( clamp(presetTwoValue) );
+    }
+
+    /**
+     * Clamps double values to {@link GammaHandler#MIN_GAMMA} and {@link GammaHandler#MAX_GAMMA}.
+     * @param value The value to be clamped.
+     * @return The clamped value.
+     */
+    private static double clamp(double value){
+        if(value < GammaHandler.MIN_GAMMA) return GammaHandler.MIN_GAMMA;
+        if(value > GammaHandler.MAX_GAMMA) return GammaHandler.MAX_GAMMA;
+        return value;
+    }
+
+    /**
+     * Clamps double values to a given minimum/maximum interval.
+     * @param value The value to be clamped.
+     * @return The clamped value.
+     */
+    private static double clamp(double value, double min, double max){
+        if(value < min) return min;
+        if(value > max) return max;
+        return value;
     }
 }

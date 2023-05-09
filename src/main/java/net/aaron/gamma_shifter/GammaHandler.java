@@ -22,11 +22,6 @@ public class GammaHandler {
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
     /**
-     * The amount to change the gamma value by per input received. Can be modified by user in ModMenu settings.
-     */
-    public static Double changePerInput = 0.25;
-
-    /**
      * The maximum gamma value the mod will set.
      */
     public static final Double MAX_GAMMA = 10.0;
@@ -35,6 +30,11 @@ public class GammaHandler {
      * The minimum gamma value the mod will set.
      */
     public static final Double MIN_GAMMA = 0.0;
+
+    /**
+     * The amount to change the gamma value by per input received. Can be modified by user in ModMenu settings.
+     */
+    public static Double changePerInput = 0.25;
 
     /**
      * Stores the current gamma value for when the mod is toggled off. Initially set when the gamma value read from
@@ -46,14 +46,24 @@ public class GammaHandler {
     /**
      * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
      */
-    private static boolean snappingEnabled = true;
+    public static boolean snappingEnabled = true;
 
-    private static boolean alwaysSaveCustomGamma = true;
+    /**
+     * True if the custom gamma should be set regardless of if the mod is enabled, false otherwise.
+     */
+    public static boolean alwaysSaveCustomGamma = true;
+
+    /**
+     * The values of the custom preset keys. Initially these keys are unbound. They are initialized
+     * by {@link net.aaron.gamma_shifter.config.ConfigLoader}.
+     */
+    public static double presetOneValue = 1.0;
+    public static double presetTwoValue = 1.0;
 
     /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
      * information to the user.
-     * @see GammaHandler#calculateGammaWithoutSnapping(Double, boolean)
+     * @see GammaHandler#calculateGamma(Double, boolean)
      * @see GammaHandler#set(Double)
      * @see GammaHandler#displayGammaMessage()
      */
@@ -66,7 +76,7 @@ public class GammaHandler {
     /**
      * Handles decreasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
      * information to the user.
-     * @see GammaHandler#calculateGammaWithoutSnapping(Double, boolean)
+     * @see GammaHandler#calculateGamma(Double, boolean)
      * @see GammaHandler#set(Double)
      * @see GammaHandler#displayGammaMessage()
      */
@@ -190,7 +200,7 @@ public class GammaHandler {
     /**
      * Sets the gamma to the maxiumum allowed value.
      */
-    public static void setMaxGamma(){
+    public static void applyMaxGamma(){
         set(MAX_GAMMA);
         displayGammaMessage();
     }
@@ -198,8 +208,24 @@ public class GammaHandler {
     /**
      * Sets the gamma to the default maximum value (100%).
      */
-    public static void setDefaultVanillaGamma(){
+    public static void applyVanillaMaxGamma(){
         set(1.0); // Default MC max gamma
+        displayGammaMessage();
+    }
+
+    /**
+     * Applies the value of {@link GammaHandler#presetOneValue} to the game.
+     */
+    public static void applyPresetOne(){
+        set(presetOneValue);
+        displayGammaMessage();
+    }
+
+    /**
+     * Applies the value of {@link GammaHandler#presetTwoValue} to the game.
+     */
+    public static void applyPresetTwo(){
+        set(presetTwoValue);
         displayGammaMessage();
     }
 
@@ -253,11 +279,51 @@ public class GammaHandler {
         snappingEnabled = enabled;
     }
 
+    /**
+     * Sets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
+     * @param value True if the custom gamma should always be saved, false otherwise.
+     */
     public static void setAlwaysSaveCustomGamma(boolean value){
             alwaysSaveCustomGamma = value;
     }
 
+    /**
+     * Gets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
+     * @return True if the custom gamma should always be saved, false otherwise.
+     */
     public static boolean getAlwaysSaveCustomGamma(){
         return alwaysSaveCustomGamma;
+    }
+
+    /**
+     * Gets the value of {@link GammaHandler#presetOneValue}.
+     * @return The value of {@link GammaHandler#presetOneValue}.
+     */
+    public static double getPresetOneValue(){
+        return presetOneValue;
+    }
+
+    /**
+     * Sets the value of {@link GammaHandler#presetOneValue}.
+     * @param value The new value.
+     */
+    public static void setPresetOneValue(double value){
+        presetOneValue = value;
+    }
+
+    /**
+     * Gets the value of {@link GammaHandler#presetTwoValue}.
+     * @return The value of {@link GammaHandler#presetTwoValue}.
+     */
+    public static double getPresetTwoValue(){
+        return presetTwoValue;
+    }
+
+    /**
+     * Sets the value of {@link GammaHandler#presetTwoValue}.
+     * @param value The new value.
+     */
+    public static void setPresetTwoValue(double value){
+        presetTwoValue = value;
     }
 }

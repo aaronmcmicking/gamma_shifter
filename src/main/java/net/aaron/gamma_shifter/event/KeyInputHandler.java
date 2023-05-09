@@ -2,7 +2,6 @@ package net.aaron.gamma_shifter.event;
 
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
-import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
@@ -23,6 +22,8 @@ public class KeyInputHandler {
     public static final String KEY_TOGGLE_MOD = "key.gamma_shifter.toggle_mod";
     public static final String KEY_MAX_GAMMA = "key.gamma_shifter.max_gamma";
     public static final String KEY_DEFAULT_GAMMA = "key.gamma_shifter.default_gamma";
+    public static final String KEY_PRESET_ONE = "key.gamma_shifter.preset_one";
+    public static final String KEY_PRESET_TWO = "key.gamma_shifter.preset_two";
 
     /**
      * Default keybinds, initialized in {@link KeyInputHandler#registerKeyBinds()}.
@@ -32,6 +33,8 @@ public class KeyInputHandler {
     public static KeyBinding toggleModKey;
     public static KeyBinding maxGammaKey;
     public static KeyBinding defaultGammaKey;
+    public static KeyBinding presetOneKey;
+    public static KeyBinding presetTwoKey;
 
     /**
      * Checks every tick for relevant key presses and calls the appropriate handler/helper method.
@@ -50,11 +53,19 @@ public class KeyInputHandler {
                 }
 
                 if(maxGammaKey.wasPressed()){
-                    GammaHandler.setMaxGamma();
+                    GammaHandler.applyMaxGamma();
                 }
 
                 if(defaultGammaKey.wasPressed()){
-                    GammaHandler.setDefaultVanillaGamma();
+                    GammaHandler.applyVanillaMaxGamma();
+                }
+
+                if(presetOneKey.wasPressed()){
+                    GammaHandler.applyPresetOne();
+                }
+
+                if(presetTwoKey.wasPressed()){
+                    GammaHandler.applyPresetTwo();
                 }
             }
 
@@ -112,11 +123,27 @@ public class KeyInputHandler {
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
+        // set the default Preset 1 key to be unbound
+        presetOneKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_PRESET_ONE,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
+        // set the default Preset 2 key to be unbound
+        presetTwoKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_PRESET_TWO,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
         registerKeyInputs();
     }
 
     public static void flushBufferedInputs(){
-        for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey}){
+        for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey}){
             while(bind.wasPressed()) { /* empty */ }
         }
     }
