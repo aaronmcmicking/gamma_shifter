@@ -53,16 +53,14 @@ public class KeyInputHandler {
                 }
 
                 if(defaultGammaKey.wasPressed()){
-                    GammaHandler.setDefaultGamma();
+                    GammaHandler.setDefaultVanillaGamma();
                 }
             }
 
             if(toggleModKey.wasPressed()){
                 if(!GammaShifter.isEnabled()){
                     // flush buffered inputs when re-enabling mod
-                    for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey}){
-                        while(bind.wasPressed()) { /* empty */ }
-                    }
+                    flushBufferedInputs();
                 }
                 GammaHandler.toggle();
             }
@@ -114,5 +112,11 @@ public class KeyInputHandler {
         ));
 
         registerKeyInputs();
+    }
+
+    public static void flushBufferedInputs(){
+        for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey}){
+            while(bind.wasPressed()) { /* empty */ }
+        }
     }
 }

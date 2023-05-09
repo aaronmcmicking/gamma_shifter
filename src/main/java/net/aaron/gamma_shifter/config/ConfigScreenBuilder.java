@@ -71,7 +71,7 @@ public class ConfigScreenBuilder {
         general.addEntry(entryBuilder.startIntField(Text.translatable("Brightness change per input (%)"),
                             (int)(GammaHandler.getChangePerInput()*100))
                         .setMin(1)
-                        .setMax(250)
+                        .setMax(1000)
                         .setDefaultValue(25)
                         .setTooltip(Text.translatable("The percent change in the brightness value when the increase/decrease key is pressed"))
                         .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
@@ -84,6 +84,14 @@ public class ConfigScreenBuilder {
                         .setTooltip(Text.translatable("Whether the mod always starts enabled or not"))
                         .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
                         .build()
+        );
+
+        // set enableSnapping (boolean button)
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Snap to change per input"), GammaHandler.isSnappingEnabled())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("Snaps the brightness to the nearest multiple of the change per input value"))
+                .setSaveConsumer(GammaHandler::setSnappingEnabled)
+                .build()
         );
 
         // return the built screen

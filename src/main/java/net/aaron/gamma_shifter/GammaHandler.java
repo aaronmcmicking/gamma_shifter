@@ -1,5 +1,6 @@
 package net.aaron.gamma_shifter;
 
+import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Style;
@@ -18,7 +19,7 @@ public class GammaHandler {
     /**
      * The current instance of MinecraftClient, wrapped to improve readability.
      */
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final MinecraftClient client = MinecraftClient.getInstance();
 
     /**
      * The amount to change the gamma value by per input received. Can be modified by user in ModMenu settings.
@@ -43,14 +44,19 @@ public class GammaHandler {
     public static Double currentCustomGamma = 1.0;
 
     /**
+     * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
+     */
+    private static boolean snappingEnabled = true;
+
+    /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
      * information to the user.
-     * @see GammaHandler#calculateNewGamma(Double, boolean)
+     * @see GammaHandler#calculateGammaWithoutSnapping(Double, boolean)
      * @see GammaHandler#set(Double)
      * @see GammaHandler#displayGammaMessage()
      */
     public static void increaseGamma(){
-        double newGamma = calculateNewGamma(mc.options.getGamma().getValue(), true);
+        double newGamma = calculateGamma(client.options.getGamma().getValue(), true);
         set(newGamma);
         displayGammaMessage();
     }
@@ -58,36 +64,88 @@ public class GammaHandler {
     /**
      * Handles decreasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
      * information to the user.
-     * @see GammaHandler#calculateNewGamma(Double, boolean)
+     * @see GammaHandler#calculateGammaWithoutSnapping(Double, boolean)
      * @see GammaHandler#set(Double)
      * @see GammaHandler#displayGammaMessage()
      */
     public static void decreaseGamma(){
-        double newGamma = calculateNewGamma(mc.options.getGamma().getValue(), false);
+        double newGamma = calculateGamma(client.options.getGamma().getValue(), false);
         set(newGamma);
         displayGammaMessage();
     }
 
     /**
-     * Calculates the new gamma value and clamps it to {@link GammaHandler#MIN_GAMMA}
-     * and {@link GammaHandler#MAX_GAMMA}.
-     * @param oldGamma The previous gamma.
-     * @param increasing True if the gamma should be increased, false if the gamma should be decreased.
+     * Determines how the gamma will be calculated based off the current gamma, the current step value, and other settings.
+     * Wraps other calculating methods so that the caller need not be concerned with how the gamma is calculated.
+     * @param oldGamma The previous gamma value.
+     * @param increasing True if the gamma should be increased, false otherwise.
      * @return The new gamma value.
      */
-    public static Double calculateNewGamma(Double oldGamma, boolean increasing){
+    public static Double calculateGamma(Double oldGamma, boolean increasing){
+        double newGamma;
+
+        if(increasing){
+            if((MAX_GAMMA - oldGamma) <= changePerInput){
+                KeyInputHandler.flushBufferedInputs();
+                return MAX_GAMMA;
+            }
+            if(isSnappingEnabled()){
+                newGamma = calculateGammaWithSnapping(oldGamma, true);
+            }else{
+                newGamma = calculateGammaWithoutSnapping(oldGamma, true);
+            }
+        }else{
+            if(oldGamma <= changePerInput) {
+                KeyInputHandler.flushBufferedInputs();
+                return MIN_GAMMA;
+            }
+            if(isSnappingEnabled()){
+                newGamma = calculateGammaWithSnapping(oldGamma, false);
+            }else{
+                newGamma = calculateGammaWithoutSnapping(oldGamma, false);
+            }
+        }
+        return newGamma;
+    }
+
+    /**
+     * Calculates a new gamma value and snaps it to the nearest multiple of {@link GammaHandler#changePerInput}.
+     * <p>The caller is responsible for ensuring that adding/subtracting {@link GammaHandler#changePerInput} from
+     * the current gamma will not result in a value outside {@link GammaHandler#MIN_GAMMA} and
+     * {@link GammaHandler#MAX_GAMMA}.</p>
+     * @param oldGamma The previous gamma value.
+     * @param increasing True if the gamma should be increased, false otherwise.
+     * @return The new gamma value.
+     */
+    private static Double calculateGammaWithSnapping(Double oldGamma, boolean increasing){
+        double newGamma;
+        int oldGammaModChangePerInput = (int)Math.round((oldGamma*100)) % (int)Math.round((changePerInput*100));
+//        GammaShifter.LOGGER.info((int)Math.round((oldGamma*100)) + " % " + (int)Math.round((changePerInput*100)) + " = " + oldGammaModChangePerInput);
+        if(increasing){
+            newGamma = Math.round( oldGamma*100 + changePerInput*100 - oldGammaModChangePerInput ) / 100.0;
+        }else{
+            newGamma = oldGammaModChangePerInput==0 ? (oldGamma*100)-(changePerInput*100) : (oldGamma*100)-oldGammaModChangePerInput;
+            newGamma = Math.round( newGamma ) / 100.0;
+        }
+        return newGamma;
+    }
+
+    /**
+     * Calculates the new gamma value without snapping it to a particular value.
+     * <p>The caller is responsible for ensuring that adding/subtracting {@link GammaHandler#changePerInput} from
+     * the current gamma will not result in a value outside {@link GammaHandler#MIN_GAMMA} and
+     * {@link GammaHandler#MAX_GAMMA}.</p>
+     * @param oldGamma The previous gamma value.
+     * @param increasing True if the gamma should be increased, false otherwise.
+     * @return The new gamma value.
+     */
+    public static Double calculateGammaWithoutSnapping(Double oldGamma, boolean increasing){
         double newGamma;
         oldGamma = Math.round(oldGamma * 100) / 100.0;
 
         if(increasing) {
-            if((MAX_GAMMA - oldGamma) <= changePerInput){
-                return MAX_GAMMA;
-            }
             newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0;
         }else{ // else if decreasing
-            if(oldGamma <= changePerInput) {
-                return MIN_GAMMA;
-            }
             newGamma = Math.round((oldGamma - changePerInput) * 100) / 100.0;
         }
         return newGamma;
@@ -98,7 +156,7 @@ public class GammaHandler {
      * @param value The gamma value to set.
      */
     public static void set(Double value){
-        mc.options.getGamma().setValue(value);
+        client.options.getGamma().setValue(value);
         currentCustomGamma = value;
     }
 
@@ -106,10 +164,10 @@ public class GammaHandler {
      * Display a HUD message to the user telling them the current gamma value.
      */
     public static void displayGammaMessage(){
-        if(mc.player != null) {
+        if(client.player != null) {
             DecimalFormat decFor = new DecimalFormat("0"); // define the Double decimal format (no decimals)
-            String msg = "Gamma = " + decFor.format(mc.options.getGamma().getValue()*100) + "%"; // build string
-            mc.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
+            String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%"; // build string
+            client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
         }
     }
 
@@ -121,9 +179,9 @@ public class GammaHandler {
     public static void toggle(){
         // make sure the latest gamma value is stored locally before overwriting it
         if(GammaShifter.isEnabled()){
-            currentCustomGamma = mc.options.getGamma().getValue();
+            currentCustomGamma = client.options.getGamma().getValue();
         }
-        mc.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
+        client.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
         GammaShifter.toggle();
     }
 
@@ -138,7 +196,7 @@ public class GammaHandler {
     /**
      * Sets the gamma to the default maximum value (100%).
      */
-    public static void setDefaultGamma(){
+    public static void setDefaultVanillaGamma(){
         set(1.0); // Default MC max gamma
         displayGammaMessage();
     }
@@ -178,12 +236,18 @@ public class GammaHandler {
     }
 
     /**
-     * Rounds a Double to the nearest 0.5. For example:
-     * <p>1.1 -> 1.0</p><p>1.4 -> 1.5</p><p>1.75 -> 2.0</p>
-     * @param x The value to be rounded.
-     * @return The rounded value.
+     * Gets whether new gamma values should be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
+     * @return True if snapping is enabled, false otherwise.
      */
-    private static Double roundToHalf(Double x){
-        return Math.round(x * 2) / 2.0;
+    public static boolean isSnappingEnabled() {
+        return snappingEnabled;
+    }
+
+    /**
+     * Sets whether new gamma values should be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
+     * <p>Set true if values should be snapped, false otherwise.</p>
+     */
+    public static void setSnappingEnabled(boolean enabled) {
+        snappingEnabled = enabled;
     }
 }

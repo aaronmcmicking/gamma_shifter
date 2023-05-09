@@ -20,6 +20,7 @@ public class ConfigLoader {
     private static Boolean enabled = true;
     private static Boolean alwaysStartEnabled = true;
     private static Double step = 0.25;
+    private static boolean snappingEnabled = true;
 
     /**
      * Initialize the file properties.
@@ -39,6 +40,7 @@ public class ConfigLoader {
             enabled = Boolean.parseBoolean((String) properties.get("enabled"));
             step = Double.parseDouble((String) properties.get("step"));
             alwaysStartEnabled = Boolean.parseBoolean((String) properties.get("alwaysStartEnabled"));
+            snappingEnabled = Boolean.parseBoolean((String) properties.get("snappingEnabled"));
 
             // apply the values in their respective spots
             set();
@@ -55,7 +57,7 @@ public class ConfigLoader {
 //            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't read config file:\n\t" + e);
         }catch(NullPointerException | NumberFormatException e){ // Parsing exceptions
             /* empty catch block */
-//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't parse config file... was it malformed?\n\t" + e);
+            GammaShifter.LOGGER.error("[GammaShifter] Couldn't parse config file... was it malformed?\n\t" + e);
         }
     }
 
@@ -70,12 +72,14 @@ public class ConfigLoader {
         enabled = GammaShifter.isEnabled();
         alwaysStartEnabled = GammaShifter.alwaysStartEnabled();
         step = GammaHandler.getChangePerInput();
+        snappingEnabled = GammaHandler.isSnappingEnabled();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
             properties.put("enabled", String.valueOf(enabled));
             properties.put("alwaysStartEnabled", String.valueOf(alwaysStartEnabled));
             properties.put("step", String.valueOf(step));
+            properties.put("snappingEnabled", String.valueOf(snappingEnabled));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -109,5 +113,6 @@ public class ConfigLoader {
         }
         GammaShifter.setAlwaysStartEnabled(alwaysStartEnabled);
         GammaHandler.setChangePerInput(step);
+        GammaHandler.setSnappingEnabled(snappingEnabled);
     }
 }
