@@ -7,9 +7,10 @@
   "key.gamma_shifter.toggle_mod": "Toggle Mod Effects",
   "key.gamma_shifter.max_gamma": "Max Gamma",
   "key.gamma_shifter.default_gamma": "Max Vanilla Gamma",
-  "key.gamma_shifter.preset_one": "Preset One",
-  "key.gamma_shifter.preset_two": "Preset Two",
+  "key.gamma_shifter.preset_one": "Preset 1",
+  "key.gamma_shifter.preset_two": "Preset 2",
+  "key.gamma_shifter.show_gamma": "Show Current Gamma",
 
-  "category.gamma_shifter.general": "General",
-  "title.gamma_shifter.config": "Gamma Shifter Options"
+  "title.gamma_shifter.config": "Gamma Shifter Options",
+  "category.gamma_shifter.general": "General"
 }

@@ -38,5 +38,7 @@
   },
   "suggests": {
     "another-mod": "*"
-  }
+  },
+
+  "accessWidener": "gamma_shifter.accesswidener"
 }

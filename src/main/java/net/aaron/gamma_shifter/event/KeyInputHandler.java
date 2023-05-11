@@ -24,6 +24,7 @@ public class KeyInputHandler {
     public static final String KEY_DEFAULT_GAMMA = "key.gamma_shifter.default_gamma";
     public static final String KEY_PRESET_ONE = "key.gamma_shifter.preset_one";
     public static final String KEY_PRESET_TWO = "key.gamma_shifter.preset_two";
+    public static final String KEY_SHOW_GAMMA = "key.gamma_shifter.show_gamma";
 
     /**
      * Default keybinds, initialized in {@link KeyInputHandler#registerKeyBinds()}.
@@ -35,6 +36,7 @@ public class KeyInputHandler {
     public static KeyBinding defaultGammaKey;
     public static KeyBinding presetOneKey;
     public static KeyBinding presetTwoKey;
+    public static KeyBinding showGammaKey;
 
     /**
      * Checks every tick for relevant key presses and calls the appropriate handler/helper method.
@@ -66,6 +68,10 @@ public class KeyInputHandler {
 
                 if(presetTwoKey.wasPressed()){
                     GammaHandler.applyPresetTwo();
+                }
+
+                if(showGammaKey.wasPressed()){
+                    GammaHandler.displayGammaMessage();
                 }
             }
 
@@ -139,12 +145,24 @@ public class KeyInputHandler {
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
+        // show gamma key
+        showGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                KEY_SHOW_GAMMA,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                KEY_CATEGORY_GAMMA_SHIFTER
+        ));
+
         registerKeyInputs();
     }
 
+    /**
+     * Flushes any buffered inputs from gamma-modifying keys. Buffered inputs are accrued when a keybind is pressed
+     * while the mod is disabled.
+     */
     public static void flushBufferedInputs(){
-        for(KeyBinding bind: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey}){
-            while(bind.wasPressed()) { /* empty */ }
+        for(KeyBinding keybinding: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey}){
+            keybinding.reset();
         }
     }
 }

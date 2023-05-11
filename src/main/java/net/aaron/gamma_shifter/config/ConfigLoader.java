@@ -22,8 +22,8 @@ public class ConfigLoader {
     private static double step = 0.25;
     private static boolean snappingEnabled = true;
     private static boolean alwaysSaveCustomGamma = true;
-    private static double presetOneValue = 1.0;
-    private static double presetTwoValue = 1.0;
+    private static double presetOne = 1.0;
+    private static double presetTwo = 1.0;
 
     /**
      * Initialize the file properties.
@@ -45,8 +45,8 @@ public class ConfigLoader {
             alwaysStartEnabled = Boolean.parseBoolean((String) properties.get("alwaysStartEnabled"));
             snappingEnabled = Boolean.parseBoolean((String) properties.get("snappingEnabled"));
             alwaysSaveCustomGamma = Boolean.parseBoolean((String) properties.get("alwaysSaveCustomGamma"));
-            presetOneValue = Double.parseDouble((String) properties.get("presetOneValue"));
-            presetTwoValue = Double.parseDouble((String) properties.get("presetTwoValue"));
+            presetOne = Double.parseDouble((String) properties.get("presetOne"));
+            presetTwo = Double.parseDouble((String) properties.get("presetTwo"));
 
 
             // apply the values in their respective spots
@@ -81,8 +81,8 @@ public class ConfigLoader {
         step = GammaHandler.getChangePerInput();
         snappingEnabled = GammaHandler.isSnappingEnabled();
         alwaysSaveCustomGamma = GammaHandler.getAlwaysSaveCustomGamma();
-        presetOneValue = GammaHandler.getPresetOneValue();
-        presetTwoValue = GammaHandler.getPresetTwoValue();
+        presetOne = GammaHandler.getPresetOne();
+        presetTwo = GammaHandler.getPresetTwo();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -91,8 +91,8 @@ public class ConfigLoader {
             properties.put("step", String.valueOf(step));
             properties.put("snappingEnabled", String.valueOf(snappingEnabled));
             properties.put("alwaysSaveCustomGamma", String.valueOf(alwaysSaveCustomGamma));
-            properties.put("presetOneValue", String.valueOf(presetOneValue));
-            properties.put("presetTwoValue", String.valueOf(presetTwoValue));
+            properties.put("presetOne", String.valueOf(presetOne));
+            properties.put("presetTwo", String.valueOf(presetTwo));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -128,8 +128,8 @@ public class ConfigLoader {
         GammaHandler.setChangePerInput( clamp(step, 0.01, GammaHandler.MAX_GAMMA) );
         GammaHandler.setSnappingEnabled(snappingEnabled);
         GammaHandler.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
-        GammaHandler.setPresetOneValue( clamp(presetOneValue) );
-        GammaHandler.setPresetTwoValue( clamp(presetTwoValue) );
+        GammaHandler.setPresetOne( clamp(presetOne) );
+        GammaHandler.setPresetTwo( clamp(presetTwo) );
     }
 
     /**

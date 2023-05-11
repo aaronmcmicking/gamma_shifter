@@ -57,8 +57,8 @@ public class GammaHandler {
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
      * by {@link net.aaron.gamma_shifter.config.ConfigLoader}.
      */
-    public static double presetOneValue = 1.0;
-    public static double presetTwoValue = 1.0;
+    public static double presetOne = 1.0;
+    public static double presetTwo = 1.0;
 
     /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display
@@ -104,7 +104,7 @@ public class GammaHandler {
             if(isSnappingEnabled()){
                 newGamma = calculateGammaWithSnapping(oldGamma, true);
             }else{
-                newGamma = calculateGammaWithoutSnapping(oldGamma, true);
+                newGamma = calculateGammaSimple(oldGamma, true);
             }
         }else{
             if(oldGamma <= changePerInput) {
@@ -114,7 +114,7 @@ public class GammaHandler {
             if(isSnappingEnabled()){
                 newGamma = calculateGammaWithSnapping(oldGamma, false);
             }else{
-                newGamma = calculateGammaWithoutSnapping(oldGamma, false);
+                newGamma = calculateGammaSimple(oldGamma, false);
             }
         }
         return newGamma;
@@ -151,7 +151,7 @@ public class GammaHandler {
      * @param increasing True if the gamma should be increased, false otherwise.
      * @return The new gamma value.
      */
-    public static Double calculateGammaWithoutSnapping(Double oldGamma, boolean increasing){
+    public static Double calculateGammaSimple(Double oldGamma, boolean increasing){
         double newGamma;
         oldGamma = Math.round(oldGamma * 100) / 100.0;
 
@@ -214,18 +214,18 @@ public class GammaHandler {
     }
 
     /**
-     * Applies the value of {@link GammaHandler#presetOneValue} to the game.
+     * Applies the value of {@link GammaHandler#presetOne} to the game.
      */
     public static void applyPresetOne(){
-        set(presetOneValue);
+        set(presetOne);
         displayGammaMessage();
     }
 
     /**
-     * Applies the value of {@link GammaHandler#presetTwoValue} to the game.
+     * Applies the value of {@link GammaHandler#presetTwo} to the game.
      */
     public static void applyPresetTwo(){
-        set(presetTwoValue);
+        set(presetTwo);
         displayGammaMessage();
     }
 
@@ -296,34 +296,34 @@ public class GammaHandler {
     }
 
     /**
-     * Gets the value of {@link GammaHandler#presetOneValue}.
-     * @return The value of {@link GammaHandler#presetOneValue}.
+     * Gets the value of {@link GammaHandler#presetOne}.
+     * @return The value of {@link GammaHandler#presetOne}.
      */
-    public static double getPresetOneValue(){
-        return presetOneValue;
+    public static double getPresetOne(){
+        return presetOne;
     }
 
     /**
-     * Sets the value of {@link GammaHandler#presetOneValue}.
+     * Sets the value of {@link GammaHandler#presetOne}.
      * @param value The new value.
      */
-    public static void setPresetOneValue(double value){
-        presetOneValue = value;
+    public static void setPresetOne(double value){
+        presetOne = value;
     }
 
     /**
-     * Gets the value of {@link GammaHandler#presetTwoValue}.
-     * @return The value of {@link GammaHandler#presetTwoValue}.
+     * Gets the value of {@link GammaHandler#presetTwo}.
+     * @return The value of {@link GammaHandler#presetTwo}.
      */
-    public static double getPresetTwoValue(){
-        return presetTwoValue;
+    public static double getPresetTwo(){
+        return presetTwo;
     }
 
     /**
-     * Sets the value of {@link GammaHandler#presetTwoValue}.
+     * Sets the value of {@link GammaHandler#presetTwo}.
      * @param value The new value.
      */
-    public static void setPresetTwoValue(double value){
-        presetTwoValue = value;
+    public static void setPresetTwo(double value){
+        presetTwo = value;
     }
 }

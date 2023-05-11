@@ -102,22 +102,22 @@ public class ConfigScreenBuilder {
         );
 
         // set presetOneValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset One (%)"), (int)Math.round(GammaHandler.getPresetOneValue()*100))
+        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset 1 (%)"), (int)Math.round(GammaHandler.getPresetOne()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("The value to set for Preset One"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetOneValue(Math.round(newValue) / 100.0))
+                .setTooltip(Text.translatable("The value to set for Preset 1"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
                 .build()
         );
 
         // set presetTwoValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset Two (%)"), (int)Math.round(GammaHandler.getPresetTwoValue()*100))
+        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset 2 (%)"), (int)Math.round(GammaHandler.getPresetTwo()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("The value to set for Preset Two"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetTwoValue(Math.round(newValue) / 100.0))
+                .setTooltip(Text.translatable("The value to set for Preset 2"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
                 .build()
         );
 
