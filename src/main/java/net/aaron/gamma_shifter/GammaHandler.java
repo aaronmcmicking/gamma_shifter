@@ -178,7 +178,7 @@ public class GammaHandler {
     public static void displayGammaMessage(){
         if(client.player != null && !GammaShifter.isSilentModeEnabled()) {
             MutableText messageText = getDisplayGammaMessage();
-            client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
+            client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(GammaShifter.getTextColour())), true);
         }
     }
 

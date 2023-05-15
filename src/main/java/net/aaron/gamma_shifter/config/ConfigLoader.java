@@ -26,6 +26,7 @@ public class ConfigLoader {
     private static double presetTwo = 1.0;
     private static boolean showCurrentGammaOverlay = false;
     private static boolean silentMode = false;
+    private static int textColour = 0xFFFFFF;
 
     /**
      * Initialize the file properties.
@@ -51,6 +52,7 @@ public class ConfigLoader {
             presetTwo = Double.parseDouble((String) properties.get("presetTwo"));
             showCurrentGammaOverlay = Boolean.parseBoolean((String) properties.get("showCurrentGammaOverlay"));
             silentMode = Boolean.parseBoolean((String) properties.get("silentMode"));
+            textColour = Integer.parseInt((String) properties.get("textColour"));
 
             // apply the values in their respective spots
             set();
@@ -88,6 +90,7 @@ public class ConfigLoader {
         presetTwo = GammaHandler.getPresetTwo();
         showCurrentGammaOverlay = GammaHandler.shouldShowCurrentGammaOverlay();
         silentMode = GammaShifter.isSilentModeEnabled();
+        textColour = GammaShifter.getTextColour();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -100,6 +103,7 @@ public class ConfigLoader {
             properties.put("presetTwo", String.valueOf(presetTwo));
             properties.put("showCurrentGammaOverlay", String.valueOf(showCurrentGammaOverlay));
             properties.put("silentMode", String.valueOf(silentMode));
+            properties.put("textColour", String.valueOf(textColour));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -139,6 +143,7 @@ public class ConfigLoader {
         GammaHandler.setPresetTwo( clamp(presetTwo) );
         GammaHandler.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
         GammaShifter.setSilentModeEnabled(silentMode);
+        GammaShifter.setTextColour(textColour);
     }
 
     /**

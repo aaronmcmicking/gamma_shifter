@@ -39,6 +39,11 @@ public class GammaShifter implements ClientModInitializer {
     private static boolean silentModeEnabled = false;
 
     /**
+     * The text colour used in HUD elements.
+     */
+    private static int textColour = 0xFFFFFF;
+
+    /**
      * Returns whether the mod is toggled on.
      * @return true if the mod is toggled on, false otherwise.
      */
@@ -93,6 +98,18 @@ public class GammaShifter implements ClientModInitializer {
      */
     public static boolean isSilentModeEnabled(){
         return silentModeEnabled;
+    }
+
+    /**
+     * Gets the text colour for HUD elements.
+     */
+    public static int getTextColour(){ return textColour; }
+
+    /**
+     * Sets the text colour for HUD elements.
+     */
+    public static void setTextColour(int colour){
+        textColour = colour;
     }
 
     /**

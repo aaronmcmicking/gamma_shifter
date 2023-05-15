@@ -138,6 +138,14 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        // set the text colour for HUD elements
+        general.addEntry(entryBuilder.startColorField(Text.translatable("config.gamma_shifter.textColour"), GammaShifter.getTextColour())
+                .setDefaultValue(0xFFFFFF)
+                .setTooltip(Text.translatable("config.gamma_shifter.textColour.tooltip"))
+                .setSaveConsumer(GammaShifter::setTextColour)
+                .build()
+        );
+
         // return the built screen
         return builder.build();
     }

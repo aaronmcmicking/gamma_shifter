@@ -18,7 +18,7 @@ public class InGameHudMixin {
         if(GammaHandler.shouldShowCurrentGammaOverlay() && !GammaShifter.isSilentModeEnabled()) {
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             matrices.push();
-            textRenderer.draw(matrices, GammaHandler.getDisplayGammaMessage(), 2.0f, 2.0f, 0xFFFFFFFF);
+            textRenderer.drawWithShadow(matrices, GammaHandler.getDisplayGammaMessage(), 2.0f, 2.0f, GammaShifter.getTextColour());
             matrices.pop();
         }
     }
