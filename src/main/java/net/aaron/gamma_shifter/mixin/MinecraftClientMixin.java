@@ -7,6 +7,7 @@ import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,7 +41,7 @@ public abstract class MinecraftClientMixin {
             if ((screen instanceof GameMenuScreen) && (MinecraftClient.getInstance() != null)  &&  (MinecraftClient.getInstance().player != null)) {
                 MinecraftClient.getInstance().options.write();
                 ConfigLoader.save();
-                GammaShifter.LOGGER.info(("Saved options"));
+                GammaShifter.LOGGER.info("Saved options");
 
                 // if the mod is enabled, make sure GammaHandler gets the updated gamma value from the vanilla settings menu
                 if(GammaShifter.isEnabled()){

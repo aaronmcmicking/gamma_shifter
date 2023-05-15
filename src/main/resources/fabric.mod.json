@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Gamma Shifter",
-  "description": "Enables setting the gamma/brightness above 100% in Minecraft 1.19+",
+  "description": "Customizable fullbright mod that increases the max brightness in 1.19+",
   "authors": [
     "Aaron McMicking"
   ],

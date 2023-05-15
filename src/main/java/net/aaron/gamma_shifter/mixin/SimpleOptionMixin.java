@@ -1,9 +1,13 @@
 package net.aaron.gamma_shifter.mixin;
 
 import com.mojang.serialization.Codec;
+import net.aaron.gamma_shifter.GammaShifter;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,19 +32,19 @@ public class SimpleOptionMixin {
 
     /**
      * Replaces the existing codec for gamma with a valid codec so that the game does not realize gamma values are
-     * out-of-range. Enables {@link SimpleOption#setValue(Object)} to set gamma values > 1.0.
-     * @param cir CallbackInfoReturnable containing the codec.
+     * out-of-range. Enables {@link GameOptions#load()} to save gamma values >1.0 to options.txt and suppresses error messages.
      */
     @Inject(method = "getCodec", at = @At("HEAD"), cancellable = true)
     public void replaceCodec(CallbackInfoReturnable<Codec<Double>> cir){
-        if(this.text.getString().equalsIgnoreCase("brightness")){
+        String gammaTranslation = Language.getInstance().get("options.gamma"); // gets translated name
+        if(this.text.getString().equals(gammaTranslation)){
             cir.setReturnValue(Codec.DOUBLE);
         }
     }
 
     /**
-     * Replaces the empty optional for out-of-range gamma values with an existing Optional of that value. Enables
-     * {@link GameOptions#load()} to set save gamma values > 1.0 to options.txt and suppresses error messages.
+     * Replaces the empty Optional for out-of-range gamma values with an existing Optional of that value.
+     * Enables {@link SimpleOption#setValue(Object)} to set gamma values >1.0.
      * <p>Currently cannot discriminate between gamma and other options, and so any option using
      * {@link net.minecraft.client.option.SimpleOption.DoubleSliderCallbacks} will have it's validation replaced
      * (since 0.1.0)</p>

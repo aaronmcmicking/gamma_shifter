@@ -28,7 +28,15 @@ public class GammaShifter implements ClientModInitializer {
      */
     private static boolean enabled = true;
 
+    /**
+     * Whether the mod should always start enabled or if it should start in the state it was previously closed in.
+     */
     private static boolean alwaysStartEnabled = true;
+
+    /**
+     * Silent mode hides all HUD elements. True if silent mode is enabled, false otherwise.
+     */
+    private static boolean silentModeEnabled = false;
 
     /**
      * Returns whether the mod is toggled on.
@@ -69,6 +77,22 @@ public class GammaShifter implements ClientModInitializer {
      */
     public static void setAlwaysStartEnabled(Boolean value){
         alwaysStartEnabled = value;
+    }
+
+    /**
+     * Sets whether silent mode is enabled or disabled. Silent mode hides all HUD elements of the mod.
+     * @param value The new value.
+     */
+    public static void setSilentModeEnabled(boolean value){
+        silentModeEnabled = value;
+    }
+
+    /**
+     * Gets the current value of silentModeEnabled. Silent mode hides all mod HUD elements.
+     * @return True if silent mode is enabled, false otherwise.
+     */
+    public static boolean isSilentModeEnabled(){
+        return silentModeEnabled;
     }
 
     /**

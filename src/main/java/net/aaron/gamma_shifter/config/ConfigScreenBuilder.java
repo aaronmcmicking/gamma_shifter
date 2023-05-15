@@ -40,9 +40,9 @@ public class ConfigScreenBuilder {
      */
     public Screen getGammaShifterOptionsMenu() {
         // toggle mod (boolean button)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Enable mod effects"), GammaShifter.isEnabled())
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.toggle_mod"), GammaShifter.isEnabled())
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("Toggles mod effects on/off"))
+                .setTooltip(Text.translatable("config.gamma_shifter.toggle_mod.tooltip"))
                 .setSaveConsumer(newValue -> {
                     if(newValue != GammaShifter.isEnabled()) {
                         GammaHandler.toggle();
@@ -50,12 +50,29 @@ public class ConfigScreenBuilder {
                 })
                 .build());
 
+        // toggle silent mode (boolean)
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("config.gamma_shifter.silent_mode.tooltip"))
+                .setSaveConsumer(GammaShifter::setSilentModeEnabled)
+                .build()
+        );
+
+        // toggle persistent gamma display
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), GammaHandler.shouldShowCurrentGammaOverlay())
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("config.gamma_shifter.show_current_gamma_overlay.tooltip"))
+                .setSaveConsumer(GammaHandler::setShowCurrentGammaOverlay)
+                .build()
+        );
+
+
         // set brightness (field)
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Brightness (%)"), (int)Math.round(GammaHandler.getCurrentCustomGamma()*100))
+        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.gamma"), (int)Math.round(GammaHandler.getCurrentCustomGamma()*100))
                     .setMin((int)(GammaHandler.MIN_GAMMA*100))
                     .setMax((int)(GammaHandler.MAX_GAMMA*100))
                     .setDefaultValue(100)
-                    .setTooltip(Text.translatable("The brightness value"))
+                    .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                     .setSaveConsumer(newValue -> {
                         if(GammaShifter.isEnabled()) {
                             GammaHandler.set((Math.round(newValue)) / 100.0);
@@ -67,56 +84,56 @@ public class ConfigScreenBuilder {
                 );
 
         // set step (field)
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Brightness change per input (%)"),
+        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.change_per_input"),
                         (int)Math.round(GammaHandler.getChangePerInput()*100))
                         .setMin(1)
                         .setMax((int)(GammaHandler.MAX_GAMMA*100))
                         .setDefaultValue(25)
-                        .setTooltip(Text.translatable("The percent change in the brightness value when the increase/decrease key is pressed"))
+                        .setTooltip(Text.translatable("config.gamma_shifter.change_per_input.tooltip"))
                         .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
                         .build()
                 );
 
         // set alwaysStartEnabled (boolean button)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Always start enabled"), GammaShifter.alwaysStartEnabled())
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_start_enabled"), GammaShifter.alwaysStartEnabled())
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("Whether the mod always starts enabled or not"))
+                .setTooltip(Text.translatable("config.gamma_shifter.always_start_enabled.tooltip"))
                 .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
                 .build()
         );
 
         // set enableSnapping (boolean button)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Snap to change per input"), GammaHandler.isSnappingEnabled())
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.snap"), GammaHandler.isSnappingEnabled())
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("Snaps the brightness to the nearest multiple of the change per input value"))
+                .setTooltip(Text.translatable("config.gamma_shifter.snap.tooltip"))
                 .setSaveConsumer(GammaHandler::setSnappingEnabled)
                 .build()
         );
 
         // set alwaysSaveCustomGamma
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("Always save custom brightness"), GammaHandler.getAlwaysSaveCustomGamma())
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_save_custom_brightness"), GammaHandler.getAlwaysSaveCustomGamma())
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("Save the customized brightness to options.txt regardless of whether the mod is enabled or disabled"))
+                .setTooltip(Text.translatable("config.gamma_shifter.always_save_custom_brightness.tooltip"))
                 .setSaveConsumer(GammaHandler::setAlwaysSaveCustomGamma)
                 .build()
         );
 
         // set presetOneValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset 1 (%)"), (int)Math.round(GammaHandler.getPresetOne()*100))
+        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("The value to set for Preset 1"))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
                 .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
                 .build()
         );
 
         // set presetTwoValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("Preset 2 (%)"), (int)Math.round(GammaHandler.getPresetTwo()*100))
+        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("The value to set for Preset 2"))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
                 .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
                 .build()
         );

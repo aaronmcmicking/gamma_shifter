@@ -3,11 +3,10 @@ package net.aaron.gamma_shifter;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.text.DecimalFormat;
 
 public class GammaHandler {
     /**
@@ -52,6 +51,8 @@ public class GammaHandler {
      * True if the custom gamma should be set regardless of if the mod is enabled, false otherwise.
      */
     public static boolean alwaysSaveCustomGamma = true;
+
+    public static boolean showCurrentGammaOverlay = false;
 
     /**
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
@@ -132,7 +133,6 @@ public class GammaHandler {
     private static Double calculateGammaWithSnapping(Double oldGamma, boolean increasing){
         double newGamma;
         int oldGammaModChangePerInput = (int)Math.round((oldGamma*100)) % (int)Math.round((changePerInput*100));
-//        GammaShifter.LOGGER.info((int)Math.round((oldGamma*100)) + " % " + (int)Math.round((changePerInput*100)) + " = " + oldGammaModChangePerInput);
         if(increasing){
             newGamma = Math.round( oldGamma*100 + changePerInput*100 - oldGammaModChangePerInput ) / 100.0;
         }else{
@@ -176,11 +176,14 @@ public class GammaHandler {
      * Display a HUD message to the user telling them the current gamma value.
      */
     public static void displayGammaMessage(){
-        if(client.player != null) {
-            DecimalFormat decFor = new DecimalFormat("0"); // define the Double decimal format (no decimals)
-            String msg = "Gamma = " + decFor.format(client.options.getGamma().getValue()*100) + "%"; // build string
-            client.player.sendMessage(Text.literal(msg).fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
+        if(client.player != null && !GammaShifter.isSilentModeEnabled()) {
+            MutableText messageText = getDisplayGammaMessage();
+            client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(Formatting.WHITE)), true);
         }
+    }
+
+    public static MutableText getDisplayGammaMessage(){
+        return Text.translatable("message.gamma_shifter.display_current_gamma", Math.round(client.options.getGamma().getValue()*100));
     }
 
     /**
@@ -325,5 +328,13 @@ public class GammaHandler {
      */
     public static void setPresetTwo(double value){
         presetTwo = value;
+    }
+
+    public static boolean shouldShowCurrentGammaOverlay(){
+        return showCurrentGammaOverlay;
+    }
+
+    public static void setShowCurrentGammaOverlay(boolean value){
+        showCurrentGammaOverlay = value;
     }
 }

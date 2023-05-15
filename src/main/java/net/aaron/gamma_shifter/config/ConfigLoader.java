@@ -24,6 +24,8 @@ public class ConfigLoader {
     private static boolean alwaysSaveCustomGamma = true;
     private static double presetOne = 1.0;
     private static double presetTwo = 1.0;
+    private static boolean showCurrentGammaOverlay = false;
+    private static boolean silentMode = false;
 
     /**
      * Initialize the file properties.
@@ -47,7 +49,8 @@ public class ConfigLoader {
             alwaysSaveCustomGamma = Boolean.parseBoolean((String) properties.get("alwaysSaveCustomGamma"));
             presetOne = Double.parseDouble((String) properties.get("presetOne"));
             presetTwo = Double.parseDouble((String) properties.get("presetTwo"));
-
+            showCurrentGammaOverlay = Boolean.parseBoolean((String) properties.get("showCurrentGammaOverlay"));
+            silentMode = Boolean.parseBoolean((String) properties.get("silentMode"));
 
             // apply the values in their respective spots
             set();
@@ -83,6 +86,8 @@ public class ConfigLoader {
         alwaysSaveCustomGamma = GammaHandler.getAlwaysSaveCustomGamma();
         presetOne = GammaHandler.getPresetOne();
         presetTwo = GammaHandler.getPresetTwo();
+        showCurrentGammaOverlay = GammaHandler.shouldShowCurrentGammaOverlay();
+        silentMode = GammaShifter.isSilentModeEnabled();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -93,6 +98,8 @@ public class ConfigLoader {
             properties.put("alwaysSaveCustomGamma", String.valueOf(alwaysSaveCustomGamma));
             properties.put("presetOne", String.valueOf(presetOne));
             properties.put("presetTwo", String.valueOf(presetTwo));
+            properties.put("showCurrentGammaOverlay", String.valueOf(showCurrentGammaOverlay));
+            properties.put("silentMode", String.valueOf(silentMode));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -130,6 +137,8 @@ public class ConfigLoader {
         GammaHandler.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
         GammaHandler.setPresetOne( clamp(presetOne) );
         GammaHandler.setPresetTwo( clamp(presetTwo) );
+        GammaHandler.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
+        GammaShifter.setSilentModeEnabled(silentMode);
     }
 
     /**

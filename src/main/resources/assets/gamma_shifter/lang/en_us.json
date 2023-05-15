@@ -12,5 +12,27 @@
   "key.gamma_shifter.show_gamma": "Show Current Gamma",
 
   "title.gamma_shifter.config": "Gamma Shifter Options",
-  "category.gamma_shifter.general": "General"
+  "category.gamma_shifter.general": "General",
+  "config.gamma_shifter.toggle_mod": "Enable mod effects",
+  "config.gamma_shifter.toggle_mod.tooltip": "Toggles mod effects on/off",
+  "config.gamma_shifter.silent_mode": "Enable silent mode",
+  "config.gamma_shifter.silent_mode.tooltip": "Silent mode hides all HUD elements of the mod",
+  "config.gamma_shifter.gamma": "Brightness (%)",
+  "config.gamma_shifter.gamma.tooltip": "The brightness value",
+  "config.gamma_shifter.change_per_input": "Brightness change per input (%)",
+  "config.gamma_shifter.change_per_input.tooltip": "The percent change in the brightness when the increase/decrease key is pressed",
+  "config.gamma_shifter.always_start_enabled": "Always start enabled",
+  "config.gamma_shifter.always_start_enabled.tooltip": "Whether the mod always starts enabled or not",
+  "config.gamma_shifter.snap": "Snap to change per input",
+  "config.gamma_shifter.snap.tooltip": "Snaps the brightness to the nearest multiple of the change per input value",
+  "config.gamma_shifter.always_save_custom_brightness": "Always save custom brightness",
+  "config.gamma_shifter.always_save_custom_brightness.tooltip": "Save the customized brightness to options.txt regardless of whether the mod is toggled on/off",
+  "config.gamma_shifter.preset_one": "Preset 1 (%)",
+  "config.gamma_shifter.preset_one.tooltip": "The brightness value to set when the Preset 1 key is pressed",
+  "config.gamma_shifter.preset_two": "Preset 2 (%)",
+  "config.gamma_shifter.preset_two.tooltip": "The brightness value to set when the Preset 2 key is pressed",
+  "config.gamma_shifter.show_current_gamma_overlay": "Display current brightness",
+  "config.gamma_shifter.show_current_gamma_overlay.tooltip": "If enabled, the current brightness is displayed in the top left corner at all times",
+
+  "message.gamma_shifter.display_current_gamma": "Gamma: %s%%"
 }

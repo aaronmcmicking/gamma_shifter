@@ -6,10 +6,11 @@
   "mixins": [
   ],
   "client": [
-    "SimpleOptionMixin$DoubleSliderCallbacksMixin",
     "GameOptionsMixin",
+    "InGameHudMixin",
     "MinecraftClientMixin",
-    "SimpleOptionMixin"
+    "SimpleOptionMixin",
+    "SimpleOptionMixin$DoubleSliderCallbacksMixin"
   ],
   "injectors": {
     "defaultRequire": 1
