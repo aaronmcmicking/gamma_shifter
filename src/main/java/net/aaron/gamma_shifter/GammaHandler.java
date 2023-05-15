@@ -1,12 +1,9 @@
 package net.aaron.gamma_shifter;
 
+import net.aaron.gamma_shifter.HUD.HUD;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 public class GammaHandler {
     /**
@@ -47,12 +44,6 @@ public class GammaHandler {
      */
     public static boolean snappingEnabled = true;
 
-    /**
-     * True if the custom gamma should be set regardless of if the mod is enabled, false otherwise.
-     */
-    public static boolean alwaysSaveCustomGamma = true;
-
-    public static boolean showCurrentGammaOverlay = false;
 
     /**
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
@@ -66,12 +57,12 @@ public class GammaHandler {
      * information to the user.
      * @see GammaHandler#calculateGamma(Double, boolean)
      * @see GammaHandler#set(Double)
-     * @see GammaHandler#displayGammaMessage()
+     * @see HUD#displayGammaMessage()
      */
     public static void increaseGamma(){
         double newGamma = calculateGamma(client.options.getGamma().getValue(), true);
         set(newGamma);
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
@@ -79,12 +70,12 @@ public class GammaHandler {
      * information to the user.
      * @see GammaHandler#calculateGamma(Double, boolean)
      * @see GammaHandler#set(Double)
-     * @see GammaHandler#displayGammaMessage()
+     * @see HUD#displayGammaMessage()
      */
     public static void decreaseGamma(){
         double newGamma = calculateGamma(client.options.getGamma().getValue(), false);
         set(newGamma);
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
@@ -95,30 +86,18 @@ public class GammaHandler {
      * @return The new gamma value.
      */
     public static Double calculateGamma(Double oldGamma, boolean increasing){
-        double newGamma;
-
         if(increasing){
             if((MAX_GAMMA - oldGamma) <= changePerInput){
                 KeyInputHandler.flushBufferedInputs();
                 return MAX_GAMMA;
-            }
-            if(isSnappingEnabled()){
-                newGamma = calculateGammaWithSnapping(oldGamma, true);
-            }else{
-                newGamma = calculateGammaSimple(oldGamma, true);
             }
         }else{
             if(oldGamma <= changePerInput) {
                 KeyInputHandler.flushBufferedInputs();
                 return MIN_GAMMA;
             }
-            if(isSnappingEnabled()){
-                newGamma = calculateGammaWithSnapping(oldGamma, false);
-            }else{
-                newGamma = calculateGammaSimple(oldGamma, false);
-            }
         }
-        return newGamma;
+        return isSnappingEnabled() ? calculateGammaWithSnapping(oldGamma, increasing) : calculateGammaSimple(oldGamma, increasing);
     }
 
     /**
@@ -173,20 +152,6 @@ public class GammaHandler {
     }
 
     /**
-     * Display a HUD message to the user telling them the current gamma value.
-     */
-    public static void displayGammaMessage(){
-        if(client.player != null && !GammaShifter.isSilentModeEnabled()) {
-            MutableText messageText = getDisplayGammaMessage();
-            client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(GammaShifter.getTextColour())), true);
-        }
-    }
-
-    public static MutableText getDisplayGammaMessage(){
-        return Text.translatable("message.gamma_shifter.display_current_gamma", Math.round(client.options.getGamma().getValue()*100));
-    }
-
-    /**
      * Toggles the mod effects on/off by setting gamma to either 0.0 or {@link GammaHandler#currentCustomGamma} and
      * toggling {@link GammaShifter}.
      * <p>Also stores the latest gamma value locally (fixes compatibility issue with Sodium)</p>
@@ -205,15 +170,15 @@ public class GammaHandler {
      */
     public static void applyMaxGamma(){
         set(MAX_GAMMA);
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
      * Sets the gamma to the default maximum value (100%).
      */
-    public static void applyVanillaMaxGamma(){
+    public static void applyVanillaMaxGamma() {
         set(1.0); // Default MC max gamma
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
@@ -221,7 +186,7 @@ public class GammaHandler {
      */
     public static void applyPresetOne(){
         set(presetOne);
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
@@ -229,7 +194,7 @@ public class GammaHandler {
      */
     public static void applyPresetTwo(){
         set(presetTwo);
-        displayGammaMessage();
+        HUD.displayGammaMessage();
     }
 
     /**
@@ -283,22 +248,6 @@ public class GammaHandler {
     }
 
     /**
-     * Sets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
-     * @param value True if the custom gamma should always be saved, false otherwise.
-     */
-    public static void setAlwaysSaveCustomGamma(boolean value){
-            alwaysSaveCustomGamma = value;
-    }
-
-    /**
-     * Gets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
-     * @return True if the custom gamma should always be saved, false otherwise.
-     */
-    public static boolean getAlwaysSaveCustomGamma(){
-        return alwaysSaveCustomGamma;
-    }
-
-    /**
      * Gets the value of {@link GammaHandler#presetOne}.
      * @return The value of {@link GammaHandler#presetOne}.
      */
@@ -330,11 +279,4 @@ public class GammaHandler {
         presetTwo = value;
     }
 
-    public static boolean shouldShowCurrentGammaOverlay(){
-        return showCurrentGammaOverlay;
-    }
-
-    public static void setShowCurrentGammaOverlay(boolean value){
-        showCurrentGammaOverlay = value;
-    }
 }

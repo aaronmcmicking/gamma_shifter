@@ -5,6 +5,7 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
+import net.aaron.gamma_shifter.HUD.HUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -24,9 +25,12 @@ public class ConfigScreenBuilder {
                                         .setSavingRunnable(ConfigLoader::save);
 
     /**
-     * A new option category.
+     * Config menu categories.
      */
     ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.general"));
+    ConfigCategory HUDCategory = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.HUD"));
+    ConfigCategory presets = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.presets"));
+
     
     /**
      * A builder used to create new "entries"/modifiable options on the options screen.
@@ -51,7 +55,7 @@ public class ConfigScreenBuilder {
                 .build());
 
         // toggle silent mode (boolean)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
                 .setDefaultValue(false)
                 .setTooltip(Text.translatable("config.gamma_shifter.silent_mode.tooltip"))
                 .setSaveConsumer(GammaShifter::setSilentModeEnabled)
@@ -59,10 +63,10 @@ public class ConfigScreenBuilder {
         );
 
         // toggle persistent gamma display
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), GammaHandler.shouldShowCurrentGammaOverlay())
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), HUD.shouldShowCurrentGammaOverlay())
                 .setDefaultValue(false)
                 .setTooltip(Text.translatable("config.gamma_shifter.show_current_gamma_overlay.tooltip"))
-                .setSaveConsumer(GammaHandler::setShowCurrentGammaOverlay)
+                .setSaveConsumer(HUD::setShowCurrentGammaOverlay)
                 .build()
         );
 
@@ -111,15 +115,15 @@ public class ConfigScreenBuilder {
         );
 
         // set alwaysSaveCustomGamma
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_save_custom_brightness"), GammaHandler.getAlwaysSaveCustomGamma())
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_save_custom_brightness"), GammaShifter.getAlwaysSaveCustomGamma())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.always_save_custom_brightness.tooltip"))
-                .setSaveConsumer(GammaHandler::setAlwaysSaveCustomGamma)
+                .setSaveConsumer(GammaShifter::setAlwaysSaveCustomGamma)
                 .build()
         );
 
         // set presetOneValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
@@ -129,7 +133,7 @@ public class ConfigScreenBuilder {
         );
 
         // set presetTwoValue
-        general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
                 .setDefaultValue(100)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
@@ -139,10 +143,30 @@ public class ConfigScreenBuilder {
         );
 
         // set the text colour for HUD elements
-        general.addEntry(entryBuilder.startColorField(Text.translatable("config.gamma_shifter.textColour"), GammaShifter.getTextColour())
+        HUDCategory.addEntry(entryBuilder.startColorField(Text.translatable("config.gamma_shifter.textColour"), HUD.getTextColour())
                 .setDefaultValue(0xFFFFFF)
                 .setTooltip(Text.translatable("config.gamma_shifter.textColour.tooltip"))
-                .setSaveConsumer(GammaShifter::setTextColour)
+                .setSaveConsumer(HUD::setTextColour)
+                .build()
+        );
+
+        /*
+            Set overlay location
+            Does not currently support translations for button text
+         */
+        String[] list = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"};
+        HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationString(HUD.getCurrentLocation()))
+                .setDefaultValue("Top Left")
+                .setTooltip(Text.translatable("config.gamma_shifter.persistent_overlay_location.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    HUD.setCurrentLocation(
+                            switch (newValue) {
+                                case "Bottom Left" -> HUD.Locations.BOTTOM_LEFT;
+                                case "Bottom Right" -> HUD.Locations.BOTTOM_RIGHT;
+                                case "Top Right" -> HUD.Locations.TOP_RIGHT;
+                                default -> HUD.Locations.TOP_LEFT;
+                    });
+                })
                 .build()
         );
 

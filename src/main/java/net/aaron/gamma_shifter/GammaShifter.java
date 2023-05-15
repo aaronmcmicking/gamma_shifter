@@ -39,9 +39,9 @@ public class GammaShifter implements ClientModInitializer {
     private static boolean silentModeEnabled = false;
 
     /**
-     * The text colour used in HUD elements.
+     * True if the custom gamma should be set regardless of if the mod is enabled, false otherwise.
      */
-    private static int textColour = 0xFFFFFF;
+    public static boolean alwaysSaveCustomGamma = true;
 
     /**
      * Returns whether the mod is toggled on.
@@ -101,16 +101,21 @@ public class GammaShifter implements ClientModInitializer {
     }
 
     /**
-     * Gets the text colour for HUD elements.
+     * Sets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
+     * @param value True if the custom gamma should always be saved, false otherwise.
      */
-    public static int getTextColour(){ return textColour; }
+    public static void setAlwaysSaveCustomGamma(boolean value){
+        alwaysSaveCustomGamma = value;
+    }
 
     /**
-     * Sets the text colour for HUD elements.
+     * Gets whether the custom gamma should be saved regardless of whether the mod is enabled or not.
+     * @return True if the custom gamma should always be saved, false otherwise.
      */
-    public static void setTextColour(int colour){
-        textColour = colour;
+    public static boolean getAlwaysSaveCustomGamma(){
+        return alwaysSaveCustomGamma;
     }
+
 
     /**
      * Starts mod activity once the game loads.

@@ -109,7 +109,7 @@ public abstract class GameOptionsMixin {
      */
     @Inject(method = "write", at = @At("HEAD"))
     public void substituteCustomGammaForSave(CallbackInfo ci){
-        if(!GammaShifter.isEnabled() && GammaHandler.getAlwaysSaveCustomGamma()){
+        if(!GammaShifter.isEnabled() && GammaShifter.getAlwaysSaveCustomGamma()){
             GameOptions options = MinecraftClient.getInstance().options;
             tempGamma = options.getGamma().getValue();
             options.getGamma().setValue(GammaHandler.currentCustomGamma);
@@ -123,7 +123,7 @@ public abstract class GameOptionsMixin {
      */
     @Inject(method = "write", at = @At("TAIL"))
     public void restoreCurrentGammaAfterSave(CallbackInfo ci){
-        if(!GammaShifter.isEnabled() && GammaHandler.getAlwaysSaveCustomGamma()){
+        if(!GammaShifter.isEnabled() && GammaShifter.getAlwaysSaveCustomGamma()){
             MinecraftClient.getInstance().options.getGamma().setValue(tempGamma);
         }
     }

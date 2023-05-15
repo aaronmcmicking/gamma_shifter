@@ -2,6 +2,7 @@ package net.aaron.gamma_shifter.config;
 
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
+import net.aaron.gamma_shifter.HUD.HUD;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
@@ -85,12 +86,12 @@ public class ConfigLoader {
         alwaysStartEnabled = GammaShifter.alwaysStartEnabled();
         step = GammaHandler.getChangePerInput();
         snappingEnabled = GammaHandler.isSnappingEnabled();
-        alwaysSaveCustomGamma = GammaHandler.getAlwaysSaveCustomGamma();
+        alwaysSaveCustomGamma = GammaShifter.getAlwaysSaveCustomGamma();
         presetOne = GammaHandler.getPresetOne();
         presetTwo = GammaHandler.getPresetTwo();
-        showCurrentGammaOverlay = GammaHandler.shouldShowCurrentGammaOverlay();
+        showCurrentGammaOverlay = HUD.shouldShowCurrentGammaOverlay();
         silentMode = GammaShifter.isSilentModeEnabled();
-        textColour = GammaShifter.getTextColour();
+        textColour = HUD.getTextColour();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -138,12 +139,12 @@ public class ConfigLoader {
         GammaShifter.setAlwaysStartEnabled(alwaysStartEnabled);
         GammaHandler.setChangePerInput( clamp(step, 0.01, GammaHandler.MAX_GAMMA) );
         GammaHandler.setSnappingEnabled(snappingEnabled);
-        GammaHandler.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
+        GammaShifter.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
         GammaHandler.setPresetOne( clamp(presetOne) );
         GammaHandler.setPresetTwo( clamp(presetTwo) );
-        GammaHandler.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
+        HUD.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
         GammaShifter.setSilentModeEnabled(silentMode);
-        GammaShifter.setTextColour(textColour);
+        HUD.setTextColour(textColour);
     }
 
     /**
