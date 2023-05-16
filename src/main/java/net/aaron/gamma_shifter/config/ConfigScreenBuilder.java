@@ -129,6 +129,13 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_message_on_gamma_change"), HUD.getShowMessageOnGammaChange())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("config.gamma_shifter.show_message_on_gamma_change.tooltip"))
+                .setSaveConsumer(HUD::setShowMessageOnGammaChange)
+                .build()
+        );
+
         /*
             Set overlay location
             Does not currently support translations for button text

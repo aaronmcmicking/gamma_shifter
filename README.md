@@ -58,7 +58,9 @@ Shows the brightness at all times in the corner of the screen<br><br>
 ***Change HUD text colour***<br>
 Sets a custom colour for the text in HUD elements<br><br>
 ***Overlay location***<br>
-Sets the corner of the screen that the persistent overlay is in<br>
+Sets the corner of the screen that the persistent overlay is in<br><br>
+***Show hotbar message***<br>
+Enables/disables hotbar message when the gamma is changed by a keypress. <br>
 
 ### Presets
 ***Preset 1*** <br>

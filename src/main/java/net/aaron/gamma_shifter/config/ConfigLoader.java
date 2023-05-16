@@ -30,6 +30,7 @@ public class ConfigLoader {
     private static boolean silentMode = false;
     private static int textColour = 0xFFFFFF;
     private static HUD.Locations location = HUD.Locations.TOP_LEFT;
+    private static boolean showMessageOnGammaChange = true;
 
     /**
      * Initialize the file properties.
@@ -58,6 +59,10 @@ public class ConfigLoader {
             silentMode = Boolean.parseBoolean((String) properties.get("silentMode"));
             textColour = Integer.parseInt((String) properties.get("textColour"));
             location = parseLocation((String) properties.get("location"));
+            showMessageOnGammaChange = Boolean.parseBoolean((String) properties.get("showMessageOnGammaChange"));
+
+            // adjust default values for malformed strings (not "true" or "false") that should default to "true"
+            fixMalformedBooleans(properties);
 
             // apply the values in their respective spots
             set();
@@ -97,6 +102,7 @@ public class ConfigLoader {
         silentMode = GammaShifter.isSilentModeEnabled();
         textColour = HUD.getTextColour();
         location = HUD.getCurrentLocation();
+        showMessageOnGammaChange = HUD.getShowMessageOnGammaChange();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -111,6 +117,7 @@ public class ConfigLoader {
             properties.put("silentMode", String.valueOf(silentMode));
             properties.put("textColour", String.valueOf(textColour));
             properties.put("location", getLocationString(location));
+            properties.put("showMessageOnGammaChange", String.valueOf(showMessageOnGammaChange));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -152,6 +159,7 @@ public class ConfigLoader {
         GammaShifter.setSilentModeEnabled(silentMode);
         HUD.setTextColour(textColour);
         HUD.setCurrentLocation(location);
+        HUD.setShowMessageOnGammaChange(showMessageOnGammaChange);
     }
 
     /**
@@ -206,5 +214,29 @@ public class ConfigLoader {
         if(value < min) return min;
         if(value > max) return max;
         return value;
+    }
+
+    /**
+     * Missing or malformed options are automatically set to 'false' when {@link Boolean#parseBoolean(String)} fails
+     * to parse a valid value. This method checks for that case and sets the corresponding values to 'true' for options
+     * which should always default to such.
+     * @param properties The properties from the file.
+     */
+    private static void fixMalformedBooleans(Properties properties){
+        if(!"true".equalsIgnoreCase((String) properties.get("enabled")) && !"false".equalsIgnoreCase((String) properties.get("enabled"))){
+            enabled = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("alwaysStartEnabled")) && !"false".equalsIgnoreCase((String) properties.get("alwaysStartEnabled"))){
+            alwaysStartEnabled = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("snappingEnabled")) && !"false".equalsIgnoreCase((String) properties.get("snappingEnabled"))){
+            snappingEnabled = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("alwaysSaveCustomGamma")) && !"false".equalsIgnoreCase((String) properties.get("alwaysSaveCustomGamma"))){
+            alwaysSaveCustomGamma = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange")) && !"false".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange"))){
+            showMessageOnGammaChange = true;
+        }
     }
 }

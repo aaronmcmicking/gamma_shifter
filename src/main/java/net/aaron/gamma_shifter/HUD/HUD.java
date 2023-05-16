@@ -45,10 +45,15 @@ public class HUD {
     private static int textColour = 0xFFFFFF;
 
     /**
+     * True if a message should be shown above the hotbar when the gamma is changed, false otherwise.
+     */
+    private static boolean showMessageOnGammaChange = true;
+
+    /**
      * Display a HUD message to the user telling them the current gamma value.
      */
     public static void displayGammaMessage(){
-        if(client.player != null && !GammaShifter.isSilentModeEnabled()) {
+        if(client.player != null && !GammaShifter.isSilentModeEnabled() && showMessageOnGammaChange) {
             MutableText messageText = getDisplayGammaMessage();
             client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(textColour)), true);
         }
@@ -97,7 +102,7 @@ public class HUD {
                 y = scaledWindowHeight - 10.0f;
             }
             default -> {
-                GammaShifter.LOGGER.error("[GammaShifter] Encountered unexpected value when setting HUD location... disabling HUD");
+                GammaShifter.LOGGER.error("[GammaShifter] Encountered unexpected value when setting overlay location... disabling overlay");
                 setShowCurrentGammaOverlay(false);
                 return;
             }
@@ -165,6 +170,22 @@ public class HUD {
      */
     public static void setTextColour(int colour){
         textColour = colour;
+    }
+
+    /**
+     * Sets whether a message should be shown above the hotbar when the gamma is changed by keypress.
+     * @param value True if the message should be shown, false otherwise.
+     */
+    public static void setShowMessageOnGammaChange(boolean value){
+        showMessageOnGammaChange = value;
+    }
+
+    /**
+     * Gets whether a message should be shown above the hotbar when the gamma is changed by keypress.
+     * @return True if the message should be shown, false otherwise.
+     */
+    public static boolean getShowMessageOnGammaChange(){
+        return showMessageOnGammaChange;
     }
 
 }

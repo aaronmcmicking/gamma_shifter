@@ -6,6 +6,7 @@
 -Added silent mode to disable all HUD elements<br>
 -Config menu and HUD now support translation keys (English is still the only supported language) <br>
 -Added "General", "HUD", and "Presets" categories to ModMenu <br>
+-Added option to enable/disable hotbar message when gamma changed by keypress. <br>
 
 ### Changes
 -ModMenu description now matches Modrinth blurb <br>

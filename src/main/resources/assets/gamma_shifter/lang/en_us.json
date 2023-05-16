@@ -39,6 +39,8 @@
   "config.gamma_shifter.persistent_overlay_location.tooltip": "The location that the persistent brightness display is shown",
   "config.gamma_shifter.textColour": "HUD text colour",
   "config.gamma_shifter.textColour.tooltip": "The colour used for text in HUD elements",
+  "config.gamma_shifter.show_message_on_gamma_change": "Show hotbar message",
+  "config.gamma_shifter.show_message_on_gamma_change.tooltip": "Enables/disables a message above the hotbar when the increase/decrease brightness key is pressed",
 
   "locations.gamma_shifter.top_left": "Top Left",
   "locations.gamma_shifter.top_right": "Top Right",
