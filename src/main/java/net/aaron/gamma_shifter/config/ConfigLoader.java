@@ -4,6 +4,7 @@ import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Properties;
@@ -28,6 +29,7 @@ public class ConfigLoader {
     private static boolean showCurrentGammaOverlay = false;
     private static boolean silentMode = false;
     private static int textColour = 0xFFFFFF;
+    private static HUD.Locations location = HUD.Locations.TOP_LEFT;
 
     /**
      * Initialize the file properties.
@@ -44,6 +46,7 @@ public class ConfigLoader {
         try (BufferedReader br = new BufferedReader(new FileReader(CONFIG_FILE))) {
             properties.load(br);
 
+            // retrieve all the values from the config file
             enabled = Boolean.parseBoolean((String) properties.get("enabled"));
             step = Double.parseDouble((String) properties.get("step"));
             alwaysStartEnabled = Boolean.parseBoolean((String) properties.get("alwaysStartEnabled"));
@@ -54,6 +57,7 @@ public class ConfigLoader {
             showCurrentGammaOverlay = Boolean.parseBoolean((String) properties.get("showCurrentGammaOverlay"));
             silentMode = Boolean.parseBoolean((String) properties.get("silentMode"));
             textColour = Integer.parseInt((String) properties.get("textColour"));
+            location = parseLocation((String) properties.get("location"));
 
             // apply the values in their respective spots
             set();
@@ -92,6 +96,7 @@ public class ConfigLoader {
         showCurrentGammaOverlay = HUD.shouldShowCurrentGammaOverlay();
         silentMode = GammaShifter.isSilentModeEnabled();
         textColour = HUD.getTextColour();
+        location = HUD.getCurrentLocation();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -105,6 +110,7 @@ public class ConfigLoader {
             properties.put("showCurrentGammaOverlay", String.valueOf(showCurrentGammaOverlay));
             properties.put("silentMode", String.valueOf(silentMode));
             properties.put("textColour", String.valueOf(textColour));
+            properties.put("location", getLocationString(location));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -145,6 +151,39 @@ public class ConfigLoader {
         HUD.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
         GammaShifter.setSilentModeEnabled(silentMode);
         HUD.setTextColour(textColour);
+        HUD.setCurrentLocation(location);
+    }
+
+    /**
+     * Parses a {@link net.aaron.gamma_shifter.HUD.HUD.Locations} value from a string.
+     * @param str The string containing the location.
+     * @return The enumerated location. If a value cannot be parsed,
+     * {@link net.aaron.gamma_shifter.HUD.HUD.Locations#TOP_LEFT} is returned by default.
+     */
+    private static @NotNull HUD.Locations parseLocation(String str){
+        if(str == null) return HUD.Locations.TOP_LEFT;
+        return switch(str){
+            case "TOP_RIGHT" -> HUD.Locations.TOP_RIGHT;
+            case "BOTTOM_LEFT" -> HUD.Locations.BOTTOM_LEFT;
+            case "BOTTOM_RIGHT" -> HUD.Locations.BOTTOM_RIGHT;
+            default -> HUD.Locations.TOP_LEFT; // "TOP_LEFT" or non-parsable entry
+        };
+    }
+
+    /**
+     * Converts a {@link net.aaron.gamma_shifter.HUD.HUD.Locations} value to an equivalent string. If an invalid value is
+     * passed into the method, "TOP_LEFT" is returned by default.
+     * @param location The value to convert.
+     * @return The string containing the converted value.
+     */
+    private static @NotNull String getLocationString(HUD.Locations location){
+        if(location == null) return "TOP_LEFT";
+        return switch(location){
+            case TOP_RIGHT -> "TOP_RIGHT";
+            case BOTTOM_RIGHT -> "BOTTOM_RIGHT";
+            case BOTTOM_LEFT -> "BOTTOM_LEFT";
+            default -> "TOP_LEFT"; // top left and non-parsable option
+        };
     }
 
     /**

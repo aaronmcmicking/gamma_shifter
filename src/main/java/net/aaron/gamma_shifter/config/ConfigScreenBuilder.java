@@ -54,49 +54,32 @@ public class ConfigScreenBuilder {
                 })
                 .build());
 
-        // toggle silent mode (boolean)
-        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
-                .setDefaultValue(false)
-                .setTooltip(Text.translatable("config.gamma_shifter.silent_mode.tooltip"))
-                .setSaveConsumer(GammaShifter::setSilentModeEnabled)
-                .build()
-        );
-
-        // toggle persistent gamma display
-        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), HUD.shouldShowCurrentGammaOverlay())
-                .setDefaultValue(false)
-                .setTooltip(Text.translatable("config.gamma_shifter.show_current_gamma_overlay.tooltip"))
-                .setSaveConsumer(HUD::setShowCurrentGammaOverlay)
-                .build()
-        );
-
-
         // set brightness (field)
         general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.gamma"), (int)Math.round(GammaHandler.getCurrentCustomGamma()*100))
-                    .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                    .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                    .setDefaultValue(100)
-                    .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
-                    .setSaveConsumer(newValue -> {
-                        if(GammaShifter.isEnabled()) {
-                            GammaHandler.set((Math.round(newValue)) / 100.0);
-                        }else{
-                            GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
-                        }
-                    } )
-                    .build()
-                );
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setDefaultValue(100)
+                .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    if(GammaShifter.isEnabled()) {
+                        GammaHandler.set((Math.round(newValue)) / 100.0);
+                    }else{
+                        GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
+                    }
+                } )
+                .build()
+        );
 
         // set step (field)
         general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.change_per_input"),
                         (int)Math.round(GammaHandler.getChangePerInput()*100))
-                        .setMin(1)
-                        .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                        .setDefaultValue(25)
-                        .setTooltip(Text.translatable("config.gamma_shifter.change_per_input.tooltip"))
-                        .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
-                        .build()
-                );
+                .setMin(1)
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setDefaultValue(25)
+                .setTooltip(Text.translatable("config.gamma_shifter.change_per_input.tooltip"))
+                .setSaveConsumer(newValue -> GammaHandler.setChangePerInput(Math.round(newValue)/100.0))
+                .build()
+        );
 
         // set alwaysStartEnabled (boolean button)
         general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_start_enabled"), GammaShifter.alwaysStartEnabled())
@@ -122,27 +105,23 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        // set presetOneValue
-        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
-                .setDefaultValue(100)
-                .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
+        // toggle silent mode (boolean)
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("config.gamma_shifter.silent_mode.tooltip"))
+                .setSaveConsumer(GammaShifter::setSilentModeEnabled)
                 .build()
         );
 
-        // set presetTwoValue
-        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
-                .setDefaultValue(100)
-                .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
+        // toggle persistent gamma display (boolean)
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), HUD.shouldShowCurrentGammaOverlay())
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("config.gamma_shifter.show_current_gamma_overlay.tooltip"))
+                .setSaveConsumer(HUD::setShowCurrentGammaOverlay)
                 .build()
         );
 
-        // set the text colour for HUD elements
+        // set the text colour for HUD elements (colour field)
         HUDCategory.addEntry(entryBuilder.startColorField(Text.translatable("config.gamma_shifter.textColour"), HUD.getTextColour())
                 .setDefaultValue(0xFFFFFF)
                 .setTooltip(Text.translatable("config.gamma_shifter.textColour.tooltip"))
@@ -155,7 +134,7 @@ public class ConfigScreenBuilder {
             Does not currently support translations for button text
          */
         String[] list = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"};
-        HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationString(HUD.getCurrentLocation()))
+        HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationDisplayString(HUD.getCurrentLocation()))
                 .setDefaultValue("Top Left")
                 .setTooltip(Text.translatable("config.gamma_shifter.persistent_overlay_location.tooltip"))
                 .setSaveConsumer(newValue -> {
@@ -167,6 +146,26 @@ public class ConfigScreenBuilder {
                                 default -> HUD.Locations.TOP_LEFT;
                     });
                 })
+                .build()
+        );
+
+        // set presetOneValue (int field)
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
+                .setDefaultValue(100)
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
+                .build()
+        );
+
+        // set presetTwoValue (int field)
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
+                .setDefaultValue(100)
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
                 .build()
         );
 

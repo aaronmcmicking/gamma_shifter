@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% (1.0) in
  * Minecraft 1.19-1.19.4.
- * <p>This file acts as an entry point for the mod.</p>
+ * <p>This file acts as an entry point for the mod and stores mod settings such as {@link GammaShifter#enabled}.</p>
  */
 public class GammaShifter implements ClientModInitializer {
 

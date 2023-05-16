@@ -1,11 +1,8 @@
 package net.aaron.gamma_shifter.mixin;
 
 import com.mojang.serialization.Codec;
-import net.aaron.gamma_shifter.GammaShifter;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Final;

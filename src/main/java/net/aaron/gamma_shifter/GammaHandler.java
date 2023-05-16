@@ -5,10 +5,15 @@ import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 
+/**
+ * Handles calculating and applying gamma values. Also stores default values, such as {@link GammaHandler#MAX_GAMMA} and
+ * {@link GammaHandler#MIN_GAMMA}, and setting fields such as {@link GammaHandler#snappingEnabled}. Does not handle
+ * saving or loading of config file, keypresses, etc.
+ */
 public class GammaHandler {
     /**
      * A helper-class instance that stores and sets gamma values read from options.txt.
-     * <p>See also: net.aaron.gamma_shifter.mixin.initGammaMixin</p>
+     * @see net.aaron.gamma_shifter.mixin.GameOptionsMixin
      */
     public static InitGammaHelper initHelper = new InitGammaHelper();
 
@@ -43,7 +48,6 @@ public class GammaHandler {
      * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
      */
     public static boolean snappingEnabled = true;
-
 
     /**
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
