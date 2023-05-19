@@ -1,4 +1,4 @@
-# Gamma Shifter 0.3.1-beta.4
+# Gamma Shifter 0.3.1-beta.5
 ***Changelog from 0.3.0***
 
 ### Additions
@@ -13,6 +13,7 @@
 -HUD text colour can now be customized <br>
 -Refactored HUD elements into HUD.class <br>
 -Changed gamma change text from "Gamma = 100%" to "Gamma: 100%" <br>
+-Changed default preset values to 250% and 500% <br>
 
 ### Fixes
 -Fixed bug where gamma values >1.0 could not be set when the language was not set to English <br>

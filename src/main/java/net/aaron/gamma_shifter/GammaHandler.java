@@ -53,8 +53,8 @@ public class GammaHandler {
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
      * by {@link net.aaron.gamma_shifter.config.ConfigLoader}.
      */
-    public static double presetOne = 1.0;
-    public static double presetTwo = 1.0;
+    public static double presetOne = 2.5;
+    public static double presetTwo = 5.0;
 
     /**
      * Handles increasing the gamma. Behaves as a wrapper for helper methods to calculate and set gamma and display

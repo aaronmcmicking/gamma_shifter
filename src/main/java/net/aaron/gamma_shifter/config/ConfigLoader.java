@@ -24,8 +24,8 @@ public class ConfigLoader {
     private static double step = 0.25;
     private static boolean snappingEnabled = true;
     private static boolean alwaysSaveCustomGamma = true;
-    private static double presetOne = 1.0;
-    private static double presetTwo = 1.0;
+    private static double presetOne = 2.5;
+    private static double presetTwo = 5.0;
     private static boolean showCurrentGammaOverlay = false;
     private static boolean silentMode = false;
     private static int textColour = 0xFFFFFF;

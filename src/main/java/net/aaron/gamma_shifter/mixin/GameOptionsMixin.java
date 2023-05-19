@@ -46,7 +46,6 @@ public abstract class GameOptionsMixin {
      */
     @Inject(method = "load", at = @At("HEAD"))
     public void retrieveGammaInject(CallbackInfo ci){
-//        GameOptions options = (GameOptions) (Object) this; // cast 'this' to a GameOption, so we can reference it (replaced by @Shadow)
         boolean found = false, missingFile = false, malformed = false; // records: 1. if gamma value was found 2. if options file was malformed 3. if options file was missing
         String curKey = "", curVal = ""; // key-value pair
         int i = 0; // iterating variable

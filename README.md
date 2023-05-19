@@ -24,10 +24,10 @@ Keybind: `]` <br>
 ***Toggle effects***<br>
 Keybind: `G` <br>
 
-***Preset 1***<br>
+***Preset 1 (250% by default)***<br>
 Keybind: `unbound`<br>
 
-***Preset 2***<br>
+***Preset 2 (500% by default)***<br>
 Keybind: `unbound`<br>
 
 ***Show current gamma***<br>
