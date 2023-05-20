@@ -44,3 +44,9 @@ replay_*.log
 to_do.txt
 MODRINTH_DESC.md
 test_list.txt
+build_releases.jar
+build_log.txt
+gradle_prop_versions/
+src/main/resources/fabric.mod_versions/
+version_update_log.txt
+updateModVersion.jar

@@ -68,7 +68,7 @@ public class InitGammaHelper {
     public void setInitialGamma(){
         try {
             this.alreadyDone = true;
-            if(GammaShifter.alwaysStartEnabled()) {
+            if(GammaShifter.isEnabled() || GammaShifter.alwaysStartEnabled()) {
                 MinecraftClient.getInstance().options.getGamma().setValue(this.gammaFromFile);
             }else{
                 MinecraftClient.getInstance().options.getGamma().setValue(1.0);

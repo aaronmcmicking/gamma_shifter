@@ -140,7 +140,7 @@ public class ConfigScreenBuilder {
             Set overlay location
             Does not currently support translations for button text
          */
-        String[] list = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"};
+        String[] list = {"Top Left", "Top Right", "Bottom Right", "Bottom Left"};
         HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationDisplayString(HUD.getCurrentLocation()))
                 .setDefaultValue("Top Left")
                 .setTooltip(Text.translatable("config.gamma_shifter.persistent_overlay_location.tooltip"))
@@ -158,7 +158,7 @@ public class ConfigScreenBuilder {
 
         // set presetOneValue (int field)
         presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
-                .setDefaultValue(100)
+                .setDefaultValue(250)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
@@ -168,7 +168,7 @@ public class ConfigScreenBuilder {
 
         // set presetTwoValue (int field)
         presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
-                .setDefaultValue(100)
+                .setDefaultValue(500)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))

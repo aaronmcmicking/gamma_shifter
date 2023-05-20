@@ -33,7 +33,7 @@
   "config.gamma_shifter.preset_one.tooltip": "The brightness value to set when the Preset 1 key is pressed",
   "config.gamma_shifter.preset_two": "Preset 2 (%)",
   "config.gamma_shifter.preset_two.tooltip": "The brightness value to set when the Preset 2 key is pressed",
-  "config.gamma_shifter.show_current_gamma_overlay": "Display current brightness",
+  "config.gamma_shifter.show_current_gamma_overlay": "Display current brightness overlay",
   "config.gamma_shifter.show_current_gamma_overlay.tooltip": "If enabled, the current brightness is displayed in the top left corner at all times",
   "config.gamma_shifter.persistent_overlay_location": "HUD location",
   "config.gamma_shifter.persistent_overlay_location.tooltip": "The location that the persistent brightness display is shown",

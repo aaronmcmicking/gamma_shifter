@@ -72,7 +72,7 @@ public class KeyInputHandler {
                 }
 
                 if(showGammaKey.wasPressed()){
-                    HUD.displayGammaMessage();
+                    HUD.displayGammaMessage(true);
                 }
             }
 
