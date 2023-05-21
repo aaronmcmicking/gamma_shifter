@@ -41,6 +41,8 @@
   "config.gamma_shifter.textColour.tooltip": "The colour used for text in HUD elements",
   "config.gamma_shifter.show_message_on_gamma_change": "Show hotbar message",
   "config.gamma_shifter.show_message_on_gamma_change.tooltip": "Enables/disables a message above the hotbar when the increase/decrease brightness key is pressed",
+  "config.gamma_shifter.enforce_bounds": "Enforce maximum/minimum brightness",
+  "config.gamma_shifter.enforce_bounds.tooltip": "Whether brightness values should be bounded to 0% to 1000% (behaviour of very high/low values is untested)",
 
   "locations.gamma_shifter.top_left": "Top Left",
   "locations.gamma_shifter.top_right": "Top Right",

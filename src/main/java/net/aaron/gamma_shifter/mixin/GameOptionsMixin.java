@@ -1,6 +1,7 @@
 package net.aaron.gamma_shifter.mixin;
 
 import net.aaron.gamma_shifter.GammaHandler;
+import net.aaron.gamma_shifter.GammaInitializer;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -17,7 +18,7 @@ import java.io.*;
 /**
  * Spongepowered mixin to read/load gamma values from options.txt when the client launches, bypassing clamping to 0.0:1.0.
  *
- * <p>After being read, the gamma value is saved in {@link GammaHandler#initHelper}, which sets the value when
+ * <p>After being read, the gamma value is saved in {@link GammaInitializer}, which sets the value when
  * the title screen is displayed. This helper class is used since {@link MinecraftClient#getInstance()} returns null
  * while the game is initializing, so {@link SimpleOption#setValue(Object)} cannot be called yet.</p>
  */
@@ -79,7 +80,7 @@ public abstract class GameOptionsMixin {
                 }
             } catch (IndexOutOfBoundsException e) { /* empty catch block */ }
             try {
-                this.foundGamma = Math.min(Double.parseDouble(curVal), GammaHandler.MAX_GAMMA);  // clamp to the maximum allowed gamma
+                this.foundGamma = Double.parseDouble(curVal);
                 found = true;
             } catch (NumberFormatException |
                      NullPointerException e) { // possible exceptions from Double.parseDouble()
@@ -91,11 +92,10 @@ public abstract class GameOptionsMixin {
 
         if(found){
             GammaShifter.LOGGER.info("Read gamma value of " + foundGamma + " from options file");
-            GammaHandler.initHelper.storeGamma(foundGamma); // InitGammaHelper handles setting the value
+            GammaInitializer.storeGamma(foundGamma); // GammaInitializer handles setting the value
         }else if(!malformed && !missingFile){
             GammaShifter.LOGGER.error("Couldn't find an existing gamma setting... did the options file include one?");
         }
-
     }
 
     /**

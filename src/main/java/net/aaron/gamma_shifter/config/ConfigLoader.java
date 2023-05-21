@@ -31,6 +31,7 @@ public class ConfigLoader {
     private static int textColour = 0xFFFFFF;
     private static HUD.Locations location = HUD.Locations.TOP_LEFT;
     private static boolean showMessageOnGammaChange = true;
+    private static boolean shouldEnforceBounds = true;
 
     /**
      * Initialize the file properties.
@@ -60,6 +61,7 @@ public class ConfigLoader {
             textColour = Integer.parseInt((String) properties.get("textColour"));
             location = parseLocation((String) properties.get("location"));
             showMessageOnGammaChange = Boolean.parseBoolean((String) properties.get("showMessageOnGammaChange"));
+            shouldEnforceBounds = Boolean.parseBoolean((String) properties.get("shouldEnforceBounds"));
 
             // adjust default values for malformed strings (not "true" or "false") that should default to "true"
             fixMalformedBooleans(properties);
@@ -103,6 +105,7 @@ public class ConfigLoader {
         textColour = HUD.getTextColour();
         location = HUD.getCurrentLocation();
         showMessageOnGammaChange = HUD.getShowMessageOnGammaChange();
+        shouldEnforceBounds = GammaHandler.shouldEnforceBounds();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -118,6 +121,7 @@ public class ConfigLoader {
             properties.put("textColour", String.valueOf(textColour));
             properties.put("location", getLocationString(location));
             properties.put("showMessageOnGammaChange", String.valueOf(showMessageOnGammaChange));
+            properties.put("shouldEnforceBounds", String.valueOf(shouldEnforceBounds));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -160,6 +164,7 @@ public class ConfigLoader {
         HUD.setTextColour(textColour);
         HUD.setCurrentLocation(location);
         HUD.setShowMessageOnGammaChange(showMessageOnGammaChange);
+        GammaHandler.setShouldEnforceBounds(shouldEnforceBounds);
     }
 
     /**
@@ -237,6 +242,9 @@ public class ConfigLoader {
         }
         if(!"true".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange")) && !"false".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange"))){
             showMessageOnGammaChange = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("shouldEnforceBounds")) && !"false".equalsIgnoreCase((String) properties.get("shouldEnforceBounds"))){
+            shouldEnforceBounds = true;
         }
     }
 }

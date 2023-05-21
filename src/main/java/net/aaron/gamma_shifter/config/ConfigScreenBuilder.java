@@ -56,8 +56,8 @@ public class ConfigScreenBuilder {
 
         // set brightness (field)
         general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.gamma"), (int)Math.round(GammaHandler.getCurrentCustomGamma()*100))
-                .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setMin(GammaHandler.shouldEnforceBounds () ? (int)(GammaHandler.MIN_GAMMA*100) : Integer.MIN_VALUE)
+                .setMax(GammaHandler.shouldEnforceBounds() ? (int)(GammaHandler.MAX_GAMMA*100) : Integer.MAX_VALUE)
                 .setDefaultValue(100)
                 .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                 .setSaveConsumer(newValue -> {
@@ -102,6 +102,14 @@ public class ConfigScreenBuilder {
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.always_save_custom_brightness.tooltip"))
                 .setSaveConsumer(GammaShifter::setAlwaysSaveCustomGamma)
+                .build()
+        );
+
+        // toggle bounds enforcing (boolean)
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.enforce_bounds"), GammaHandler.shouldEnforceBounds())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("config.gamma_shifter.enforce_bounds.tooltip"))
+                .setSaveConsumer(GammaHandler::setShouldEnforceBounds)
                 .build()
         );
 

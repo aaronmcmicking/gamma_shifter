@@ -48,7 +48,9 @@ Whether the mod will always start enabled or if it starts in the state the game 
 ***Snap gamma to change-per-input*** <br>
 Whether gamma changes will snap to the nearest multiple of the current change-per-input<br><br>
 ***Always save custom gamma*** <br>
-Whether the custom gamma (>= 100%) will always be saved to options.txt, regardless of if the mod is enabled<br>
+Whether the custom gamma (>= 100%) will always be saved to options.txt, regardless of if the mod is enabled<br><br>
+***Enforce bounds*** <br>
+Whether gamma values are clamped to Gamma Shifter's max/min values (0% - 1000%)<br>
 
 ### HUD
 ***Enable Silent Mode***<br>

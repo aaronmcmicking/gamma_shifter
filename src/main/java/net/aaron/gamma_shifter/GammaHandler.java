@@ -11,11 +11,6 @@ import net.minecraft.client.option.GameOptions;
  * saving or loading of config file, keypresses, etc.
  */
 public class GammaHandler {
-    /**
-     * A helper-class instance that stores and sets gamma values read from options.txt.
-     * @see net.aaron.gamma_shifter.mixin.GameOptionsMixin
-     */
-    public static InitGammaHelper initHelper = new InitGammaHelper();
 
     /**
      * The current instance of MinecraftClient, wrapped to improve readability.
@@ -48,6 +43,11 @@ public class GammaHandler {
      * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
      */
     public static boolean snappingEnabled = true;
+
+    /**
+     * Whether gamma values should be clamped to {@link GammaHandler#MIN_GAMMA} and {@link GammaHandler#MAX_GAMMA}.
+     */
+    public static boolean shouldEnforceBounds = true;
 
     /**
      * The values of the custom preset keys. Initially these keys are unbound. They are initialized
@@ -90,13 +90,11 @@ public class GammaHandler {
      * @return The new gamma value.
      */
     public static Double calculateGamma(Double oldGamma, boolean increasing){
-        if(increasing){
-            if((MAX_GAMMA - oldGamma) <= changePerInput){
+        if(shouldEnforceBounds()) {
+            if (increasing && (MAX_GAMMA - oldGamma) <= changePerInput) { // if increasing would exceed max gamma
                 KeyInputHandler.flushBufferedInputs();
                 return MAX_GAMMA;
-            }
-        }else{
-            if(oldGamma <= changePerInput) {
+            } else if (!increasing && oldGamma <= changePerInput) { // if decreasing would be lower that min gamma
                 KeyInputHandler.flushBufferedInputs();
                 return MIN_GAMMA;
             }
@@ -281,6 +279,22 @@ public class GammaHandler {
      */
     public static void setPresetTwo(double value){
         presetTwo = value;
+    }
+
+    /**
+     * Get the value of {@link GammaHandler#shouldEnforceBounds}.
+     * @return True if {@link GammaHandler#MIN_GAMMA} and {@link GammaHandler#MAX_GAMMA} should be enforced, false otherwise.
+     */
+    public static boolean shouldEnforceBounds(){
+        return shouldEnforceBounds;
+    }
+
+    /**
+     * Sets the value of {@link GammaHandler#shouldEnforceBounds}.
+     * @param value True if {@link GammaHandler#MIN_GAMMA} and {@link GammaHandler#MAX_GAMMA} should be enforced, false otherwise.
+     */
+    public static void setShouldEnforceBounds(boolean value){
+        shouldEnforceBounds = value;
     }
 
 }
