@@ -40,7 +40,7 @@ public abstract class MinecraftClientMixin {
             if ((screen instanceof GameMenuScreen) && (MinecraftClient.getInstance() != null)  &&  (MinecraftClient.getInstance().player != null)) {
                 MinecraftClient.getInstance().options.write();
                 ConfigLoader.save();
-                GammaShifter.LOGGER.info("Saved options");
+//                GammaShifter.LOGGER.info("Saved options");
 
                 // if the mod is enabled, make sure GammaHandler gets the updated gamma value from the vanilla settings menu
                 if(GammaShifter.isEnabled()){

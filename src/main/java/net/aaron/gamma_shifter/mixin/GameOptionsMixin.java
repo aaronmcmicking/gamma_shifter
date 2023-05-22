@@ -67,7 +67,7 @@ public abstract class GameOptionsMixin {
                 } // if
             } // while
         } catch (IOException e) {
-            GammaShifter.LOGGER.error("Couldn't read options file... does it exist?\n\t" + e);
+            GammaShifter.LOGGER.error("Couldn't read options file... is it missing?\n\t" + e);
             missingFile = true;
         }
 
@@ -84,7 +84,7 @@ public abstract class GameOptionsMixin {
                 found = true;
             } catch (NumberFormatException |
                      NullPointerException e) { // possible exceptions from Double.parseDouble()
-                GammaShifter.LOGGER.error("Couldn't parse value from file... was the options file malformed?\n\t" + e);
+                GammaShifter.LOGGER.error("Couldn't parse gamma value from file... was the options file malformed?\n\t" + e);
                 this.foundGamma = 1.0; // in case of exception, set gamma to a default value
                 malformed = true;
             }

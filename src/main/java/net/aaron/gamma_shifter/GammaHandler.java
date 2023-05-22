@@ -113,11 +113,13 @@ public class GammaHandler {
      */
     private static Double calculateGammaWithSnapping(Double oldGamma, boolean increasing){
         double newGamma;
-        int oldGammaModChangePerInput = (int)Math.round((oldGamma*100)) % (int)Math.round((changePerInput*100));
+        oldGamma *= 100;
+        double changePerInput = GammaHandler.changePerInput * 100;
+        int oldGammaModChangePerInput = (int)Math.round((oldGamma)) % (int)Math.round((changePerInput));
         if(increasing){
-            newGamma = Math.round( oldGamma*100 + changePerInput*100 - oldGammaModChangePerInput ) / 100.0;
+            newGamma = Math.round( oldGamma + changePerInput - oldGammaModChangePerInput ) / 100.0;
         }else{
-            newGamma = oldGammaModChangePerInput==0 ? (oldGamma*100)-(changePerInput*100) : (oldGamma*100)-oldGammaModChangePerInput;
+            newGamma = oldGammaModChangePerInput==0 ? (oldGamma)-(changePerInput) : (oldGamma)-oldGammaModChangePerInput;
             newGamma = Math.round( newGamma ) / 100.0;
         }
         return newGamma;
@@ -133,15 +135,9 @@ public class GammaHandler {
      * @return The new gamma value.
      */
     public static Double calculateGammaSimple(Double oldGamma, boolean increasing){
-        double newGamma;
         oldGamma = Math.round(oldGamma * 100) / 100.0;
-
-        if(increasing) {
-            newGamma = Math.round((oldGamma + changePerInput) * 100) / 100.0;
-        }else{ // else if decreasing
-            newGamma = Math.round((oldGamma - changePerInput) * 100) / 100.0;
-        }
-        return newGamma;
+        oldGamma += increasing ? changePerInput : -changePerInput;
+        return Math.round(oldGamma * 100) / 100.0;
     }
 
     /**
