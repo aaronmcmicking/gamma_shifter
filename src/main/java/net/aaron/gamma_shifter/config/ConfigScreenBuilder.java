@@ -6,6 +6,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
+import net.aaron.gamma_shifter.event.AutoNight;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -30,6 +31,7 @@ public class ConfigScreenBuilder {
     ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.general"));
     ConfigCategory HUDCategory = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.HUD"));
     ConfigCategory presets = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.presets"));
+    ConfigCategory autoNightMode = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.auto_night"));
 
     
     /**
@@ -61,8 +63,8 @@ public class ConfigScreenBuilder {
                 .setDefaultValue(100)
                 .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    if(GammaShifter.isEnabled()) {
-                        GammaHandler.set((Math.round(newValue)) / 100.0);
+                    if(GammaShifter.isEnabled() && !AutoNight.isActive()) {
+                        GammaHandler.set((Math.round(newValue)) / 100.0); // causing bug
                     }else{
                         GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
                     }
@@ -144,10 +146,8 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        /*
-            Set overlay location
-            Does not currently support translations for button text
-         */
+        // Set overlay location
+        // Does not currently support translations for button text
         String[] list = {"Top Left", "Top Right", "Bottom Right", "Bottom Left"};
         HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationDisplayString(HUD.getCurrentLocation()))
                 .setDefaultValue("Top Left")
@@ -181,6 +181,34 @@ public class ConfigScreenBuilder {
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
                 .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
+                .build()
+        );
+
+        // toggle auto night mode (boolean)
+        autoNightMode.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.auto_night"), AutoNight.isEnabled())
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("config.gamma_shifter.auto_night.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    if(newValue && !AutoNight.isEnabled()) {
+                        AutoNight.setAlreadyInitialized(false);
+                    }
+                    AutoNight.setEnabled(newValue);
+                })
+                .build()
+        );
+
+        // set auto night mode gamma value (int field)
+        autoNightMode.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.auto_night_value"), (int)(AutoNight.getNightGammaValue()*100))
+                .setDefaultValue(250)
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setTooltip(Text.translatable("config.gamma_shifter.auto_night_value.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    AutoNight.setNightGammaValue(Math.round(newValue) / 100.0);
+                    if(AutoNight.isActive()){
+                        AutoNight.update();
+                    }
+                })
                 .build()
         );
 

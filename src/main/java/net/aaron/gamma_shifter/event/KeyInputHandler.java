@@ -5,6 +5,7 @@ import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -73,6 +74,11 @@ public class KeyInputHandler {
 
                 if(showGammaKey.wasPressed()){
                     HUD.displayGammaMessage(true);
+                    // debug (remove for any release)
+                    if(MinecraftClient.getInstance().world != null) {
+                        GammaShifter.LOGGER.info("getTimeOfDay == " + MinecraftClient.getInstance().world.getLevelProperties().getTimeOfDay());
+                        GammaShifter.LOGGER.info("isActive == " + AutoNight.isActive());
+                    }
                 }
             }
 
@@ -146,7 +152,7 @@ public class KeyInputHandler {
                 KEY_CATEGORY_GAMMA_SHIFTER
         ));
 
-        // show gamma key
+        // set the show gamma key to be unbound
         showGammaKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 KEY_SHOW_GAMMA,
                 InputUtil.Type.KEYSYM,
@@ -162,7 +168,7 @@ public class KeyInputHandler {
      * while the mod is disabled.
      */
     public static void flushBufferedInputs(){
-        for(KeyBinding keybinding: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey}){
+        for(KeyBinding keybinding: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey, showGammaKey}){
             keybinding.reset();
         }
     }

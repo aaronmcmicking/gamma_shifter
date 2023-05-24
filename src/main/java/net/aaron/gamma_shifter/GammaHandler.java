@@ -1,9 +1,11 @@
 package net.aaron.gamma_shifter;
 
 import net.aaron.gamma_shifter.HUD.HUD;
+import net.aaron.gamma_shifter.event.AutoNight;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles calculating and applying gamma values. Also stores default values, such as {@link GammaHandler#MAX_GAMMA} and
@@ -35,7 +37,10 @@ public class GammaHandler {
     /**
      * Stores the current gamma value for when the mod is toggled off. Initially set when the gamma value read from
      * options.txt is read.
-     * <p>If the mod is enabled, this should be the same as the value stored {@link GameOptions#getGamma()}.</p>
+     * <p>This value will  not always be the same as {@link GameOptions#getGamma()} when the mod is enabled.</p>
+     * <p>NOTE: Does not track gamma values gamma values set in AutoNight Mode (ANM). In ANM, a local value is set
+     * instead, but the previous custom gamma is still saved here.</p>
+     * @see net.aaron.gamma_shifter.event.AutoNight
      */
     public static Double currentCustomGamma = 1.0;
 
@@ -145,6 +150,8 @@ public class GammaHandler {
      * @param value The gamma value to set.
      */
     public static void set(Double value){
+        GammaShifter.LOGGER.info("in set: setting isActive to false");
+        AutoNight.setIsActive(false);
         client.options.getGamma().setValue(value);
         currentCustomGamma = value;
     }
@@ -152,14 +159,46 @@ public class GammaHandler {
     /**
      * Toggles the mod effects on/off by setting gamma to either 0.0 or {@link GammaHandler#currentCustomGamma} and
      * toggling {@link GammaShifter}.
-     * <p>Also stores the latest gamma value locally (fixes compatibility issue with Sodium)</p>
+     * <p>Also stores the latest gamma value locally (fixes compatibility issue with Sodium), unless Auto Night Mode
+     * is active.</p>
+     * @see AutoNight
      */
-    public static void toggle(){
+    public static void  toggle(){
         // make sure the latest gamma value is stored locally before overwriting it
-        if(GammaShifter.isEnabled()){
-            currentCustomGamma = client.options.getGamma().getValue();
+        if(GammaShifter.isEnabled()) {
+            if (AutoNight.isActive()) {
+                GammaShifter.LOGGER.info("in toggle(): setting isActive to false");
+                AutoNight.setIsActive(false);
+            } else {
+                currentCustomGamma = client.options.getGamma().getValue();
+            }
         }
         client.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
+        GammaShifter.toggle();
+    }
+
+    /**
+     * Toggling method that accepts a new gamma value to apply from a GammaPacket. Uses caller information from the
+     * packet to control setting the applied gamma and {@link GammaHandler#currentCustomGamma}, as well as modifying
+     * the state of {@link AutoNight}.
+     * @param packet The GammaPacket containing the gamma value and sender information.
+     * @see GammaPacket
+     */
+    public static void toggle(@NotNull GammaPacket packet){
+        if(GammaShifter.isEnabled()){
+            if(packet.sender().isPresent()){
+                if(packet.sender().get() != GammaPacket.Sender.AUTO_NIGHT){
+                    currentCustomGamma = client.options.getGamma().getValue();
+                }
+            }
+            client.options.getGamma().setValue(1.0);
+        }else{
+            if(packet.sender().isPresent() && packet.sender().get() == GammaPacket.Sender.AUTO_NIGHT){
+                GammaShifter.LOGGER.info("in toggle(pkt): setting isActive to true");
+                AutoNight.setIsActive(true);
+            }
+            client.options.getGamma().setValue(packet.value);
+        }
         GammaShifter.toggle();
     }
 

@@ -3,6 +3,7 @@ A client-side FabricMC mod that restores the ability to set the gamma (brightnes
 
 ## Features
 -Gamma settings can be changed with hotkeys with pausing the game<br>
+-Auto Night Mode to automatically toggle FullBright at night <br>
 -Customizable mod properties through ModMenu/Cloth Config API implementation <br>
 -Adds hotkeys to set 100% and 1000% brightness instantly <br>
 -Adds custom presets <br>
@@ -69,6 +70,12 @@ Enables/disables hotbar message when the gamma is changed by a keypress. <br>
 A preset to immediately set a specific gamma value<br><br>
 ***Preset 2*** <br>
 A preset to immediately set a specific gamma value<br>
+
+### Auto Night Mode
+***Auto Night Mode***<br>
+Automatically increases and decreases brightness at dusk and dawn<br><br>
+***Night Mode brightness***<br>
+The brightness will be set when Night Mode turns on<br><br>
 
 ## Dependencies
 Required: <br>

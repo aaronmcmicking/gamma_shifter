@@ -3,6 +3,7 @@ package net.aaron.gamma_shifter.config;
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
+import net.aaron.gamma_shifter.event.AutoNight;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +33,8 @@ public class ConfigLoader {
     private static HUD.Locations location = HUD.Locations.TOP_LEFT;
     private static boolean showMessageOnGammaChange = true;
     private static boolean shouldEnforceBounds = true;
+    private static boolean autoNightEnabled = false;
+    private static double autoNightGammaValue = 2.5;
 
     /**
      * Initialize the file properties.
@@ -44,7 +47,7 @@ public class ConfigLoader {
      * a new config file is created and the default config values are saved to it.
      */
     public static void load(){
-        Properties properties = new Properties();
+        @NotNull Properties properties = new Properties();
         try (BufferedReader br = new BufferedReader(new FileReader(CONFIG_FILE))) {
             properties.load(br);
 
@@ -62,12 +65,9 @@ public class ConfigLoader {
             location = parseLocation((String) properties.get("location"));
             showMessageOnGammaChange = Boolean.parseBoolean((String) properties.get("showMessageOnGammaChange"));
             shouldEnforceBounds = Boolean.parseBoolean((String) properties.get("shouldEnforceBounds"));
+            autoNightEnabled = Boolean.parseBoolean((String) properties.get("autoNightEnabled"));
+            autoNightGammaValue = Double.parseDouble((String) properties.get("autoNightGammaValue"));
 
-            // adjust default values for malformed strings (not "true" or "false") that should default to "true"
-            fixMalformedBooleans(properties);
-
-            // apply the values in their respective spots
-            set();
         }catch(FileNotFoundException e){
             // attempt to create a new config file and save the default values into it
             if(createNewConfigFile()) {
@@ -76,13 +76,19 @@ public class ConfigLoader {
             }else{
                 GammaShifter.LOGGER.error("[GammaShifter] Couldn't find config and couldn't create a new one:\n\t" + e);
             }
-        }catch(IOException e){ // non-FileNotFoundException IOExceptions
+        }catch(IOException ignored){ // non-FileNotFoundException IOExceptions
             /* empty catch block */
 //            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't read config file:\n\t" + e);
         }catch(NullPointerException | NumberFormatException e){ // Parsing exceptions
             /* empty catch block */
             GammaShifter.LOGGER.error("[GammaShifter] Couldn't parse config file... was it malformed?\n\t" + e);
         }
+
+        // adjust default values for malformed strings (not "true" or "false") that should default to "true"
+        fixMalformedBooleans(properties);
+        // apply the values in their respective spots
+        // will set default values defined above
+        set();
     }
 
     /**
@@ -106,6 +112,8 @@ public class ConfigLoader {
         location = HUD.getCurrentLocation();
         showMessageOnGammaChange = HUD.getShowMessageOnGammaChange();
         shouldEnforceBounds = GammaHandler.shouldEnforceBounds();
+        autoNightEnabled = AutoNight.isEnabled();
+        autoNightGammaValue = AutoNight.getNightGammaValue();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -122,6 +130,8 @@ public class ConfigLoader {
             properties.put("location", getLocationString(location));
             properties.put("showMessageOnGammaChange", String.valueOf(showMessageOnGammaChange));
             properties.put("shouldEnforceBounds", String.valueOf(shouldEnforceBounds));
+            properties.put("autoNightEnabled", String.valueOf(autoNightEnabled));
+            properties.put("autoNightGammaValue", String.valueOf(autoNightGammaValue));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -165,6 +175,8 @@ public class ConfigLoader {
         HUD.setCurrentLocation(location);
         HUD.setShowMessageOnGammaChange(showMessageOnGammaChange);
         GammaHandler.setShouldEnforceBounds(shouldEnforceBounds);
+        AutoNight.setEnabled(autoNightEnabled);
+        AutoNight.setNightGammaValue(clamp(autoNightGammaValue));
     }
 
     /**
@@ -227,7 +239,7 @@ public class ConfigLoader {
      * which should always default to such.
      * @param properties The properties from the file.
      */
-    private static void fixMalformedBooleans(Properties properties){
+    private static void fixMalformedBooleans(@NotNull Properties properties){
         if(!"true".equalsIgnoreCase((String) properties.get("enabled")) && !"false".equalsIgnoreCase((String) properties.get("enabled"))){
             enabled = true;
         }

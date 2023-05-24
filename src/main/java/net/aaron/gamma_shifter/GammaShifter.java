@@ -2,6 +2,7 @@ package net.aaron.gamma_shifter;
 
 import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
+import net.aaron.gamma_shifter.event.AutoNight;
 import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class GammaShifter implements ClientModInitializer {
 
     /**
      * Toggles the mod.
+     * <p>Does not configure any other mod properties and therefore should only be called by GammaHandler.</p>
      */
     public static void toggle(){
         enabled = !enabled;
@@ -124,6 +126,7 @@ public class GammaShifter implements ClientModInitializer {
     public void onInitializeClient() {
         ConfigLoader.load();
         KeyInputHandler.registerKeyBinds();
+        AutoNight.registerAutoNight();
     }
 
 }
