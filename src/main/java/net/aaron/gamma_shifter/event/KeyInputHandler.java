@@ -75,8 +75,8 @@ public class KeyInputHandler {
                 if(showGammaKey.wasPressed()){
                     HUD.displayGammaMessage(true);
                     // debug (remove for any release)
-                    if(MinecraftClient.getInstance().world != null) {
-                        GammaShifter.LOGGER.info("getTimeOfDay == " + MinecraftClient.getInstance().world.getLevelProperties().getTimeOfDay());
+                    if(MinecraftClient.getInstance().world != null) { // remove before any releases
+//                        GammaShifter.LOGGER.info("getTimeOfDay == " + MinecraftClient.getInstance().world.getLevelProperties().getTimeOfDay());
                         GammaShifter.LOGGER.info("isActive == " + AutoNight.isActive());
                     }
                 }

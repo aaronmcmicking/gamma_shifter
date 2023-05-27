@@ -5,10 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-// contains value as optional
-// contains enum info about the packet sender
-// not really packet, but idk what else to call it
-
 /**
  * A pseudo-packet that contains a new gamma value and information about the class that sent the packet. The sender
  * information is stored as an enum and delivered within an {@link Optional}.

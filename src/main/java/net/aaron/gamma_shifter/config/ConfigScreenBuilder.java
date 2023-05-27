@@ -30,8 +30,8 @@ public class ConfigScreenBuilder {
      */
     ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.general"));
     ConfigCategory HUDCategory = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.HUD"));
-    ConfigCategory presets = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.presets"));
     ConfigCategory autoNightMode = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.auto_night"));
+    ConfigCategory presets = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.presets"));
 
     
     /**
@@ -45,6 +45,9 @@ public class ConfigScreenBuilder {
      * @return The options screen.
      */
     public Screen getGammaShifterOptionsMenu() {
+
+        // GENERAL OPTIONS
+
         // toggle mod (boolean button)
         general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.toggle_mod"), GammaShifter.isEnabled())
                 .setDefaultValue(true)
@@ -63,8 +66,12 @@ public class ConfigScreenBuilder {
                 .setDefaultValue(100)
                 .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    if(GammaShifter.isEnabled() && !AutoNight.isActive()) {
-                        GammaHandler.set((Math.round(newValue)) / 100.0); // causing bug
+                    if(GammaShifter.isEnabled()) {
+                        if(AutoNight.isActive() && newValue != (int)Math.round(GammaHandler.getCurrentCustomGamma()*100)){
+                            GammaShifter.LOGGER.info("newValue = " + newValue + ", rounded CCG = " + (int)Math.round(GammaHandler.getCurrentCustomGamma()*100));
+//                            AutoNight.setIsActive(false);
+                            GammaHandler.set((Math.round(newValue)) / 100.0);
+                        }
                     }else{
                         GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
                     }
@@ -115,6 +122,9 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+
+        // HUD OPTIONS
+
         // toggle silent mode (boolean)
         HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
                 .setDefaultValue(false)
@@ -164,25 +174,8 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        // set presetOneValue (int field)
-        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
-                .setDefaultValue(250)
-                .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
-                .build()
-        );
 
-        // set presetTwoValue (int field)
-        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
-                .setDefaultValue(500)
-                .setMin((int)(GammaHandler.MIN_GAMMA*100))
-                .setMax((int)(GammaHandler.MAX_GAMMA*100))
-                .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
-                .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
-                .build()
-        );
+        // AUTO NIGHT OPTIONS
 
         // toggle auto night mode (boolean)
         autoNightMode.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.auto_night"), AutoNight.isEnabled())
@@ -211,6 +204,30 @@ public class ConfigScreenBuilder {
                 })
                 .build()
         );
+
+
+        // PRESET OPTIONS
+
+        // set presetOneValue (int field)
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
+                .setDefaultValue(250)
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetOne(Math.round(newValue) / 100.0))
+                .build()
+        );
+
+        // set presetTwoValue (int field)
+        presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
+                .setDefaultValue(500)
+                .setMin((int)(GammaHandler.MIN_GAMMA*100))
+                .setMax((int)(GammaHandler.MAX_GAMMA*100))
+                .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))
+                .setSaveConsumer(newValue -> GammaHandler.setPresetTwo(Math.round(newValue) / 100.0))
+                .build()
+        );
+
 
         // return the built screen
         return builder.build();

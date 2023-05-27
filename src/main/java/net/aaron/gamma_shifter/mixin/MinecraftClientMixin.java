@@ -23,6 +23,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
+    /**
+     * Shadow {@link MinecraftClient#currentScreen}.
+     */
     @Shadow
     public Screen currentScreen;
 
@@ -38,7 +41,7 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
     public void setScreenGammaInject(Screen screen, CallbackInfo ci) {
-        GammaShifter.LOGGER.info("in setScreen: this.currentScreen == " + (this.currentScreen==null ? "null" : this.currentScreen.toString()));
+//        GammaShifter.LOGGER.info("in setScreen: this.currentScreen == " + (this.currentScreen==null ? "null" : this.currentScreen.toString()));
         MinecraftClient client = MinecraftClient.getInstance();
         if (!GammaInitializer.alreadyDone()) { // if setting the initial value from options.txt
             GammaInitializer.setInitialGamma();

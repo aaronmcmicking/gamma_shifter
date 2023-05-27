@@ -3,6 +3,7 @@ package net.aaron.gamma_shifter.mixin;
 import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaInitializer;
 import net.aaron.gamma_shifter.GammaShifter;
+import net.aaron.gamma_shifter.event.AutoNight;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
@@ -99,8 +100,8 @@ public abstract class GameOptionsMixin {
     }
 
     /**
-     * Substitutes the current gamma with a custom gamma value if the mod is disabled, so that the custom value
-     * is still saved in options.txt. Stores the current shown gamma value in {@link GameOptionsMixin#tempGamma} to
+     * Substitutes the current gamma with a custom gamma value if the mod is disabled or if AutoNight is active,
+     * so that the custom value is still saved in options.txt. Stores the current shown gamma value in {@link GameOptionsMixin#tempGamma} to
      * be restored after {@link GameOptions#write()} finishes.
      * <p>Only modifies values if mod is currently disabled.</p>
      * @see GameOptionsMixin#restoreCurrentGammaAfterSave(CallbackInfo)
@@ -108,7 +109,7 @@ public abstract class GameOptionsMixin {
      */
     @Inject(method = "write", at = @At("HEAD"))
     public void substituteCustomGammaForSave(CallbackInfo ci){
-        if(!GammaShifter.isEnabled() && GammaShifter.getAlwaysSaveCustomGamma()){
+        if(GammaShifter.getAlwaysSaveCustomGamma() && (!GammaShifter.isEnabled() || AutoNight.isActive()) ) {
             GameOptions options = MinecraftClient.getInstance().options;
             tempGamma = options.getGamma().getValue();
             options.getGamma().setValue(GammaHandler.currentCustomGamma);
@@ -122,7 +123,7 @@ public abstract class GameOptionsMixin {
      */
     @Inject(method = "write", at = @At("TAIL"))
     public void restoreCurrentGammaAfterSave(CallbackInfo ci){
-        if(!GammaShifter.isEnabled() && GammaShifter.getAlwaysSaveCustomGamma()){
+        if(GammaShifter.getAlwaysSaveCustomGamma() && (!GammaShifter.isEnabled() || AutoNight.isActive()) ){
             MinecraftClient.getInstance().options.getGamma().setValue(tempGamma);
         }
     }

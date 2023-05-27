@@ -163,7 +163,7 @@ public class GammaHandler {
      * is active.</p>
      * @see AutoNight
      */
-    public static void  toggle(){
+    public static void toggle(){
         // make sure the latest gamma value is stored locally before overwriting it
         if(GammaShifter.isEnabled()) {
             if (AutoNight.isActive()) {
@@ -173,7 +173,8 @@ public class GammaHandler {
                 currentCustomGamma = client.options.getGamma().getValue();
             }
         }
-        client.options.getGamma().setValue(GammaShifter.isEnabled() ? 1.0 : currentCustomGamma);
+        double gamma = GammaShifter.isEnabled() ? 1.0 : currentCustomGamma;
+        client.options.getGamma().setValue(gamma);
         GammaShifter.toggle();
     }
 

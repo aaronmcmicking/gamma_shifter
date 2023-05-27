@@ -4,6 +4,7 @@ import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaPacket;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.config.ConfigScreenBuilder;
+import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -11,19 +12,20 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles logic to enable/disable Night Mode during the day/night cycle of Minecraft. Stores a unique custom gamma
- * value and sets it as desired. Class activity is largely disabled if {@link AutoNight#enabled} or {@link AutoNight#isActive},
- * which are controlled by the config menu and {@link GammaHandler}, are set to false.
+ * value and sets it as desired. Class activity is largely disabled if {@link AutoNight#enabled} or {@link AutoNight#isActive}
+ * (which are controlled by the config menu and {@link GammaHandler}) are set to false.
  * <p>Unlike other mod features, AutoNight uses pseudo-packets to set gamma values. These allow other classes to distinguish
  * which class they are being called by and act accordingly. </p>
  * <p>AutoNight should never overwrite other classes' fields directly. Instead, whether any functional changes are made is
  * at the discretion methods called by AutoNight. In this way, AutoNight must request changes from other methods and
- * cannot make forceful changes (<b>except as described below</b>), and therefore undefined behaviour will often result in AutoNight being disabled by
- * other mod features. </p>
- * <p>The only authority AutoNight exerts is through calls to {@link AutoNight#isActive()}, which is checked by some
- * other features when they are deciding whether to act. However, AutoNight does not control if this is checked or how
- * the result is interpreted, and {@link AutoNight#isActive} can be publicly set at any time.</p>
+ * cannot make forceful changes (<b>except as described below</b>), and therefore bugs/unexpected behaviour will often
+ * result in AutoNight being disabled by other mod features. </p>
+ * <p>The only authority AutoNight exerts is through calls to {@link AutoNight#isActive()}, some other mod features
+ * check. However, AutoNight does not control if this is checked or how the result is interpreted, and
+ * {@link AutoNight#isActive} can be publicly set at any time.</p>
  * @see GammaPacket
  * @see ConfigScreenBuilder
+ * @see net.aaron.gamma_shifter.config.ConfigLoader
  * @see GammaHandler#toggle(GammaPacket)
  */
 public class AutoNight {
@@ -69,21 +71,22 @@ public class AutoNight {
      * <p>The GammaPacket includes info that AutoNight has sent the packet, and therefore the
      * receiver is allowed to discriminate against/ignore the enclosed value.</p>
      * @see AutoNight#initializeAutoNightStatus()
+     * @see GammaPacket
      */
     public static void registerAutoNight(){
         ClientTickEvents.END_CLIENT_TICK.register(listener -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            if(enabled && client != null && client.world != null){
-                long time = client.world.getTimeOfDay() % 24000;
+            if(enabled && client != null && client.world != null){ // autoNight is enabled and player is in world
+                long time = client.world.getTimeOfDay() % 24000; // mod by ticks-per-day to normalize time
                 if(time == NIGHT_START_TIME){ // night start
                     if(!GammaShifter.isEnabled()){
                         isActive = true;
                         GammaHandler.toggle(new GammaPacket(nightGammaValue, GammaPacket.Sender.AUTO_NIGHT));
                     }
                 }else if(time == MORNING_START_TIME){ // day start
-                    if(GammaShifter.isEnabled()){
+                    if(GammaShifter.isEnabled() && AutoNight.isActive()){
                         isActive = false;
-                        GammaHandler.toggle(new GammaPacket(1.0, GammaPacket.Sender.AUTO_NIGHT));
+                        GammaHandler.toggle(new GammaPacket(1.0, GammaPacket.Sender.AUTO_NIGHT)); // I think this packet gets ignored
                     }
                 }
             }
@@ -126,6 +129,7 @@ public class AutoNight {
 //            }
 //        }
 
+        // turn on when night begins
         GammaShifter.LOGGER.info("timeState = " + timeState + ", GS.isEnabled == " + GammaShifter.isEnabled());
         if(timeState == TimeState.NIGHT){
             if(!GammaShifter.isEnabled()){
@@ -145,8 +149,8 @@ public class AutoNight {
      * @see TimeState
      */
     private static TimeState getTimeState(@NotNull ClientWorld world){
-        long time = world.getLevelProperties().getTimeOfDay() % 24000;
-        GammaShifter.LOGGER.info("getTimeState: time == " + time);
+        long time = world.getLevelProperties().getTimeOfDay() % 24000; // mod by ticks-per-day to normalize time
+        GammaShifter.LOGGER.info("getTimeState: time == " + time); // debug
         if(time > NIGHT_START_TIME && time < MORNING_START_TIME){
             return TimeState.NIGHT;
         }
@@ -175,7 +179,12 @@ public class AutoNight {
      * @param value The new gamma value to apply.
      */
     public static void setNightGammaValue(double value){
-        nightGammaValue = (value <= GammaHandler.MAX_GAMMA && value >= GammaHandler.MIN_GAMMA) ? value : 2.5; // clamp to max/min gamma
+        // clamp to max/min gamma
+        if(value <= GammaHandler.MAX_GAMMA && value >= GammaHandler.MIN_GAMMA){
+            nightGammaValue = value;
+        }else{
+            nightGammaValue = 2.5;
+        }
     }
 
     /**
