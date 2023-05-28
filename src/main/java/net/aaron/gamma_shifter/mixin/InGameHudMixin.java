@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InGameHudMixin {
     @Inject(method = "render", at = @At("HEAD"))
     public void renderPersistentGammaOverlay(MatrixStack matrices, float tickDelta, CallbackInfo ci){
-        if(HUD.shouldShowCurrentGammaOverlay() && !GammaShifter.isSilentModeEnabled() && GammaShifter.isEnabled()) {
+        if(HUD.shouldShowCurrentGammaOverlay() && !GammaShifter.isSilentModeEnabled()) {
             HUD.renderPersistentOverlay(matrices); // HUD class handles actual rendering
         }
     }

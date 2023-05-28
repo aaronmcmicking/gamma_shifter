@@ -32,7 +32,7 @@ public class AutoNight {
     /**
      * The gamma value set when AutoNight activates.
      */
-    private static double nightGammaValue = 2.5;
+    private static double nightGammaValue = 3.0;
     /**
      * Whether the feature is 'enabled' in settings and will activate during night. Enabled does not indicate whether
      * the autoNight gamma is currently applied.
@@ -51,7 +51,7 @@ public class AutoNight {
     /**
      * Constants for the time when night and morning start (in ticks).
      */
-    private static final long NIGHT_START_TIME = 13000;
+    private static final long NIGHT_START_TIME = 12200;
     private static final long MORNING_START_TIME = 23500;
 
     /**

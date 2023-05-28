@@ -63,7 +63,7 @@ public class ConfigScreenBuilder {
         general.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.gamma"), (int)Math.round(GammaHandler.getCurrentCustomGamma()*100))
                 .setMin(GammaHandler.shouldEnforceBounds () ? (int)(GammaHandler.MIN_GAMMA*100) : Integer.MIN_VALUE)
                 .setMax(GammaHandler.shouldEnforceBounds() ? (int)(GammaHandler.MAX_GAMMA*100) : Integer.MAX_VALUE)
-                .setDefaultValue(100)
+                .setDefaultValue((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                 .setSaveConsumer(newValue -> {
                     if(GammaShifter.isEnabled()) {
@@ -149,13 +149,6 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_message_on_gamma_change"), HUD.getShowMessageOnGammaChange())
-                .setDefaultValue(true)
-                .setTooltip(Text.translatable("config.gamma_shifter.show_message_on_gamma_change.tooltip"))
-                .setSaveConsumer(HUD::setShowMessageOnGammaChange)
-                .build()
-        );
-
         // Set overlay location
         // Does not currently support translations for button text
         String[] list = {"Top Left", "Top Right", "Bottom Right", "Bottom Left"};
@@ -174,6 +167,12 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_message_on_gamma_change"), HUD.getShowMessageOnGammaChange())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("config.gamma_shifter.show_message_on_gamma_change.tooltip"))
+                .setSaveConsumer(HUD::setShowMessageOnGammaChange)
+                .build()
+        );
 
         // AUTO NIGHT OPTIONS
 
@@ -192,7 +191,7 @@ public class ConfigScreenBuilder {
 
         // set auto night mode gamma value (int field)
         autoNightMode.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.auto_night_value"), (int)(AutoNight.getNightGammaValue()*100))
-                .setDefaultValue(250)
+                .setDefaultValue(300)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.auto_night_value.tooltip"))

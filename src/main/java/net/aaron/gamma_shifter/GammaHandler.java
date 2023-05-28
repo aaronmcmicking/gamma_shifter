@@ -42,7 +42,7 @@ public class GammaHandler {
      * instead, but the previous custom gamma is still saved here.</p>
      * @see net.aaron.gamma_shifter.event.AutoNight
      */
-    public static Double currentCustomGamma = 1.0;
+    public static Double currentCustomGamma = 10.0;
 
     /**
      * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
