@@ -22,7 +22,7 @@ public class GammaHandler {
     /**
      * The maximum gamma value the mod will set.
      */
-    public static final Double MAX_GAMMA = 10.0;
+    public static final Double MAX_GAMMA = 20.0;
 
     /**
      * The minimum gamma value the mod will set.
@@ -42,7 +42,7 @@ public class GammaHandler {
      * instead, but the previous custom gamma is still saved here.</p>
      * @see net.aaron.gamma_shifter.event.AutoNight
      */
-    public static Double currentCustomGamma = 10.0;
+    public static Double currentCustomGamma = 20.0;
 
     /**
      * Stores whether changes in gamma value will be snapped to the nearest multiple of {@link GammaHandler#changePerInput}.
@@ -150,7 +150,6 @@ public class GammaHandler {
      * @param value The gamma value to set.
      */
     public static void set(Double value){
-        GammaShifter.LOGGER.info("in set: setting isActive to false");
         AutoNight.setIsActive(false);
         client.options.getGamma().setValue(value);
         currentCustomGamma = value;
@@ -167,7 +166,6 @@ public class GammaHandler {
         // make sure the latest gamma value is stored locally before overwriting it
         if(GammaShifter.isEnabled()) {
             if (AutoNight.isActive()) {
-                GammaShifter.LOGGER.info("in toggle(): setting isActive to false");
                 AutoNight.setIsActive(false);
             } else {
                 currentCustomGamma = client.options.getGamma().getValue();
@@ -195,7 +193,6 @@ public class GammaHandler {
             client.options.getGamma().setValue(1.0);
         }else{
             if(packet.sender().isPresent() && packet.sender().get() == GammaPacket.Sender.AUTO_NIGHT){
-                GammaShifter.LOGGER.info("in toggle(pkt): setting isActive to true");
                 AutoNight.setIsActive(true);
             }
             client.options.getGamma().setValue(packet.value);

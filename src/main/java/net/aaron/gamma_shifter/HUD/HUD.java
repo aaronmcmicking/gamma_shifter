@@ -59,12 +59,11 @@ public class HUD {
 
     /**
      * Display a HUD message to the user telling them the current gamma value.
-     * @param overrideShowGammaOnChange Overrides {@link HUD#showMessageOnGammaChange} being set to 'false' to allow
-     *                                  a message to still be displayed if desired. Cannot override
-     *                                  {@link GammaShifter#isSilentModeEnabled()} being 'true'.
+     * @param force Overrides {@link HUD#showMessageOnGammaChange} being set to 'false' to allow a message to still be
+     *              displayed if desired. Cannot override {@link GammaShifter#isSilentModeEnabled()} being 'true'.
      */
-    public static void displayGammaMessage(boolean overrideShowGammaOnChange){
-        if((client.player != null && !GammaShifter.isSilentModeEnabled()) && (showMessageOnGammaChange || overrideShowGammaOnChange)) {
+    public static void displayGammaMessage(boolean force){
+        if((client.player != null && !GammaShifter.isSilentModeEnabled()) && (showMessageOnGammaChange || force)) {
             MutableText messageText = getDisplayGammaMessage();
             client.player.sendMessage(messageText.fillStyle(Style.EMPTY.withColor(textColour)), true);
         }

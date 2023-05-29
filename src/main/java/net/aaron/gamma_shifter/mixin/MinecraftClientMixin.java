@@ -43,7 +43,6 @@ public abstract class MinecraftClientMixin {
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
     public void setScreenGammaInject(Screen screen, CallbackInfo ci) {
-//        GammaShifter.LOGGER.info("in setScreen: this.currentScreen == " + (this.currentScreen==null ? "null" : this.currentScreen.toString()));
         MinecraftClient client = MinecraftClient.getInstance();
         if (!GammaInitializer.alreadyDone()) { // if setting the initial value from options.txt
             GammaInitializer.setInitialGamma();
@@ -54,10 +53,8 @@ public abstract class MinecraftClientMixin {
         if ((screen instanceof GameMenuScreen) && (client != null)  &&  (client.player != null)) {
             client.options.write();
             ConfigLoader.save();
-//               GammaShifter.LOGGER.info("Saved options");
             // if the mod is enabled, make sure GammaHandler gets the updated gamma value from the vanilla settings menu
             if(GammaShifter.isEnabled() && !AutoNight.isActive()){ // changes are ignored if AutoNight is active
-//                GammaShifter.LOGGER.info("Setting currentCustomGamma to " + client.options.getGamma().getValue() + "from setScreen inject");
                 GammaHandler.setCurrentCustomGamma(client.options.getGamma().getValue());
             }
         // if AutoNight needs to be initialized
@@ -65,7 +62,6 @@ public abstract class MinecraftClientMixin {
                 && client != null
                 && client.player != null
                 && client.world != null ) {
-//            GammaShifter.LOGGER.info("in setScreen, got into lower if-statement");
             AutoNight.initializeAutoNightStatus();
         }
     }

@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Gamma Shifter",
-  "description": "Customizable fullbright mod that increases the max brightness in 1.19+",
+  "description": "Customizable fullbright utilities with auto night-sight for 1.19+.",
   "authors": [
     "Aaron McMicking"
   ],

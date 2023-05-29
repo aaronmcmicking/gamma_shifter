@@ -43,7 +43,7 @@
   "config.gamma_shifter.show_message_on_gamma_change": "Show hotbar message",
   "config.gamma_shifter.show_message_on_gamma_change.tooltip": "Enables/disables a message above the hotbar when the increase/decrease gamma key is pressed",
   "config.gamma_shifter.enforce_bounds": "Enforce maximum/minimum gamma",
-  "config.gamma_shifter.enforce_bounds.tooltip": "Whether gamma values should be bounded to 0%-1000% (behaviour of very high/low values is untested)",
+  "config.gamma_shifter.enforce_bounds.tooltip": "Whether gamma values should be bounded to 0%-2000% (behaviour of very high/low values is untested)",
   "config.gamma_shifter.auto_night": "Enable Auto Night Mode",
   "config.gamma_shifter.auto_night.tooltip": "Automatically increases and decreases gamma at dusk and dawn",
   "config.gamma_shifter.auto_night_value": "Night Mode Gamma",

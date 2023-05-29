@@ -133,6 +133,14 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        // show gamma message on value change (boolean)
+        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_message_on_gamma_change"), HUD.getShowMessageOnGammaChange())
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("config.gamma_shifter.show_message_on_gamma_change.tooltip"))
+                .setSaveConsumer(HUD::setShowMessageOnGammaChange)
+                .build()
+        );
+
         // toggle persistent gamma display (boolean)
         HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_current_gamma_overlay"), HUD.shouldShowCurrentGammaOverlay())
                 .setDefaultValue(false)
@@ -164,13 +172,6 @@ public class ConfigScreenBuilder {
                                 default -> HUD.Locations.TOP_LEFT;
                     });
                 })
-                .build()
-        );
-
-        HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.show_message_on_gamma_change"), HUD.getShowMessageOnGammaChange())
-                .setDefaultValue(true)
-                .setTooltip(Text.translatable("config.gamma_shifter.show_message_on_gamma_change.tooltip"))
-                .setSaveConsumer(HUD::setShowMessageOnGammaChange)
                 .build()
         );
 
@@ -209,7 +210,7 @@ public class ConfigScreenBuilder {
 
         // set presetOneValue (int field)
         presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
-                .setDefaultValue(250)
+                .setDefaultValue(500)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.preset_one.tooltip"))
@@ -219,7 +220,7 @@ public class ConfigScreenBuilder {
 
         // set presetTwoValue (int field)
         presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_two"), (int)Math.round(GammaHandler.getPresetTwo()*100))
-                .setDefaultValue(500)
+                .setDefaultValue(1000)
                 .setMin((int)(GammaHandler.MIN_GAMMA*100))
                 .setMax((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.preset_two.tooltip"))

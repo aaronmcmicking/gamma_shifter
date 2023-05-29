@@ -51,7 +51,7 @@ public class AutoNight {
     /**
      * Constants for the time when night and morning start (in ticks).
      */
-    private static final long NIGHT_START_TIME = 12200;
+    private static final long NIGHT_START_TIME = 12400;
     private static final long MORNING_START_TIME = 23500;
 
     /**
@@ -102,10 +102,8 @@ public class AutoNight {
     public static void initializeAutoNightStatus(){
         // preconditions
         if(!enabled){
-            GammaShifter.LOGGER.info("autoNight: enabled == false, returning");
             return;
         }else if(alreadyInitialized){
-            GammaShifter.LOGGER.info("alreadyInitialized = true, returning");
             return;
         }
 
@@ -114,11 +112,8 @@ public class AutoNight {
         if(client == null || client.world == null){
             GammaShifter.LOGGER.error("[GammaShifter] Incorrectly trying to initialize AutoNight state when the client instance or world was null");
             return;
-        }else{
-            GammaShifter.LOGGER.info("Entering world... detecting day state");
         }
 
-        GammaShifter.LOGGER.info("alreadyInitialized = false, continuing");
         TimeState timeState = getTimeState(client.world);
 
         // auto turn off when loading into daytime (remove if unused by release)
@@ -130,10 +125,8 @@ public class AutoNight {
 //        }
 
         // turn on when night begins
-        GammaShifter.LOGGER.info("timeState = " + timeState + ", GS.isEnabled == " + GammaShifter.isEnabled());
         if(timeState == TimeState.NIGHT){
             if(!GammaShifter.isEnabled()){
-                GammaShifter.LOGGER.info("setting initial state");
                 isActive = true;
                 GammaHandler.toggle(new GammaPacket(nightGammaValue, GammaPacket.Sender.AUTO_NIGHT));
             }
@@ -150,7 +143,6 @@ public class AutoNight {
      */
     private static TimeState getTimeState(@NotNull ClientWorld world){
         long time = world.getLevelProperties().getTimeOfDay() % 24000; // mod by ticks-per-day to normalize time
-        GammaShifter.LOGGER.info("getTimeState: time == " + time); // debug
         if(time > NIGHT_START_TIME && time < MORNING_START_TIME){
             return TimeState.NIGHT;
         }
