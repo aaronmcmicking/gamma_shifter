@@ -2,6 +2,7 @@ package net.aaron.gamma_shifter;
 
 import net.aaron.gamma_shifter.HUD.HUD;
 import net.aaron.gamma_shifter.event.AutoNight;
+import net.aaron.gamma_shifter.event.Darkness;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
@@ -170,6 +171,8 @@ public class GammaHandler {
             } else {
                 currentCustomGamma = client.options.getGamma().getValue();
             }
+        }else{
+            Darkness.cancel();
         }
         double gamma = GammaShifter.isEnabled() ? 1.0 : currentCustomGamma;
         client.options.getGamma().setValue(gamma);

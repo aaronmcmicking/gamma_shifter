@@ -1,6 +1,7 @@
 package net.aaron.gamma_shifter;
 
 import net.aaron.gamma_shifter.config.ConfigLoader;
+import net.aaron.gamma_shifter.event.Darkness;
 import net.aaron.gamma_shifter.event.KeyInputHandler;
 import net.aaron.gamma_shifter.event.AutoNight;
 import net.fabricmc.api.ClientModInitializer;
@@ -127,6 +128,7 @@ public class GammaShifter implements ClientModInitializer {
         ConfigLoader.load();
         KeyInputHandler.registerKeyBinds();
         AutoNight.registerAutoNight();
+        Darkness.detectDarknessEffect();
     }
 
 }

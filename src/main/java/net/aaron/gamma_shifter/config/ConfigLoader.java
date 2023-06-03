@@ -4,6 +4,7 @@ import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
 import net.aaron.gamma_shifter.event.AutoNight;
+import net.aaron.gamma_shifter.event.Darkness;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +36,7 @@ public class ConfigLoader {
     private static boolean shouldEnforceBounds = true;
     private static boolean autoNightEnabled = false;
     private static double autoNightGammaValue = 2.5;
+    private static boolean disableOnDarknessEffect = true;
 
     /**
      * Initialize the file properties.
@@ -67,6 +69,7 @@ public class ConfigLoader {
             shouldEnforceBounds = Boolean.parseBoolean((String) properties.get("shouldEnforceBounds"));
             autoNightEnabled = Boolean.parseBoolean((String) properties.get("autoNightEnabled"));
             autoNightGammaValue = Double.parseDouble((String) properties.get("autoNightGammaValue"));
+            disableOnDarknessEffect = Boolean.parseBoolean((String) properties.get("disableOnDarknessEffect"));
 
         }catch(FileNotFoundException e){
             // attempt to create a new config file and save the default values into it
@@ -114,6 +117,7 @@ public class ConfigLoader {
         shouldEnforceBounds = GammaHandler.shouldEnforceBounds();
         autoNightEnabled = AutoNight.isEnabled();
         autoNightGammaValue = AutoNight.getNightGammaValue();
+        disableOnDarknessEffect = Darkness.isEnabled();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -132,6 +136,7 @@ public class ConfigLoader {
             properties.put("shouldEnforceBounds", String.valueOf(shouldEnforceBounds));
             properties.put("autoNightEnabled", String.valueOf(autoNightEnabled));
             properties.put("autoNightGammaValue", String.valueOf(autoNightGammaValue));
+            properties.put("disableOnDarknessEffect", String.valueOf(disableOnDarknessEffect));
 
             properties.store(bw, "Gamma Shifter Config");
         }
@@ -177,6 +182,7 @@ public class ConfigLoader {
         GammaHandler.setShouldEnforceBounds(shouldEnforceBounds);
         AutoNight.setEnabled(autoNightEnabled);
         AutoNight.setNightGammaValue(clamp(autoNightGammaValue));
+        Darkness.setEnabled(disableOnDarknessEffect);
     }
 
     /**
@@ -255,8 +261,11 @@ public class ConfigLoader {
         if(!"true".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange")) && !"false".equalsIgnoreCase((String) properties.get("showMessageOnGammaChange"))){
             showMessageOnGammaChange = true;
         }
-        if(!"true".equalsIgnoreCase((String) properties.get("shouldEnforceBounds")) && !"false".equalsIgnoreCase((String) properties.get("shouldEnforceBounds"))){
+        if(!"true".equalsIgnoreCase((String) properties.get("shouldEnforceBounds")) && !"false".equalsIgnoreCase((String) properties.get("shouldEnforceBounds"))) {
             shouldEnforceBounds = true;
+        }
+        if(!"true".equalsIgnoreCase((String) properties.get("disableOnDarknessEffect")) && !"false".equalsIgnoreCase((String) properties.get("disableOnDarknessEffect"))){
+            disableOnDarknessEffect = true;
         }
     }
 }

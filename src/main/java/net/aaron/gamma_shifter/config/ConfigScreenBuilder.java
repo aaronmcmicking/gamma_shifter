@@ -7,6 +7,7 @@ import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.HUD.HUD;
 import net.aaron.gamma_shifter.event.AutoNight;
+import net.aaron.gamma_shifter.event.Darkness;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -122,6 +123,13 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        // should disable on darkness effect (boolean)
+        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.disable_on_darkness"), Darkness.isEnabled())
+                .setTooltip(Text.translatable("config.gamma_shifter.disable_on_darkness.tooltip"))
+                .setDefaultValue(true)
+                .setSaveConsumer(Darkness::setEnabled)
+                .build()
+        );
 
         // HUD OPTIONS
 
