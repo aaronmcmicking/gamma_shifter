@@ -3,6 +3,7 @@ package net.aaron.gamma_shifter.HUD;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
@@ -83,7 +84,7 @@ public class HUD {
      * @param matrices The matrix stacked used in by the renderer for Minecraft HUD elements.
      * @see net.aaron.gamma_shifter.mixin.InGameHudMixin
      */
-    public static void renderPersistentOverlay(MatrixStack matrices){
+    public static void renderPersistentOverlay(DrawContext context){
         float x, y;
         Window window = client.getWindow();
         float scaledWindowHeight = (float) window.getScaledHeight();
@@ -119,9 +120,12 @@ public class HUD {
         }
 
         // render the text
-        matrices.push();
-        textRenderer.drawWithShadow(matrices, overlayText, x, y, textColour);
-        matrices.pop();
+//        matrices.push();
+//        textRenderer.drawWithShadow(matrices, overlayText, x, y, textColour);
+//        matrices.pop();
+//        textRenderer.draw(overlayText, x, y, true, context.getMatrices(), context.);
+//        context.drawTextWithShadow(textRenderer, overlayText, (int)x, (int)y, textColour);
+        context.drawText(textRenderer, overlayText, (int)x, (int)y, textColour, false);
     }
 
     /**
