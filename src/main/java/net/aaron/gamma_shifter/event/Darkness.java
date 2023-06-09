@@ -30,18 +30,15 @@ public class Darkness {
             boolean GSEnabled = GammaShifter.isEnabled();
             DarknessStatus.previouslyEnabled = DarknessStatus.currentlyEnabled;
             DarknessStatus.currentlyEnabled = hasDarkness;
-//            World world = MinecraftClient.getInstance().world;
-//            if(world != null)
-//                GammaShifter.LOGGER.info("1: waiting == " + waiting + ", player==null ? == " + (player == null) + ", player.hasStatus(darkness) == " + (player==null ? "N/A (null)" : player.hasStatusEffect(StatusEffects.DARKNESS)) + ", GammaShifter.isEnabled() == " + GammaShifter.isEnabled());
+            GammaShifter.LOGGER.info("prev_en = " + DarknessStatus.previouslyEnabled + ", hasDarkness = " + hasDarkness + ", waiting = " + waiting + ", GSEnabled = " + GSEnabled);
             if(!waiting && !override && hasDarkness && GSEnabled){
+                GammaShifter.LOGGER.info("setting waiting to false");
                 waiting = true;
                 GammaHandler.toggle(); // disabling
-            }else if(waiting && !GSEnabled){
+            }else if(waiting && !GSEnabled && !hasDarkness){
                 waiting = false;
                 override = false;
-                if(!hasDarkness) {
-                    GammaHandler.toggle(); // enabling
-                }
+                GammaHandler.toggle(); // enabling
             }else if(!hasDarkness && (waiting || override)){
                 waiting = false;
                 override = false;

@@ -8,6 +8,8 @@ import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -78,12 +80,14 @@ public class AutoNight {
             MinecraftClient client = MinecraftClient.getInstance();
             if(enabled && client != null && client.world != null){ // autoNight is enabled and player is in world
                 long time = client.world.getTimeOfDay() % 24000; // mod by ticks-per-day to normalize time
-                if(time == NIGHT_START_TIME){ // night start
+                RegistryKey<World> dimension = client.world.getRegistryKey();
+
+                if(time == NIGHT_START_TIME && dimension.equals(World.OVERWORLD)) { // night start
                     if(!GammaShifter.isEnabled()){
                         isActive = true;
                         GammaHandler.toggle(new GammaPacket(nightGammaValue, GammaPacket.Sender.AUTO_NIGHT));
                     }
-                }else if(time == MORNING_START_TIME){ // day start
+                }else if(time == MORNING_START_TIME || !dimension.equals(World.OVERWORLD)){ // day start
                     if(GammaShifter.isEnabled() && AutoNight.isActive()){
                         isActive = false;
                         GammaHandler.toggle(new GammaPacket(1.0, GammaPacket.Sender.AUTO_NIGHT)); // I think this packet gets ignored
@@ -116,16 +120,8 @@ public class AutoNight {
 
         TimeState timeState = getTimeState(client.world);
 
-        // auto turn off when loading into daytime (remove if unused by release)
-//        if(timeState == TimeState.DAY){
-//            if(GammaShifter.isEnabled()){
-//                isActive = false;
-//                GammaHandler.toggle(new GammaPacket(1.0, GammaPacket.Sender.AUTO_NIGHT));
-//            }
-//        }
-
         // turn on when night begins
-        if(timeState == TimeState.NIGHT){
+        if(timeState == TimeState.NIGHT && client.world.getRegistryKey().equals(World.OVERWORLD)){
             if(!GammaShifter.isEnabled()){
                 isActive = true;
                 GammaHandler.toggle(new GammaPacket(nightGammaValue, GammaPacket.Sender.AUTO_NIGHT));
