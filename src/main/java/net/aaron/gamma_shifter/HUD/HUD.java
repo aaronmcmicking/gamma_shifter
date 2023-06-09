@@ -120,11 +120,6 @@ public class HUD {
         }
 
         // render the text
-//        matrices.push();
-//        textRenderer.drawWithShadow(matrices, overlayText, x, y, textColour);
-//        matrices.pop();
-//        textRenderer.draw(overlayText, x, y, true, context.getMatrices(), context.);
-//        context.drawTextWithShadow(textRenderer, overlayText, (int)x, (int)y, textColour);
         context.drawText(textRenderer, overlayText, (int)x, (int)y, textColour, false);
     }
 
