@@ -1,4 +1,4 @@
-# Gamma Shifter 1.0.0
+# Gamma Shifter 1.0.1
 A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft 1.19+ and adds other customizable quality-of-life features.
 
 ## Features
@@ -61,6 +61,8 @@ Whether gamma changes will snap to the nearest multiple of the current change-pe
 Whether the custom gamma (>=100%) will always be saved to options.txt, regardless of if the mod is enabled<br><br>
 ***Enforce maximum/minimum gamma*** <br>
 Whether gamma values are clamped to Gamma Shifter's max/min values (0% - 2000%)<br><br>
+***Disable during Darkness effect*** <br>
+Temporarily disables gamma effects when the Darkness effect is applied to reduce visual anomalies <br>
 
 ### HUD
 ***Enable Silent Mode***<br>
