@@ -81,7 +81,7 @@ public class HUD {
     /**
      * Renders a persistent overlay that shows the gamma in a screen corner at all times (if enabled).
      * <p>Renders every tick.</p>
-     * @param matrices The matrix stacked used in by the renderer for Minecraft HUD elements.
+     * @param context The DrawContext used in by the renderer for Minecraft HUD elements.
      * @see net.aaron.gamma_shifter.mixin.InGameHudMixin
      */
     public static void renderPersistentOverlay(DrawContext context){
