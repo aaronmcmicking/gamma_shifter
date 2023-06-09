@@ -48,6 +48,8 @@
   "config.gamma_shifter.auto_night.tooltip": "Automatically increases and decreases gamma at dusk and dawn",
   "config.gamma_shifter.auto_night_value": "Night Mode Gamma",
   "config.gamma_shifter.auto_night_value.tooltip": "The gamma will be set when Night Mode turns on",
+  "config.gamma_shifter.disable_on_darkness": "Disable during Darkness effect",
+  "config.gamma_shifter.disable_on_darkness.tooltip": "Temporarily disables gamma effects when the Darkness effect is applied to reduce visual anomalies",
 
   "locations.gamma_shifter.top_left": "Top Left",
   "locations.gamma_shifter.top_right": "Top Right",
