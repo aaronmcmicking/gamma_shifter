@@ -30,9 +30,7 @@ public class Darkness {
             boolean GSEnabled = GammaShifter.isEnabled();
             DarknessStatus.previouslyEnabled = DarknessStatus.currentlyEnabled;
             DarknessStatus.currentlyEnabled = hasDarkness;
-            GammaShifter.LOGGER.info("prev_en = " + DarknessStatus.previouslyEnabled + ", hasDarkness = " + hasDarkness + ", waiting = " + waiting + ", GSEnabled = " + GSEnabled);
             if(!waiting && !override && hasDarkness && GSEnabled){
-                GammaShifter.LOGGER.info("setting waiting to false");
                 waiting = true;
                 GammaHandler.toggle(); // disabling
             }else if(waiting && !GSEnabled && !hasDarkness){
