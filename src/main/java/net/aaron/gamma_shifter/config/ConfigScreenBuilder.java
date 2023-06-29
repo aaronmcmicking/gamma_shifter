@@ -30,6 +30,7 @@ public class ConfigScreenBuilder {
      * Config menu categories.
      */
     ConfigCategory general = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.general"));
+    ConfigCategory behaviour = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.behaviour"));
     ConfigCategory HUDCategory = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.HUD"));
     ConfigCategory autoNightMode = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.auto_night"));
     ConfigCategory presets = builder.getOrCreateCategory(Text.translatable("category.gamma_shifter.presets"));
@@ -92,7 +93,7 @@ public class ConfigScreenBuilder {
         );
 
         // set alwaysStartEnabled (boolean button)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_start_enabled"), GammaShifter.alwaysStartEnabled())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_start_enabled"), GammaShifter.alwaysStartEnabled())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.always_start_enabled.tooltip"))
                 .setSaveConsumer(GammaShifter::setAlwaysStartEnabled)
@@ -100,7 +101,7 @@ public class ConfigScreenBuilder {
         );
 
         // set enableSnapping (boolean button)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.snap"), GammaHandler.isSnappingEnabled())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.snap"), GammaHandler.isSnappingEnabled())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.snap.tooltip"))
                 .setSaveConsumer(GammaHandler::setSnappingEnabled)
@@ -108,7 +109,7 @@ public class ConfigScreenBuilder {
         );
 
         // set alwaysSaveCustomGamma
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_save_custom_brightness"), GammaShifter.getAlwaysSaveCustomGamma())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_save_custom_brightness"), GammaShifter.getAlwaysSaveCustomGamma())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.always_save_custom_brightness.tooltip"))
                 .setSaveConsumer(GammaShifter::setAlwaysSaveCustomGamma)
@@ -116,7 +117,7 @@ public class ConfigScreenBuilder {
         );
 
         // toggle bounds enforcing (boolean)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.enforce_bounds"), GammaHandler.shouldEnforceBounds())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.enforce_bounds"), GammaHandler.shouldEnforceBounds())
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("config.gamma_shifter.enforce_bounds.tooltip"))
                 .setSaveConsumer(GammaHandler::setShouldEnforceBounds)
@@ -124,7 +125,7 @@ public class ConfigScreenBuilder {
         );
 
         // should disable on darkness effect (boolean)
-        general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.disable_on_darkness"), Darkness.isEnabled())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.disable_on_darkness"), Darkness.isEnabled())
                 .setTooltip(Text.translatable("config.gamma_shifter.disable_on_darkness.tooltip"))
                 .setDefaultValue(true)
                 .setSaveConsumer(Darkness::setEnabled)

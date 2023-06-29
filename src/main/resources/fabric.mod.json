@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Gamma Shifter",
-  "description": "Customizable fullbright utilities with auto night-sight for 1.19+.",
+  "description": "Customizable fullbright utilities with auto night-sight for 1.19+.\nAny feedback can be submitted on GitHub and is greatly appreciated!",
   "authors": [
     "Aaron McMicking"
   ],
