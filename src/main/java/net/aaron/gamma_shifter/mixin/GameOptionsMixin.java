@@ -19,7 +19,7 @@ import java.io.*;
 import java.util.Iterator;
 
 /**
- * Spongepowered mixin to read/load gamma values from options.txt when the client launches, bypassing clamping to 0.0:1.0.
+ * Reads/loads gamma values from options.txt when the client launches, bypassing clamping to 0.0:1.0.
  *
  * <p>After being read, the gamma value is saved in {@link GammaInitializer}, which sets the value when
  * the title screen is displayed. This helper class is used since {@link MinecraftClient#getInstance()} returns null
@@ -41,7 +41,7 @@ public abstract class GameOptionsMixin {
     @Shadow public abstract File getOptionsFile();
 
     /**
-     * Injects into {@link GameOptions#load()} to retrieve and stores the gamma value before it is overwritten by the game.
+     * Retrieves and stores the gamma value before it is overwritten by the game.
      * @param ci CallbackInfo to be returned after injection finishes.
      */
     @Inject(method = "load", at = @At("HEAD"))
