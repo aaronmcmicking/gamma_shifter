@@ -30,7 +30,7 @@ public class ConfigLoader {
     private static double presetTwo = 5.0;
     private static boolean showCurrentGammaOverlay = false;
     private static boolean silentMode = false;
-    private static int textColour = 0xFFFFFF;
+    private static int textColour = 0xFFFFFF; // white
     private static HUD.Locations location = HUD.Locations.TOP_LEFT;
     private static boolean showMessageOnGammaChange = true;
     private static boolean shouldEnforceBounds = true;
@@ -89,6 +89,7 @@ public class ConfigLoader {
 
         // adjust default values for malformed strings (not "true" or "false") that should default to "true"
         fixMalformedBooleans(properties);
+
         // apply the values in their respective spots
         // will set default values defined above
         set();
@@ -117,7 +118,7 @@ public class ConfigLoader {
         shouldEnforceBounds = GammaHandler.shouldEnforceBounds();
         autoNightEnabled = AutoNight.isEnabled();
         autoNightGammaValue = AutoNight.getNightGammaValue();
-        disableOnDarknessEffect = Darkness.isEnabled();
+        disableOnDarknessEffect = Darkness.shouldDisableDuringDarkness();
 
         // write to file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
@@ -182,7 +183,7 @@ public class ConfigLoader {
         GammaHandler.setShouldEnforceBounds(shouldEnforceBounds);
         AutoNight.setEnabled(autoNightEnabled);
         AutoNight.setNightGammaValue(clamp(autoNightGammaValue));
-        Darkness.setEnabled(disableOnDarknessEffect);
+        Darkness.setShouldDisableDuringDarkness(disableOnDarknessEffect);
     }
 
     /**
@@ -243,6 +244,10 @@ public class ConfigLoader {
      * Missing or malformed options are automatically set to 'false' when {@link Boolean#parseBoolean(String)} fails
      * to parse a valid value. This method checks for that case and sets the corresponding values to 'true' for options
      * which should always default to such.
+     * <br><br>
+     * Note that we cannot simply check whether a value is null since for any String (including null),
+     * {@link Boolean#parseBoolean(String)} returns "false" if the string does not exactly equal "true". Therefore,
+     * malformed strings will return "false" as well.
      * @param properties The properties from the file.
      */
     private static void fixMalformedBooleans(@NotNull Properties properties){

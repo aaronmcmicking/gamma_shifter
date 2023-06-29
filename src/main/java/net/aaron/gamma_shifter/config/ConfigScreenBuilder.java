@@ -125,10 +125,10 @@ public class ConfigScreenBuilder {
         );
 
         // should disable on darkness effect (boolean)
-        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.disable_on_darkness"), Darkness.isEnabled())
+        behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.disable_on_darkness"), Darkness.shouldDisableDuringDarkness())
                 .setTooltip(Text.translatable("config.gamma_shifter.disable_on_darkness.tooltip"))
                 .setDefaultValue(true)
-                .setSaveConsumer(Darkness::setEnabled)
+                .setSaveConsumer(Darkness::setShouldDisableDuringDarkness)
                 .build()
         );
 

@@ -37,11 +37,11 @@ public class AutoNight {
     private static double nightGammaValue = 3.0;
     /**
      * Whether the feature is 'enabled' in settings and will activate during night. Enabled does not indicate whether
-     * the autoNight gamma is currently applied.
+     * the nightGammaValue is currently applied.
      */
     private static boolean enabled = false;
     /**
-     * Whether the feature is currently 'active', ie. whether the AutoNight gamma is currently applied.
+     * Whether the feature is currently 'active', ie. whether nightGammaValue is currently applied.
      */
     private static boolean isActive = false;
     /**
