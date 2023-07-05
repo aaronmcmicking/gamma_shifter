@@ -16,11 +16,11 @@ except to fix bugs and update to new Minecraft versions.
 -Adds hotkeys to set 100% and 2000% brightness instantly <br>
 -Adds custom presets <br>
 
-For a full list of features and keybinds, see [Modrinth](https://www.mondrinth.com/mod/gamma_shifter).
+For a full list of features and keybinds, see [Modrinth](https://modrinth.com/mod/gamma-shifter).
 
 ## Quick Start
 ### Download Pre-Built
-To download a pre-built version of the mod, see the [Modrinth downloads page](https://www.modrinth.com/mod/gamma_shifter/versions).
+To download a pre-built version of the mod, see the [Modrinth downloads page](https://modrinth.com/mod/gamma-shifter/versions).
 
 ### Build Single Version from Source
 Make sure `fabric.mod.json` and `gradle.properties` have proper dependency versions for the MC version you want to build for. <br>
