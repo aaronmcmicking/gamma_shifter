@@ -28,13 +28,15 @@ For updated dependency versions, see `Build Dependencies` below.
 <br>
 
 To build, run: <br>
-`./gradlew build`
-<br><br>
+    
+    ./gradlew build
+
 Gradle will create `./build/` if it does not exist. Artifacts will be generated in `./build/libs`. 
 
 ### Build All Versions from Source
 If you wish to build a `.jar` for each supported mod version, then run: <br>
-`./buildAllVersions.jar`
+
+    ./buildAllVersions.jar
 
 When prompted, enter the new mod version (not MC version) you wish to build. All mod versions will be built: this may
 take moment, especially if you are building the mod for the first time. A popup will appear when building finishes.
