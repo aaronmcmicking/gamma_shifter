@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Injects into HUD rendering to call renderer for mod HUD.
+ * Calls renderer for mod HUD.
  * @see HUD
  */
 @Mixin(InGameHud.class)

@@ -160,8 +160,7 @@ public class KeyInputHandler {
     }
 
     /**
-     * Flushes any buffered inputs from gamma-modifying keys. Buffered inputs are accrued when a keybind is pressed
-     * while the mod is disabled.
+     * Flushes any buffered inputs accrued when a keybind is pressed while the mod is disabled.
      */
     public static void flushBufferedInputs(){
         for(KeyBinding keybinding: new KeyBinding[]{increaseGammaKey, decreaseGammaKey, maxGammaKey, defaultGammaKey, presetOneKey, presetTwoKey, showGammaKey}){

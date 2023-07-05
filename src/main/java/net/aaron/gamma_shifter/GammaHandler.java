@@ -15,19 +15,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GammaHandler {
 
-    /**
-     * The current instance of MinecraftClient, wrapped to improve readability.
-     */
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+   private static final MinecraftClient client = MinecraftClient.getInstance();
 
-    /**
-     * The maximum gamma value the mod will set.
-     */
     public static final Double MAX_GAMMA = 20.0;
 
-    /**
-     * The minimum gamma value the mod will set.
-     */
     public static final Double MIN_GAMMA = 0.0;
 
     /**
@@ -157,7 +148,7 @@ public class GammaHandler {
     }
 
     /**
-     * Toggles the mod effects on/off by setting gamma to either 0.0 or {@link GammaHandler#currentCustomGamma} and
+     * Toggles the mod effects on/off by setting gamma to either 1.0 or {@link GammaHandler#currentCustomGamma} and
      * toggling {@link GammaShifter}.
      * <p>Also stores the latest gamma value locally (fixes compatibility issue with Sodium), unless Auto Night Mode
      * is active.</p>
@@ -203,42 +194,26 @@ public class GammaHandler {
         GammaShifter.toggle();
     }
 
-    /**
-     * Sets the gamma to the maxiumum allowed value.
-     */
     public static void applyMaxGamma(){
         set(MAX_GAMMA);
         HUD.displayGammaMessage();
     }
 
-    /**
-     * Sets the gamma to the default maximum value (100%).
-     */
     public static void applyVanillaMaxGamma() {
-        set(1.0); // Default MC max gamma
+        set(1.0); // Default MC max gamma = 100%
         HUD.displayGammaMessage();
     }
 
-    /**
-     * Applies the value of {@link GammaHandler#presetOne} to the game.
-     */
     public static void applyPresetOne(){
         set(presetOne);
         HUD.displayGammaMessage();
     }
 
-    /**
-     * Applies the value of {@link GammaHandler#presetTwo} to the game.
-     */
     public static void applyPresetTwo(){
         set(presetTwo);
         HUD.displayGammaMessage();
     }
 
-    /**
-     * Gets the current custom gamma.
-     * @return The current custom gamma.
-     */
     public static Double getCurrentCustomGamma() {
         return currentCustomGamma;
     }
@@ -253,18 +228,10 @@ public class GammaHandler {
         currentCustomGamma = value;
     }
 
-    /**
-     * Get the amount to change the gamma by per input.
-     * @return The change-per-input.
-     */
     public static Double getChangePerInput(){
         return changePerInput;
     }
 
-    /**
-     * Sets the amount to change the gamma by per input.
-     * @param value The new change-per-input to set.
-     */
     public static void setChangePerInput(Double value){
         changePerInput = value;
     }
@@ -285,34 +252,18 @@ public class GammaHandler {
         snappingEnabled = enabled;
     }
 
-    /**
-     * Gets the value of {@link GammaHandler#presetOne}.
-     * @return The value of {@link GammaHandler#presetOne}.
-     */
     public static double getPresetOne(){
         return presetOne;
     }
 
-    /**
-     * Sets the value of {@link GammaHandler#presetOne}.
-     * @param value The new value.
-     */
     public static void setPresetOne(double value){
         presetOne = value;
     }
 
-    /**
-     * Gets the value of {@link GammaHandler#presetTwo}.
-     * @return The value of {@link GammaHandler#presetTwo}.
-     */
     public static double getPresetTwo(){
         return presetTwo;
     }
 
-    /**
-     * Sets the value of {@link GammaHandler#presetTwo}.
-     * @param value The new value.
-     */
     public static void setPresetTwo(double value){
         presetTwo = value;
     }

@@ -18,17 +18,14 @@ public class GammaPacket {
      */
     public Double value;
 
-    /**
-     * Information about the packet sender as an enumerated value.
-     * @see Sender
-     */
     private @Nullable Sender sender;
 
     /**
      * Enums used to label packet senders.
      */
     public enum Sender{
-        AUTO_NIGHT
+        AUTO_NIGHT,
+        DARKNESS
     }
 
     /**

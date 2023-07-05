@@ -12,7 +12,7 @@ public class GammaInitializer {
     /**
      * The gamma value found from options.txt.
      */
-    public static Double gammaFromFile = 1.0;
+    public static Double gammaFromFile = 1.0; // default fallback value = 1.0
 
     /**
      * Stores whether the value has been set already, since it should be set when the title screen displays
@@ -20,10 +20,6 @@ public class GammaInitializer {
      */
     public static boolean alreadyDone = false;
 
-    /**
-     * Stores a gamma value.
-     * @param value The value to store.
-     */
     public static void storeGamma(Double value){
         gammaFromFile = value;
     }

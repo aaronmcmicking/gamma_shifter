@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -15,15 +14,9 @@ import net.minecraft.text.Text;
  */
 public class HUD {
 
-    /**
-     * The instance of the Minecraft client.
-     */
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
-    /**
-     * The current location that the persistent overlay is displayed at (if enabled).
-     */
-    private static Locations currentLocation = Locations.TOP_LEFT;
+    private static Locations currentOverlayLocation = Locations.TOP_LEFT;
 
     /**
      * Enum of locations that the persistent gamma overlay can be rendered at.
@@ -38,12 +31,9 @@ public class HUD {
     /**
      * Whether the persistent display should be shown.
      */
-    public static boolean showCurrentGammaOverlay = false;
+    private static boolean showCurrentGammaOverlay = false;
 
-    /**
-     * The text colour used in HUD elements.
-     */
-    private static int textColour = 0xFFFFFF;
+    private static int textColour = 0xFFFFFF; // default = white
 
     /**
      * True if a message should be shown above the hotbar when the gamma is changed, false otherwise.
@@ -93,24 +83,26 @@ public class HUD {
         TextRenderer textRenderer = client.textRenderer;
         float overlayTextWidth = (float) textRenderer.getWidth(overlayText);
 
+        final float OFFSET = 2.0f;
+        final float LARGE_OFFSET = 10.0f;
 
         // get the x, y values for the text
-        switch (currentLocation) {
+        switch (currentOverlayLocation) {
             case TOP_LEFT -> {
-                x = 2.0f;
-                y = 2.0f;
+                x = OFFSET;
+                y = OFFSET;
             }
             case TOP_RIGHT -> {
-                x = scaledWindowWidth - overlayTextWidth - 2.0f;
-                y = 2.0f;
+                x = scaledWindowWidth - overlayTextWidth - OFFSET;
+                y = OFFSET;
             }
             case BOTTOM_LEFT -> {
-                x = 2.0f;
-                y = scaledWindowHeight - 10.0f;
+                x = OFFSET;
+                y = scaledWindowHeight - LARGE_OFFSET;
             }
             case BOTTOM_RIGHT -> {
-                x = scaledWindowWidth - overlayTextWidth - 2.0f;
-                y = scaledWindowHeight - 10.0f;
+                x = scaledWindowWidth - overlayTextWidth - OFFSET;
+                y = scaledWindowHeight - LARGE_OFFSET;
             }
             default -> {
                 GammaShifter.LOGGER.error("[GammaShifter] Encountered unexpected value when setting overlay location... disabling overlay");
@@ -127,16 +119,16 @@ public class HUD {
      * Gets the current location of the persistent gamma overlay.
      * @return The current overlay location.
      */
-    public static Locations getCurrentLocation(){
-        return currentLocation;
+    public static Locations getCurrentOverlayLocation(){
+        return currentOverlayLocation;
     }
 
     /**
      * Sets the current location for the persistent gamma overlay.
      * @param location The new location.
      */
-    public static void setCurrentLocation(Locations location){
-        currentLocation = location;
+    public static void setCurrentOverlayLocation(Locations location){
+        currentOverlayLocation = location;
     }
 
     /**
@@ -153,46 +145,24 @@ public class HUD {
             }
     }
 
-    /**
-     * Gets whether the persistent gamma overlay should be shown or not.
-     * @return True if the overlay should be rendered, false otherwise.
-     */
     public static boolean shouldShowCurrentGammaOverlay(){
         return showCurrentGammaOverlay;
     }
 
-    /**
-     * Sets whether the persistent gamma overlay should be shown or not.
-     * @param value The new value. True if the overlay should be shown, false otherwise.
-     */
     public static void setShowCurrentGammaOverlay(boolean value){
         showCurrentGammaOverlay = value;
     }
 
-    /**
-     * Gets the text colour for HUD elements.
-     */
     public static int getTextColour(){ return textColour; }
 
-    /**
-     * Sets the text colour for HUD elements.
-     */
     public static void setTextColour(int colour){
         textColour = colour;
     }
 
-    /**
-     * Sets whether a message should be shown above the hotbar when the gamma is changed by keypress.
-     * @param value True if the message should be shown, false otherwise.
-     */
     public static void setShowMessageOnGammaChange(boolean value){
         showMessageOnGammaChange = value;
     }
 
-    /**
-     * Gets whether a message should be shown above the hotbar when the gamma is changed by keypress.
-     * @return True if the message should be shown, false otherwise.
-     */
     public static boolean getShowMessageOnGammaChange(){
         return showMessageOnGammaChange;
     }

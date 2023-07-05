@@ -13,8 +13,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 /**
- * A custom config screen builder that uses the Cloth Config API to create a custom {@link Screen} object using
- * Cloth Config helper methods. This screen is then displayed by ModMenu when requested.
+ * A custom config screen builder that uses the Cloth Config API to create a custom {@link Screen}. This screen is then
+ * displayed by ModMenu when requested.
  */
 public class ConfigScreenBuilder {
     /**
@@ -43,12 +43,11 @@ public class ConfigScreenBuilder {
 
     /**
      * Constructs a new options screen.
-     * <p>As per Cloth Config specifications, a new screen must be build every time the config menu is opened.</p>
      * @return The options screen.
      */
     public Screen getGammaShifterOptionsMenu() {
 
-        // GENERAL OPTIONS
+        /* GENERAL OPTIONS */
 
         // toggle mod (boolean button)
         general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.toggle_mod"), GammaShifter.isEnabled())
@@ -92,6 +91,8 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
+        /* BEHAVIOUR OPTIONS */
+
         // set alwaysStartEnabled (boolean button)
         behaviour.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.always_start_enabled"), GammaShifter.alwaysStartEnabled())
                 .setDefaultValue(true)
@@ -132,7 +133,7 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        // HUD OPTIONS
+        /* HUD OPTIONS */
 
         // toggle silent mode (boolean)
         HUDCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.silent_mode"), GammaShifter.isSilentModeEnabled())
@@ -169,11 +170,11 @@ public class ConfigScreenBuilder {
         // Set overlay location
         // Does not currently support translations for button text
         String[] list = {"Top Left", "Top Right", "Bottom Right", "Bottom Left"};
-        HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationDisplayString(HUD.getCurrentLocation()))
+        HUDCategory.addEntry(entryBuilder.startSelector(Text.translatable("config.gamma_shifter.persistent_overlay_location"), list, HUD.getLocationDisplayString(HUD.getCurrentOverlayLocation()))
                 .setDefaultValue("Top Left")
                 .setTooltip(Text.translatable("config.gamma_shifter.persistent_overlay_location.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    HUD.setCurrentLocation(
+                    HUD.setCurrentOverlayLocation(
                             switch (newValue) {
                                 case "Bottom Left" -> HUD.Locations.BOTTOM_LEFT;
                                 case "Bottom Right" -> HUD.Locations.BOTTOM_RIGHT;
@@ -184,7 +185,7 @@ public class ConfigScreenBuilder {
                 .build()
         );
 
-        // AUTO NIGHT OPTIONS
+        /* AUTO NIGHT OPTIONS */
 
         // toggle auto night mode (boolean)
         autoNightMode.addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.gamma_shifter.auto_night"), AutoNight.isEnabled())
@@ -215,7 +216,7 @@ public class ConfigScreenBuilder {
         );
 
 
-        // PRESET OPTIONS
+        /* PRESET OPTIONS */
 
         // set presetOneValue (int field)
         presets.addEntry(entryBuilder.startIntField(Text.translatable("config.gamma_shifter.preset_one"), (int)Math.round(GammaHandler.getPresetOne()*100))
@@ -238,7 +239,6 @@ public class ConfigScreenBuilder {
         );
 
 
-        // return the built screen
         return builder.build();
     }
 }

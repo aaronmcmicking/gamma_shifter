@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Spongepowered mixin that:
  * <p>1. Signals to {@link GammaInitializer} to set the gamma file read from options.txt when the title screen loads for the first time.</p>
  * <p>2. Saves the options to disk when the pause menu is opened while the player is in a world.</p>
  * <p>3. Saves the options when the game closes.</p>
@@ -23,9 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
-    /**
-     * Shadow {@link MinecraftClient#currentScreen}.
-     */
     @Shadow
     public Screen currentScreen;
 

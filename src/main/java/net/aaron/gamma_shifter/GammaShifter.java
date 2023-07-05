@@ -20,9 +20,6 @@ public class GammaShifter implements ClientModInitializer {
      */
     public static final String GAMMA_MOD = "gamma_shifter";
 
-    /**
-     * The Logger for log output from all other mod classes.
-     */
     public static final Logger LOGGER = LoggerFactory.getLogger(GAMMA_MOD);
 
     /**
@@ -43,7 +40,7 @@ public class GammaShifter implements ClientModInitializer {
     /**
      * True if the custom gamma should be set regardless of if the mod is enabled, false otherwise.
      */
-    public static boolean alwaysSaveCustomGamma = true;
+    private static boolean alwaysSaveCustomGamma = true;
 
     /**
      * Returns whether the mod is toggled on.
@@ -119,10 +116,6 @@ public class GammaShifter implements ClientModInitializer {
         return alwaysSaveCustomGamma;
     }
 
-
-    /**
-     * Starts mod activity once the game loads.
-     */
     @Override
     public void onInitializeClient() {
         ConfigLoader.load();

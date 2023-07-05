@@ -105,9 +105,7 @@ public class AutoNight {
      */
     public static void initializeAutoNightStatus(){
         // preconditions
-        if(!enabled){
-            return;
-        }else if(alreadyInitialized){
+        if(!enabled || alreadyInitialized){
             return;
         }
 
@@ -218,11 +216,6 @@ public class AutoNight {
         return alreadyInitialized;
     }
 
-    /**
-     * Returns whether AutoNight has updated it's state after 1) the player enters a world from the main menu 2)
-     * the pause menu is closed after settings are changed in ModMenu.
-     * @param value True if AutoNight has initialized itself, false otherwise.
-     */
     public static void setAlreadyInitialized(boolean value){
         alreadyInitialized = value;
     }

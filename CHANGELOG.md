@@ -9,4 +9,4 @@ during Darkness effect` to `Behaviour` category <br>
 -Changed option `Gamma change per input` to `Step` <br>
 -Changed option `Snap to change per input` to `Snap to step` <br>
 -Changed option `Enforce maximum/minimum gamma` to `Enforce bounds` <br>
--Updated documentation <br>
+-Updated documentation, removed unnecessary comments <br>

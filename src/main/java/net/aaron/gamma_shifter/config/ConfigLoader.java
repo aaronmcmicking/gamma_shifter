@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 public class ConfigLoader {
     /**
-     * Initialize and set default values for options saved in the config file.
+     * Default values for options saved in the config file.
      */
     private static boolean enabled = true;
     private static boolean alwaysStartEnabled = true;
@@ -79,11 +79,9 @@ public class ConfigLoader {
             }else{
                 GammaShifter.LOGGER.error("[GammaShifter] Couldn't find config and couldn't create a new one:\n\t" + e);
             }
-        }catch(IOException ignored){ // non-FileNotFoundException IOExceptions
-            /* empty catch block */
-//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't read config file:\n\t" + e);
+        }catch(IOException e){ // non-FileNotFoundException I/O exceptions
+            GammaShifter.LOGGER.error("[GammaShifter] Couldn't read config file:\n\t" + e);
         }catch(NullPointerException | NumberFormatException e){ // Parsing exceptions
-            /* empty catch block */
             GammaShifter.LOGGER.error("[GammaShifter] Couldn't parse config file... was it malformed?\n\t" + e);
         }
 
@@ -96,8 +94,7 @@ public class ConfigLoader {
     }
 
     /**
-     * Saves the current settings into the config file. If the config file cannot be found, then a new one is created
-     * by {@link FileWriter}.
+     * Saves the current settings into the config file. If the config file cannot be found, then a new one is created.
      */
     public static void save(){
         Properties properties = new Properties();
@@ -113,7 +110,7 @@ public class ConfigLoader {
         showCurrentGammaOverlay = HUD.shouldShowCurrentGammaOverlay();
         silentMode = GammaShifter.isSilentModeEnabled();
         textColour = HUD.getTextColour();
-        location = HUD.getCurrentLocation();
+        location = HUD.getCurrentOverlayLocation();
         showMessageOnGammaChange = HUD.getShowMessageOnGammaChange();
         shouldEnforceBounds = GammaHandler.shouldEnforceBounds();
         autoNightEnabled = AutoNight.isEnabled();
@@ -142,8 +139,7 @@ public class ConfigLoader {
             properties.store(bw, "Gamma Shifter Config");
         }
         catch(IOException e){
-            /* empty catch block */
-//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't write config file:\n\t" + e);
+            GammaShifter.LOGGER.error("[GammaShifter] Couldn't write config file:\n\t" + e);
         }
     }
 
@@ -155,13 +151,13 @@ public class ConfigLoader {
         try {
             return (new File(CONFIG_FILE.getPath())).createNewFile();
         }catch(Exception e){
-//            GammaShifter.LOGGER.error("[GammaShifterBeta] Couldn't create new config file:\n\t" + e);
+            GammaShifter.LOGGER.error("[GammaShifter] Couldn't create new config file:\n\t" + e);
             return false;
         }
     }
 
     /**
-     * Applies the stored values elsewhere in the mod.
+     * Applies values read from the config file elsewhere in the mod.
      */
     private static void set(){
         if (alwaysStartEnabled) {
@@ -173,12 +169,12 @@ public class ConfigLoader {
         GammaHandler.setChangePerInput( clamp(step, 0.01, GammaHandler.MAX_GAMMA) );
         GammaHandler.setSnappingEnabled(snappingEnabled);
         GammaShifter.setAlwaysSaveCustomGamma(alwaysSaveCustomGamma);
-        GammaHandler.setPresetOne( clamp(presetOne) );
-        GammaHandler.setPresetTwo( clamp(presetTwo) );
+        GammaHandler.setPresetOne( clamp(presetOne) ); // clamp to 0-max gamma
+        GammaHandler.setPresetTwo( clamp(presetTwo) ); // clamp to 0-max gamma
         HUD.setShowCurrentGammaOverlay(showCurrentGammaOverlay);
         GammaShifter.setSilentModeEnabled(silentMode);
         HUD.setTextColour(textColour);
-        HUD.setCurrentLocation(location);
+        HUD.setCurrentOverlayLocation(location);
         HUD.setShowMessageOnGammaChange(showMessageOnGammaChange);
         GammaHandler.setShouldEnforceBounds(shouldEnforceBounds);
         AutoNight.setEnabled(autoNightEnabled);
