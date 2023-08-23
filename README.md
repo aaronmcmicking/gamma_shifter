@@ -1,10 +1,6 @@
 # Gamma Shifter
-A client-side FabricMC mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft
+A client-side Fabric mod that restores the ability to set the gamma (brightness) setting beyond 100% in Minecraft
 1.19+ and adds other customizable quality-of-life features.
-
-<span style="color: red;">IMPORTANT: </span>
-The `main` branch on GitHub contains an obsolete Minecraft 1.19 version of the mod. For the most recent mod version,
-see the branch corresponding to the latest major release of Minecraft.
 
 Gamma Shifter is no longer in active development and I do not plan to continue adding features to or working on this mod
 except to fix bugs and update to new Minecraft versions.
@@ -18,35 +14,14 @@ except to fix bugs and update to new Minecraft versions.
 
 For a full list of features and keybinds, see [Modrinth](https://modrinth.com/mod/gamma-shifter).
 
-## Quick Start
-### Download Pre-Built
-To download a pre-built version of the mod, see the [Modrinth downloads page](https://modrinth.com/mod/gamma-shifter/versions).
+## Download
+This mod can be downloaded from its [Modrinth downloads page](https://modrinth.com/mod/gamma-shifter/versions).
 
-### Build Single Version from Source
-Make sure `fabric.mod.json` and `gradle.properties` have proper dependency versions for the MC version you want to build for. <br>
-For updated dependency versions, see `Build Dependencies` below.
-<br>
-
-To build, run: <br>
-
-    ./gradlew build
-
-Gradle will create `./build/` if it does not exist. Artifacts will be generated in `./build/libs`.
-
-### Build All Versions from Source
-If you wish to build a `.jar` for each supported mod version, then run: <br>
-
-    ./buildAllVersions.jar
-
-When prompted, enter the new mod version (not MC version) you wish to build. All mod versions will be built: this may
-take moment, especially if you are building the mod for the first time. A popup will appear when building finishes.
-
-Gradle will create `./build/` if it does not exist. Artifacts will be generated in `./build/libs`.
-
-## Build Dependencies
-[Fabric / Fabric API](https://fabricmc.net/develop) <br>
-[ModMenu](https://modrinth.com/mod/modmenu/versions) <br>
+## Dependencies
+[Fabric](https://fabricmc.net/use/installer/) and [Fabric API](https://modrinth.com/mod/fabric-api/versions) <br>
+*or* <br>
+[Quilt](https://quiltmc.org/en/install/) and [Quilt Standard Library](https://modrinth.com/mod/qsl/versions)
+<br><br>
+*Optional*: <br>
+[ModMenu](https://modrinth.com/mod/modmenu/versions) and
 [Cloth Config API](https://modrinth.com/mod/cloth-config/versions) <br>
-
-*Fabric/Fabric API should be used to build, but the mod made be used with Quilt Loader/Quilted Standard Library* <br>
-*ModMenu and Cloth Config API are required to build, but the mod may be used without them.*
