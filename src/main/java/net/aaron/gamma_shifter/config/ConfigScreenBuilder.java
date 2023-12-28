@@ -67,12 +67,8 @@ public class ConfigScreenBuilder {
                 .setDefaultValue((int)(GammaHandler.MAX_GAMMA*100))
                 .setTooltip(Text.translatable("config.gamma_shifter.gamma.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    if(GammaShifter.isEnabled()) {
-                        if(AutoNight.isActive() && newValue != (int)Math.round(GammaHandler.getCurrentCustomGamma()*100)){
-                            GammaShifter.LOGGER.info("newValue = " + newValue + ", rounded CCG = " + (int)Math.round(GammaHandler.getCurrentCustomGamma()*100));
-//                            AutoNight.setIsActive(false);
-                            GammaHandler.set((Math.round(newValue)) / 100.0);
-                        }
+                    if(GammaShifter.isEnabled() || AutoNight.isActive()) {
+                        GammaHandler.set((Math.round(newValue)) / 100.0);
                     }else{
                         GammaHandler.setCurrentCustomGamma((Math.round(newValue)) / 100.0);
                     }

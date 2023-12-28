@@ -4,7 +4,6 @@ import net.aaron.gamma_shifter.GammaHandler;
 import net.aaron.gamma_shifter.GammaPacket;
 import net.aaron.gamma_shifter.GammaShifter;
 import net.aaron.gamma_shifter.config.ConfigScreenBuilder;
-import net.aaron.gamma_shifter.config.ConfigLoader;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -95,6 +94,13 @@ public class AutoNight {
                 }
             }
         });
+    }
+
+    public static void disableOnWakeUp(){
+        if(AutoNight.isActive() && GammaShifter.isEnabled()){
+            GammaHandler.toggle();
+            isActive = false; // must come after toggle() call since toggle() would otherwise overwrite GammaHandler.currentCustomGamma
+        }
     }
 
     /**

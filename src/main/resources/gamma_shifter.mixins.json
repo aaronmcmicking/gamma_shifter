@@ -10,7 +10,8 @@
     "InGameHudMixin",
     "MinecraftClientMixin",
     "SimpleOptionMixin",
-    "SimpleOptionMixin$DoubleSliderCallbacksMixin"
+    "SimpleOptionMixin$DoubleSliderCallbacksMixin",
+    "PlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
